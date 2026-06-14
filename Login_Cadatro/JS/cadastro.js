@@ -134,3 +134,12 @@ function removerErro(input) {
     const msg = input.parentElement.querySelector('.msg-erro');
     if (msg) msg.remove();
 }
+
+function toggleSenha(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const visivel = input.type === 'text';
+
+    input.type = visivel ? 'password' : 'text';
+    btn.innerHTML = visivel ? '&#xf06e;' : '&#xf070;';
+    btn.setAttribute('aria-label', visivel ? 'Mostrar senha' : 'Esconder senha');
+}

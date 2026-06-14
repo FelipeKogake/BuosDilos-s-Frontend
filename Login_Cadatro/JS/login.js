@@ -86,13 +86,27 @@ inputEmail.addEventListener('blur', () => {
 function mostrarPopup(mensagem, tipo = 'sucesso') {
     const popup = document.createElement('div');
     popup.classList.add('popup', `popup--${tipo}`);
+    popup.setAttribute('role', 'alert');
     popup.innerHTML = `
-        <span>${mensagem}</span>
-        <button class="popup-fechar" onclick="this.closest('.popup').remove()">✕</button>
+        <div class="popup-conteudo">
+            <span class="popup-mensagem">${mensagem}</span>
+            <button class="popup-fechar" aria-label="Fechar">✕</button>
+        </div>
+        <div class="popup-barra"></div>
     `;
+
+    popup.querySelector('.popup-fechar').addEventListener('click', () => {
+        fecharPopup(popup);
+    });
+
     document.body.appendChild(popup);
 
-    setTimeout(() => popup.remove(), 4000); // some após 4s
+    setTimeout(() => fecharPopup(popup), 4000);
+}
+
+function fecharPopup(popup) {
+    popup.classList.add('popup--saindo');
+    popup.addEventListener('animationend', () => popup.remove(), { once: true });
 }
 
 // verifica ao carregar a página
@@ -105,7 +119,7 @@ if (popupFlag === 'senha-alterada') {
     mostrarPopup('Erro ao alterar a senha. Tente novamente.', 'erro');
 } else if (popupFlag === 'cadastro-feito') {
     localStorage.removeItem('popup');
-    mostrarPopup('Conta já disponível!');
+    mostrarPopup('Conta já disponível.');
 } else if (popupFlag === 'erro-cadastro') {
     localStorage.removeItem('popup');
     mostrarPopup('Erro ao realizar cadastro. Tente novamente.', 'erro');
@@ -140,8 +154,15 @@ function aplicarErro(input, mensagem) {
     if (!msg) {
         msg = document.createElement('span');
         msg.classList.add('msg-erro');
-        msg.setAttribute('role', 'alert');  // ← acessibilidade: anuncia o erro
-        input.parentElement.appendChild(msg);
+        msg.setAttribute('role', 'alert');
+
+        const esqueceu = input.parentElement.querySelector('.esqueceu');
+        if (esqueceu) {
+            // ← insere antes do link "Esqueceu a senha?"
+            input.parentElement.insertBefore(msg, esqueceu);
+        } else {
+            input.parentElement.appendChild(msg);
+        }
     }
     msg.textContent = mensagem;
 }
@@ -150,4 +171,44 @@ function removerErro(input) {
     input.classList.remove('input-erro');
     const msg = input.parentElement.querySelector('.msg-erro');
     if (msg) msg.remove();
+}
+
+const btnEntrar = document.querySelector('.btn-entrar');
+const inputSenha = document.getElementById('senha');
+
+function validarCampoObrigatorio(input, mensagem) {
+    if (input.value.trim() === '') {
+        aplicarErro(input, mensagem);
+        return false;
+    }
+    return true;
+}
+
+function tentarLogin(e) {
+    e.preventDefault();
+
+    const emailValido = validarCampoObrigatorio(inputEmail, 'Digite seu email') && validarEmail();
+    const senhaValida = validarCampoObrigatorio(inputSenha, 'Digite sua senha');
+
+    if (!emailValido || !senhaValida) return;
+
+    // ← aqui você faz a chamada para sua API
+    window.location.href = 'home.html';
+}
+
+inputSenha.addEventListener('input', () => {
+    if (inputSenha.classList.contains('input-erro')) {
+        if (inputSenha.value.trim() !== '') {
+            removerErro(inputSenha);
+        }
+    }
+});
+
+function toggleSenha(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const visivel = input.type === 'text';
+
+    input.type = visivel ? 'password' : 'text';
+    btn.innerHTML = visivel ? '&#xf06e;' : '&#xf070;';
+    btn.setAttribute('aria-label', visivel ? 'Mostrar senha' : 'Esconder senha');
 }

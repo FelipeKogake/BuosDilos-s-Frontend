@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700;1,900&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css');
+
 
 :root {
     --cor-fundo: #DCEAF7;
@@ -259,35 +261,87 @@ body {
     margin-top: 0.2rem;
 }
 
-.popup {
-    position: fixed;
-    top: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 999;
+.input-wrapper {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.5rem;
+    width: 100%;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding-right: 3rem;
+    box-sizing: border-box;
+}
+
+.btn-olho {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--cor-input-texto);
+    padding: 0;
+    line-height: 1;
+    transition: opacity 0.2s ease;
+}
+
+.btn-olho:hover {
+    opacity: 0.7;
+}
+
+/* ============================================
+   POPUP
+   ============================================ */
+
+.popup {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 999;
+    width: 280px;
+    padding: 1.25rem 1.25rem 0 1.25rem;
     border-radius: 16px;
     font-family: 'Epilogue', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    font-style: italic;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    animation: slideDown 0.3s ease;
+    animation: slideIn 0.4s ease forwards;
+    overflow: hidden;
+}
+
+.popup--saindo {
+    animation: slideOut 0.4s ease forwards;
 }
 
 .popup--sucesso {
-    background: #eaf3de;
-    color: #3b6d11;
-    border: 1px solid #97c459;
+    background: var(--cor-painel);
+    border: 1.5px solid var(--cor-primaria);
+    color: var(--cor-texto-titulo);
 }
 
 .popup--erro {
-    background: #fcebeb;
-    color: #a32d2d;
-    border: 1px solid #f09595;
+    background: var(--cor-painel);
+    border: 1.5px solid #e24b4a;
+    color: var(--cor-texto-titulo);
+}
+
+.popup-conteudo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+}
+
+.popup-mensagem {
+    font-size: 0.95rem;
+    font-style: italic;
+    font-weight: 600;
+    line-height: 1.4;
 }
 
 .popup-fechar {
@@ -295,14 +349,44 @@ body {
     border: none;
     cursor: pointer;
     font-size: 1rem;
-    color: inherit;
+    color: var(--cor-texto-terciario);
     padding: 0;
     line-height: 1;
+    flex-shrink: 0;
 }
 
-@keyframes slideDown {
-    from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+.popup-fechar:hover {
+    color: var(--cor-texto-titulo);
+}
+
+.popup-barra {
+    height: 4px;
+    border-radius: 0 0 4px 4px;
+    margin: 0 -1.25rem;
+    animation: barra 4s linear forwards;
+}
+
+.popup--sucesso .popup-barra {
+    background: var(--cor-primaria);
+}
+
+.popup--erro .popup-barra {
+    background: #e24b4a;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(120%); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideOut {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(120%); }
+}
+
+@keyframes barra {
+    from { width: 100%; }
+    to   { width: 0%; }
 }
 
 /* ============================================

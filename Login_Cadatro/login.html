@@ -24,12 +24,17 @@
             </div>
             <div class="campo">
                 <label for="senha">Senha</label>
-                <input type="password" id="senha" placeholder="Senha" />
+                <div class="input-wrapper">
+                    <input type="password" id="senha" placeholder="Senha" />
+                    <button type="button" class="btn-olho" onclick="toggleSenha('senha', this)" aria-label="Mostrar senha">
+                        &#xf06e;
+                    </button>
+                </div>
                 <a href="recuperacao.html" class="esqueceu">Esqueceu a senha?</a>
             </div>
         </form>
 
-        <button class="btn-entrar">Entrar</button>
+        <button class="btn-entrar" onclick="tentarLogin(event)">Entrar</button>
 
         <div class="divider">
             <hr />

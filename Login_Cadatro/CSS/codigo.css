@@ -225,6 +225,13 @@ body {
     border: 0;
 }
 
+.msg-erro {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: #e24b4a;
+    margin-top: 0.2rem;
+}
+
 /* ============================================
    MEDIA QUERIES
    ============================================ */

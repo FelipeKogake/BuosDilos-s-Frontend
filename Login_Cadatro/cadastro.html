@@ -44,14 +44,19 @@
 
             <div class="campo">
                 <label for="senha">Senha</label>
-                <input
-                    type="password"
-                    id="senha"
-                    name="senha"
-                    placeholder="Senha"
-                    autocomplete="new-password"
-                    aria-required="true"
-                />
+                <div class="input-wrapper">
+                    <input
+                        type="password"
+                        id="senha"
+                        name="senha"
+                        placeholder="Senha"
+                        autocomplete="new-password"
+                        aria-required="true"
+                    />
+                    <button type="button" class="btn-olho" onclick="toggleSenha('senha', this)" aria-label="Mostrar senha">
+                        &#xf06e;
+                    </button>
+                </div>
             </div>
 
             <button type="button" class="btn-cadastro" onclick="tentarCadastrar()">cadastro</button>

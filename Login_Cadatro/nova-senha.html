@@ -19,7 +19,8 @@
 
         <form novalidate>
             <div class="campo">
-                <label for="senha-nova">Senha Nova</label>
+            <label for="senha-nova">Senha Nova</label>
+            <div class="input-wrapper">
                 <input
                     type="password"
                     id="senha-nova"
@@ -28,10 +29,15 @@
                     autocomplete="new-password"
                     aria-required="true"
                 />
+                <button type="button" class="btn-olho" onclick="toggleSenha('senha-nova', this)" aria-label="Mostrar senha">
+                    &#xf06e;
+                </button>
             </div>
+        </div>
 
-            <div class="campo">
-                <label for="confirma-senha">Confirmação de Senha</label>
+        <div class="campo">
+            <label for="confirma-senha">Confirmação de Senha</label>
+            <div class="input-wrapper">
                 <input
                     type="password"
                     id="confirma-senha"
@@ -40,7 +46,11 @@
                     autocomplete="new-password"
                     aria-required="true"
                 />
+                <button type="button" class="btn-olho" onclick="toggleSenha('confirma-senha', this)" aria-label="Mostrar senha">
+                    &#xf06e;
+                </button>
             </div>
+        </div>
 
             <button type="button" class="btn-alterar" onclick="tentarAlterar()">Alterar</button>
         </form>

@@ -76,25 +76,67 @@ function toggleTema() {
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
 
+const inputSenhaNova = document.getElementById('senha-nova');
+const inputConfirmaSenha = document.getElementById('confirma-senha');
+
 async function tentarAlterar() {
-    const senha = document.getElementById('senha-nova').value;
-    const confirma = document.getElementById('confirma-senha').value;
+    const senhaValida = validarCampoObrigatorio(inputSenhaNova, 'Digite sua nova senha');
+    const confirmaValida = validarCampoObrigatorio(inputConfirmaSenha, 'Confirme sua senha');
 
-    if (!senha || !confirma) return;
+    if (!senhaValida || !confirmaValida) return;
 
-    if (senha !== confirma) {
-        aplicarErro('As senhas não coincidem');
+    if (inputSenhaNova.value !== inputConfirmaSenha.value) {
+        aplicarErroInput(inputConfirmaSenha, 'As senhas não coincidem');
         return;
     }
 
     try {
-        // await fetch('/api/nova-senha', { method: 'POST', body: ... });
         window.location.href = 'senha-alterada.html';
     } catch (error) {
         localStorage.setItem('popup', 'erro-senha');
         window.location.href = 'login.html';
     }
 }
+
+function validarCampoObrigatorio(input, mensagem) {
+    if (input.value.trim() === '') {
+        aplicarErroInput(input, mensagem);
+        return false;
+    }
+    removerErro(input);
+    return true;
+}
+
+function aplicarErroInput(input, mensagem) {
+    input.classList.add('input-erro');
+    let msg = input.parentElement.querySelector('.msg-erro');
+    if (!msg) {
+        msg = document.createElement('span');
+        msg.classList.add('msg-erro');
+        msg.setAttribute('role', 'alert');
+        input.parentElement.appendChild(msg);
+    }
+    msg.textContent = mensagem;
+}
+
+function removerErro(input) {
+    input.classList.remove('input-erro');
+    const msg = input.parentElement.querySelector('.msg-erro');
+    if (msg) msg.remove();
+}
+
+// limpa erro ao digitar
+inputSenhaNova.addEventListener('input', () => {
+    if (inputSenhaNova.classList.contains('input-erro') && inputSenhaNova.value.trim() !== '') {
+        removerErro(inputSenhaNova);
+    }
+});
+
+inputConfirmaSenha.addEventListener('input', () => {
+    if (inputConfirmaSenha.classList.contains('input-erro') && inputConfirmaSenha.value.trim() !== '') {
+        removerErro(inputConfirmaSenha);
+    }
+});
 
 function aplicarErro(mensagem) {
     let msg = document.querySelector('.msg-erro');
@@ -105,4 +147,20 @@ function aplicarErro(mensagem) {
         document.querySelector('.painel-nova-senha form').appendChild(msg);
     }
     msg.textContent = mensagem;
+}
+
+function toggleSenha(inputId, btn) {
+    const input1 = document.getElementById('senha-nova');
+    const input2 = document.getElementById('confirma-senha');
+    const btns = document.querySelectorAll('.btn-olho');
+
+    const visivel = input1.type === 'text';
+
+    input1.type = visivel ? 'password' : 'text';
+    input2.type = visivel ? 'password' : 'text';
+
+    btns.forEach(b => {
+        b.innerHTML = visivel ? '&#xf06e;' : '&#xf070;';
+        b.setAttribute('aria-label', visivel ? 'Mostrar senha' : 'Esconder senha');
+    });
 }
