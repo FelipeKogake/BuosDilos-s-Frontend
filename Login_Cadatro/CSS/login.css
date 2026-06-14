@@ -45,8 +45,9 @@ body {
 
 .personagem {
     position: relative;
-    z-index: 1;
+    z-index: 99;
     flex: 1;
+    opacity: 1;
 }
 
 .personagemImg {
@@ -64,9 +65,9 @@ body {
 .personagem-sombra {
     position: fixed;
     top: 90%;
-    left: 17%;
+    left: 16%;
     transform: translateY(-50%) rotate(9deg);
-    width: clamp(8vw, 12vw, 15vw);
+    width: clamp(8vw, 17vw, 20vw);
     height: clamp(50vh, 65vh, 75vh);
     background: linear-gradient(360deg, var(--cor-sombra-inicio), var(--cor-sombra-fim));
     border-radius: 30px;

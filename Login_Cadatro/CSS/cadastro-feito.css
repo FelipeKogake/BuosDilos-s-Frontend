@@ -56,7 +56,7 @@ body::before {
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    margin-left: 5vw;
+    margin-left: 5.5vw;
 }
 
 .personagemImg {
@@ -76,6 +76,7 @@ body::before {
     justify-content: center;
     gap: 2rem;
     padding: 2rem;
+    margin-right: 7.5vw;
 }
 
 .titulo {
@@ -156,10 +157,30 @@ body::before {
     body {
         flex-direction: column;
         justify-content: center;
+        align-items: center;
     }
 
     .estrelas--front { display: none; }
-    .personagemImg { width: 55vw; max-height: 40vh; }
+
+    .personagem {
+        margin-left: 0;      /* ← zera o margin do desktop */
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 0;
+    }
+
+    .conteudo {
+        margin-right: 0;     /* ← zera o margin do desktop */
+        padding: 1.5rem;
+        gap: 1rem;            /* ← reduz o gap entre título e botão */
+        margin-top: 0;
+    }
+
+    .personagemImg {
+        width: 55vw;
+        max-height: 40vh;
+    }
+
     .titulo { font-size: 2rem; }
     .btn-voltar { padding: 0.9rem 2rem; font-size: 1rem; }
 }
