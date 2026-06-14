@@ -138,15 +138,27 @@ inputConfirmaSenha.addEventListener('input', () => {
     }
 });
 
-function aplicarErro(mensagem) {
-    let msg = document.querySelector('.msg-erro');
+function aplicarErroInput(input, mensagem) {
+    input.classList.add('input-erro');
+    
+    const campo = input.closest('.campo');
+    let msg = campo.querySelector('.msg-erro');
     if (!msg) {
         msg = document.createElement('span');
         msg.classList.add('msg-erro');
         msg.setAttribute('role', 'alert');
-        document.querySelector('.painel-nova-senha form').appendChild(msg);
+
+        const wrapper = campo.querySelector('.input-wrapper');
+        wrapper.insertAdjacentElement('afterend', msg);  // ← insere depois do wrapper
     }
     msg.textContent = mensagem;
+}
+
+function removerErro(input) {
+    input.classList.remove('input-erro');
+    const campo = input.closest('.campo');
+    const msg = campo.querySelector('.msg-erro');
+    if (msg) msg.remove();
 }
 
 function toggleSenha(inputId, btn) {

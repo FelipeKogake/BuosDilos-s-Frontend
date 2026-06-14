@@ -119,19 +119,28 @@ async function tentarCadastrar() {
 
 function aplicarErro(input, mensagem) {
     input.classList.add('input-erro');
-    let msg = input.parentElement.querySelector('.msg-erro');
+
+    const campo = input.closest('.campo');
+    let msg = campo.querySelector('.msg-erro');
     if (!msg) {
         msg = document.createElement('span');
         msg.classList.add('msg-erro');
         msg.setAttribute('role', 'alert');
-        input.parentElement.appendChild(msg);
+
+        const wrapper = campo.querySelector('.input-wrapper');
+        if (wrapper) {
+            wrapper.insertAdjacentElement('afterend', msg);
+        } else {
+            campo.appendChild(msg);
+        }
     }
     msg.textContent = mensagem;
 }
 
 function removerErro(input) {
     input.classList.remove('input-erro');
-    const msg = input.parentElement.querySelector('.msg-erro');
+    const campo = input.closest('.campo');
+    const msg = campo.querySelector('.msg-erro');
     if (msg) msg.remove();
 }
 
@@ -143,3 +152,21 @@ function toggleSenha(inputId, btn) {
     btn.innerHTML = visivel ? '&#xf06e;' : '&#xf070;';
     btn.setAttribute('aria-label', visivel ? 'Mostrar senha' : 'Esconder senha');
 }
+
+inputNome.addEventListener('input', () => {
+    if (inputNome.classList.contains('input-erro') && inputNome.value.trim() !== '') {
+        removerErro(inputNome);
+    }
+});
+
+inputEmail.addEventListener('input', () => {
+    if (inputEmail.classList.contains('input-erro')) {
+        validarEmail();
+    }
+});
+
+inputSenha.addEventListener('input', () => {
+    if (inputSenha.classList.contains('input-erro') && inputSenha.value.trim() !== '') {
+        removerErro(inputSenha);
+    }
+});

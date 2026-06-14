@@ -150,18 +150,19 @@ function validarEmail() {
 function aplicarErro(input, mensagem) {
     input.classList.add('input-erro');
 
-    let msg = input.parentElement.querySelector('.msg-erro');
+    const container = input.closest('.campo');
+    let msg = container.querySelector('.msg-erro');
     if (!msg) {
         msg = document.createElement('span');
         msg.classList.add('msg-erro');
         msg.setAttribute('role', 'alert');
 
-        const esqueceu = input.parentElement.querySelector('.esqueceu');
+        const esqueceu = container.querySelector('.esqueceu');
         if (esqueceu) {
-            // ← insere antes do link "Esqueceu a senha?"
-            input.parentElement.insertBefore(msg, esqueceu);
+            container.insertBefore(msg, esqueceu);
         } else {
-            input.parentElement.appendChild(msg);
+            const wrapper = container.querySelector('.input-wrapper') || input.parentElement;
+            wrapper.insertAdjacentElement('afterend', msg);  // ← insere depois do wrapper
         }
     }
     msg.textContent = mensagem;
