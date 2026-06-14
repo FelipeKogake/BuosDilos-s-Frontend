@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/recuperacao.css">
+    <title>Recuperação de Senha</title>
+</head>
+<body>
+    <!-- estrelas de fundo (atrás) -->
+    <img src="Assets/recuperacao/estrelas-azul.png" class="estrelas estrelas--back" aria-hidden="true"/>
+
+    <div class="personagem" aria-hidden="true">
+        <div class="personagem-sombra"></div>
+        <img src="Assets/recuperacao/personagem-recuperacao.png" alt="Personagem" class="personagemImg" />
+    </div>
+
+    <main class="painel-recuperacao">
+        <h1 class="titulo">Esqueceu a Senha?</h1>
+
+        <p class="descricao">Digite seu email para enviarmos um código para sua recuperação de sua senha.</p>
+
+
+        <form novalidate>
+            <div class="campo">
+                <label for="email">Email de recuperação</label>
+                <input type="email" id="email" placeholder="Email" />
+            </div>
+        </form>
+
+        <a href="codigo.html" class="btn-continuar">Continuar</a>
+
+        <a href="login.html" class="voltar">Voltar para Login</a>
+    </main>
+
+    <!-- estrelas da frente -->
+    <img src="Assets/recuperacao/estrelas-azul.png" class="estrelas estrelas--front" aria-hidden="true"/>
+
+    <button class="btn-tema" onclick="toggleTema()">
+        <img src="Assets/avatar-azul.png" alt="Trocar tema" />
+    </button>
+
+    <script src="JS/recuperacao.js"></script>
+</body>
+</html>

@@ -1,0 +1,446 @@
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700;1,900&display=swap');
+
+:root {
+    --cor-fundo: #DCEAF7;
+    --cor-painel: #ffffff;
+    --cor-primaria: #b0aed4;
+    --cor-primaria-hover: #7b78b0;
+    --cor-label: #4a7fa5;
+    --cor-input-fundo: #f0f0f0;
+    --cor-input-texto: #aaa;
+    --cor-texto-titulo: #111;
+    --cor-texto-secundario: #555;
+    --cor-texto-terciario: #888;
+    --cor-borda: #ccc;
+    --cor-divisor: #e0e0e0;
+    --sombra-painel: 6px 6px 20px rgba(0, 9, 169, 0.4);
+    --sombra-input: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --cor-sombra-inicio: #BFD7EE;
+    --cor-sombra-fim: #DCEAF7;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+    position: relative;
+    background-color: var(--cor-fundo);
+    overflow: hidden;
+    font-family: 'Epilogue', sans-serif;
+}
+
+.bolhas {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    object-fit: fill;
+}
+
+.bolhas--back { z-index: 0; }
+.bolhas--front { z-index: 2; opacity: 0.5; }
+
+.personagem {
+    position: relative;
+    z-index: 99;
+    flex: 1;
+    opacity: 1;
+}
+
+.personagemImg {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 8%;
+    width: 38vw;
+    max-height: 70vh;
+    object-fit: contain;
+    z-index: 9;
+    pointer-events: none;
+}
+
+.personagem-sombra {
+    position: fixed;
+    top: 90%;
+    left: 16%;
+    transform: translateY(-50%) rotate(9deg);
+    width: clamp(8vw, 17vw, 20vw);
+    height: clamp(50vh, 65vh, 75vh);
+    background: linear-gradient(360deg, var(--cor-sombra-inicio), var(--cor-sombra-fim));
+    border-radius: 30px;
+    z-index: 1;
+}
+
+.painel-login {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 480px;
+    margin-left: 50vw;
+    margin-right: 3rem;
+    height: 84vh;
+    align-self: center;
+    background: var(--cor-painel);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2.5rem 5rem;
+    gap: 0.75rem;
+    box-shadow: var(--sombra-painel);
+}
+
+.titulo {
+    font-size: 3.5rem;
+    font-weight: 900;
+    font-style: italic;
+    margin: 0 0 1.25rem 0;
+    color: var(--cor-texto-titulo);
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.campo label {
+    font-style: italic;
+    font-weight: 600;
+    color: var(--cor-label);
+    font-size: 1.1rem;
+    margin-top: 20px;
+}
+
+.campo input {
+    background: var(--cor-input-fundo);
+    border: none;
+    border-radius: 20px;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    color: var(--cor-input-texto);
+    outline: none;
+    box-shadow: var(--sombra-input); 
+}
+
+.esqueceu {
+    align-self: flex-end;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--cor-texto-terciario);
+    text-decoration: none;
+    margin-top: 0.25rem;
+}
+
+.esqueceu:hover {
+    color: var(--cor-primaria-hover);
+    text-decoration: underline;
+}
+
+.btn-entrar {
+    background: var(--cor-primaria);
+    border: none;
+    border-radius: 20px;
+    padding: 1.1rem;
+    font-size: 1.2rem;
+    font-style: italic;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.2s ease;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-entrar:hover {
+    background: var(--cor-primaria-hover);
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--cor-borda);
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
+.divider hr {
+    flex: 1;
+    border: none;
+    border-top: 1px solid var(--cor-divisor);
+    margin: 0;
+}
+
+.btn-criar {
+    background: var(--cor-painel);
+    border: 1.5px solid var(--cor-borda);
+    border-radius: 20px;
+    padding: 1.1rem;
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: 700;
+    color: var(--cor-label);
+    cursor: pointer;
+    transition: background 0.2s ease;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-criar:hover {
+    background: #f0efef;
+}
+
+.voltar {
+    text-align: center;
+    font-size: 0.95rem;
+    font-style: italic;
+    font-weight: 600;
+    color: var(--cor-texto-secundario);
+    text-decoration: none;
+    margin-top: 0.25rem;
+}
+
+.voltar:hover {
+    text-decoration: underline;
+}
+
+.btn-tema {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    z-index: 99;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: clamp(70px, 8vw, 120px);
+    height: clamp(70px, 8vw, 120px);
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+}
+
+.btn-tema img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.btn-tema:hover {
+    transform: scale(1.1);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.campo input.input-erro {
+    outline: 2px solid #e24b4a;
+    outline-offset: 2px;
+    background: #fff0f0;
+}
+
+.msg-erro {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: #e24b4a;
+    margin-top: 0.2rem;
+}
+
+/* ============================================
+   MEDIA QUERIES
+   ============================================ */
+
+@media (max-width: 1400px) {
+    .personagemImg {
+        left: 5%;
+        width: 35vw;
+    }
+
+    .painel-login {
+        flex: 0 0 440px;
+        padding: 2rem 4rem;
+        margin-right: 2.5rem;
+    }
+
+    .titulo {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .personagemImg {
+        left: 2%;
+        width: 32vw;
+    }
+
+    .painel-login {
+        flex: 0 0 400px;
+        padding: 2rem 3rem;
+        margin-right: 2rem;
+    }
+
+    .titulo {
+        font-size: 2.5rem;
+    }
+
+    .campo label {
+        font-size: 1rem;
+    }
+
+    .campo input {
+        padding: 0.9rem 1.1rem;
+    }
+
+    .btn-entrar,
+    .btn-criar {
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .personagemImg {
+        left: -2%;
+        width: 28vw;
+    }
+
+    .painel-login {
+        flex: 0 0 360px;
+        padding: 1.5rem 2.5rem;
+        margin-right: 1.5rem;
+        height: 90vh;
+    }
+
+    .titulo {
+        font-size: 2.2rem;
+    }
+
+    .campo label {
+        font-size: 0.95rem;
+    }
+
+    .campo input {
+        padding: 0.85rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    .btn-entrar,
+    .btn-criar {
+        padding: 0.9rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 860px) {
+    body {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: auto;
+        height: auto;
+    }
+
+    .bolhas--front {
+        display: none;
+    }
+
+    .personagem-sombra {
+        display: none;
+    }
+
+    .personagem {
+        display: flex;
+        justify-content: center;
+        z-index: 3;
+    }
+
+    .personagemImg {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        width: 45vw;
+        max-height: 30vh;
+        margin-bottom: -2rem;
+        z-index: 3;
+    }
+
+    .painel-login {
+        margin-left: 0;
+        flex: none;
+        width: 85vw;
+        margin-right: 0;
+        padding: 2rem 3rem;
+        height: auto;
+        min-height: auto;
+        max-height: none;
+        overflow-y: visible;
+        border-radius: 20px;
+    }
+
+    .titulo {
+        font-size: 2.2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .campo label {
+        font-size: 0.95rem;
+    }
+
+    .campo input {
+        padding: 0.85rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    .btn-entrar,
+    .btn-criar {
+        padding: 0.9rem;
+        font-size: 1rem;
+    }
+
+    .esqueceu,
+    .voltar,
+    .divider {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .personagemImg {
+        width: 55vw;
+        max-height: 25vh;
+    }
+
+    .painel-login {
+        width: 75vw;
+        padding: 1.8rem 2rem;
+    }
+
+    .titulo {
+        font-size: 2rem;
+    }
+
+    .campo input {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-entrar,
+    .btn-criar {
+        padding: 0.85rem;
+        font-size: 0.95rem;
+    }
+}

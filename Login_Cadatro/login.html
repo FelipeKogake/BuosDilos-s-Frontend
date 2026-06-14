@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/login.css">
+    <title>Login</title>
+</head>
+<body>
+    <!-- bolhas de fundo (atrás) -->
+    <img src="Assets/login/bolhas-azul.png" class="bolhas bolhas--back" aria-hidden="true"/>
+
+    <div class="personagem" aria-hidden="true">
+        <div class="personagem-sombra"></div>
+        <img src="Assets/login/personagem-azul.png" alt="Personagem" class="personagemImg" />
+    </div>
+
+    <main class="painel-login">
+        <h1 class="titulo">Login</h1>
+
+        <form novalidate>
+            <div class="campo">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Email" />
+            </div>
+            <div class="campo">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" placeholder="Senha" />
+                <a href="recuperacao.html" class="esqueceu">Esqueceu a senha?</a>
+            </div>
+        </form>
+
+        <button class="btn-entrar">Entrar</button>
+
+        <div class="divider">
+            <hr />
+            <span>ou</span>
+            <hr />
+        </div>
+
+        <a href="cadastro.html" class="btn-criar">Criar Conta</a>
+
+        <a href="#" class="voltar">Voltar para Página inicial</a>
+    </main>
+
+    <!-- bolhas da frente -->
+    <img src="Assets/login/bolhas-azul.png" class="bolhas bolhas--front" aria-hidden="true"/>
+
+    <button class="btn-tema" onclick="toggleTema()">
+        <img src="Assets/avatar-azul.png" alt="Trocar tema" />
+    </button>
+
+    <script src="JS/login.js"></script>
+</body>
+</html>
