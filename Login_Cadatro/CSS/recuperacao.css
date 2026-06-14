@@ -148,6 +148,8 @@ body {
     cursor: pointer;
     margin-top: 1rem;
     transition: background 0.2s ease;
+    text-align: center;
+    text-decoration: none;
 }
 
 .btn-continuar:hover {
@@ -192,4 +194,102 @@ body {
 
 .btn-tema:hover {
     transform: scale(1.1);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ============================================
+   MEDIA QUERIES
+   ============================================ */
+
+@media (max-width: 1400px) {
+    .personagemImg { left: 5%; width: 35vw; }
+    .painel-recuperacao { flex: 0 0 440px; padding: 2rem 4rem; margin-right: 2.5rem; }
+    .titulo { font-size: 3rem; }
+}
+
+@media (max-width: 1200px) {
+    .personagemImg { left: 2%; width: 32vw; }
+    .painel-recuperacao { flex: 0 0 400px; padding: 2rem 3rem; margin-right: 2rem; }
+    .titulo { font-size: 2.5rem; }
+    .campo label { font-size: 1rem; }
+    .campo input { padding: 0.9rem 1.1rem; }
+    .btn-continuar { padding: 1rem; font-size: 1.1rem; }
+}
+
+@media (max-width: 1024px) {
+    .personagemImg { left: -2%; width: 28vw; }
+    .painel-recuperacao { flex: 0 0 360px; padding: 1.5rem 2.5rem; margin-right: 1.5rem; }
+    .titulo { font-size: 2.2rem; }
+    .campo label { font-size: 0.95rem; }
+    .campo input { padding: 0.85rem 1rem; font-size: 0.95rem; }
+    .btn-continuar { padding: 0.9rem; font-size: 1rem; }
+}
+
+@media (max-width: 860px) {
+    body {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: auto;
+        height: auto;
+    }
+
+    .estrelas--front { display: none; }
+    .personagem-sombra { display: none; }
+
+    .personagem {
+        display: flex;
+        justify-content: center;
+        z-index: 3;
+    }
+
+    .personagemImg {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        width: 45vw;
+        max-height: 30vh;
+        margin-bottom: -2rem;
+        z-index: 3;
+    }
+
+    .painel-recuperacao {
+        margin-left: 0;
+        flex: none;
+        width: 85vw;
+        margin-right: 0;
+        padding: 2rem 3rem;
+        height: auto;
+        min-height: auto;
+        max-height: none;
+        overflow-y: visible;
+        border-radius: 20px;
+    }
+
+    .titulo { font-size: 2.2rem; margin-bottom: 0.75rem; }
+    .campo label { font-size: 0.95rem; }
+    .campo input { padding: 0.85rem 1rem; font-size: 0.95rem; }
+    .btn-continuar { padding: 0.9rem; font-size: 1rem; }
+    .voltar { font-size: 0.85rem; }
+    .descricao { font-size: 0.9rem; }
+}
+
+@media (max-width: 600px) {
+    .personagemImg { width: 55vw; max-height: 25vh; }
+    .painel-recuperacao { width: 75vw; padding: 1.8rem 2rem; }
+    .titulo { font-size: 2rem; }
+    .campo input { padding: 0.8rem 1rem; font-size: 0.9rem; }
+    .btn-continuar { padding: 0.85rem; font-size: 0.95rem; }
 }

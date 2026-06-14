@@ -29,7 +29,7 @@ body {
     font-family: 'Epilogue', sans-serif;
 }
 
-.bolhas {
+.estrelas {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -40,8 +40,8 @@ body {
     object-fit: fill;
 }
 
-.bolhas--back { z-index: 0; }
-.bolhas--front { z-index: 2; opacity: 0.5; }
+.estrelas--back { z-index: 0; }
+.estrelas--front { z-index: 2; opacity: 0.5; }
 
 .personagem {
     position: relative;
@@ -49,35 +49,35 @@ body {
     flex: 1;
 }
 
+.personagem-sombra {
+    position: fixed;
+    top: 70%;
+    left: 19%;           /* ← era 10%, move um pouco para a esquerda */
+    transform: translateY(-50%) rotate(9deg);
+    width: clamp(8vw, 15vw, 20vw);   /* ← um pouco menor */
+    height: clamp(50vh, 65vh, 75vh);
+    background: linear-gradient(360deg, var(--cor-sombra-inicio), var(--cor-sombra-fim));
+    border-radius: 30px;
+    z-index: 1;         /* ← menor que o personagemImg que é z-index: 9 */
+}
+
 .personagemImg {
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
-    left: 8%;
-    width: 38vw;
-    max-height: 70vh;
+    left: 12%;
+    width: 30vw;
+    max-height: 85vh;
     object-fit: contain;
-    z-index: 9;
+    z-index: 9;         /* ← sempre na frente da sombra */
     pointer-events: none;
 }
 
-.personagem-sombra {
-    position: fixed;
-    top: 90%;
-    left: 17%;
-    transform: translateY(-50%) rotate(9deg);
-    width: clamp(8vw, 12vw, 15vw);
-    height: clamp(50vh, 65vh, 75vh);
-    background: linear-gradient(360deg, var(--cor-sombra-inicio), var(--cor-sombra-fim));
-    border-radius: 30px;
-    z-index: 1;
-}
-
-.painel-login {
+.painel-nova-senha {
     position: relative;
     z-index: 1;
     flex: 0 0 480px;
-    margin-left: 50vw;
+    margin-left: auto;   /* ← troca o 50vw por auto */
     margin-right: 3rem;
     height: 84vh;
     align-self: center;
@@ -97,6 +97,13 @@ body {
     font-style: italic;
     margin: 0 0 1.25rem 0;
     color: var(--cor-texto-titulo);
+    line-height: 1.1;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
 .campo {
@@ -121,23 +128,20 @@ body {
     color: var(--cor-input-texto);
     outline: none;
     box-shadow: var(--sombra-input);
+    font-family: 'Epilogue', sans-serif;
 }
 
-.esqueceu {
-    align-self: flex-end;
-    font-size: 0.9rem;
+.campo input::placeholder {
     font-style: italic;
-    color: var(--cor-texto-terciario);
-    text-decoration: none;
-    margin-top: 0.25rem;
+    color: var(--cor-input-texto);
 }
 
-.esqueceu:hover {
-    color: var(--cor-primaria-hover);
-    text-decoration: underline;
+.campo input:focus {
+    outline: 2px solid var(--cor-primaria);
+    outline-offset: 2px;
 }
 
-.btn-entrar {
+.btn-alterar {
     background: var(--cor-primaria);
     border: none;
     border-radius: 20px;
@@ -147,45 +151,17 @@ body {
     font-weight: 700;
     color: #fff;
     cursor: pointer;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
     transition: background 0.2s ease;
+    font-family: 'Epilogue', sans-serif;
+    width: 100%;
 }
 
-.btn-entrar:hover {
-    background: var(--cor-primaria-hover);
-}
+.btn-alterar:hover { background: var(--cor-primaria-hover); }
 
-.divider {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: var(--cor-borda);
-    font-size: 0.95rem;
-    font-style: italic;
-}
-
-.divider hr {
-    flex: 1;
-    border: none;
-    border-top: 1px solid var(--cor-divisor);
-    margin: 0;
-}
-
-.btn-criar {
-    background: var(--cor-painel);
-    border: 1.5px solid var(--cor-borda);
-    border-radius: 20px;
-    padding: 1.1rem;
-    font-size: 1.1rem;
-    font-style: italic;
-    font-weight: 700;
-    color: var(--cor-label);
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.btn-criar:hover {
-    background: #f0efef;
+.btn-alterar:focus {
+    outline: 2px solid var(--cor-primaria-hover);
+    outline-offset: 2px;
 }
 
 .voltar {
@@ -198,8 +174,12 @@ body {
     margin-top: 0.25rem;
 }
 
-.voltar:hover {
-    text-decoration: underline;
+.voltar:hover { text-decoration: underline; }
+
+.voltar:focus {
+    outline: 2px solid var(--cor-primaria);
+    outline-offset: 2px;
+    border-radius: 4px;
 }
 
 .btn-tema {
@@ -224,8 +204,11 @@ body {
     border-radius: 50%;
 }
 
-.btn-tema:hover {
-    transform: scale(1.1);
+.btn-tema:hover { transform: scale(1.1); }
+
+.btn-tema:focus {
+    outline: 2px solid var(--cor-primaria);
+    outline-offset: 4px;
 }
 
 .sr-only {
@@ -245,84 +228,27 @@ body {
    ============================================ */
 
 @media (max-width: 1400px) {
-    .personagemImg {
-        left: 5%;
-        width: 35vw;
-    }
-
-    .painel-login {
-        flex: 0 0 440px;
-        padding: 2rem 4rem;
-        margin-right: 2.5rem;
-    }
-
-    .titulo {
-        font-size: 3rem;
-    }
+    .personagemImg { left: 5%; width: 35vw; }
+    .painel-nova-senha { flex: 0 0 440px; padding: 2rem 4rem; margin-right: 2.5rem; }
+    .titulo { font-size: 3rem; }
 }
 
 @media (max-width: 1200px) {
-    .personagemImg {
-        left: 2%;
-        width: 32vw;
-    }
-
-    .painel-login {
-        flex: 0 0 400px;
-        padding: 2rem 3rem;
-        margin-right: 2rem;
-    }
-
-    .titulo {
-        font-size: 2.5rem;
-    }
-
-    .campo label {
-        font-size: 1rem;
-    }
-
-    .campo input {
-        padding: 0.9rem 1.1rem;
-    }
-
-    .btn-entrar,
-    .btn-criar {
-        padding: 1rem;
-        font-size: 1.1rem;
-    }
+    .personagemImg { left: 2%; width: 32vw; }
+    .painel-nova-senha { flex: 0 0 400px; padding: 2rem 3rem; margin-right: 2rem; }
+    .titulo { font-size: 2.5rem; }
+    .campo label { font-size: 1rem; }
+    .campo input { padding: 0.9rem 1.1rem; }
+    .btn-alterar { padding: 1rem; font-size: 1.1rem; }
 }
 
 @media (max-width: 1024px) {
-    .personagemImg {
-        left: -2%;
-        width: 28vw;
-    }
-
-    .painel-login {
-        flex: 0 0 360px;
-        padding: 1.5rem 2.5rem;
-        margin-right: 1.5rem;
-        height: 90vh;
-    }
-
-    .titulo {
-        font-size: 2.2rem;
-    }
-
-    .campo label {
-        font-size: 0.95rem;
-    }
-
-    .campo input {
-        padding: 0.85rem 1rem;
-        font-size: 0.95rem;
-    }
-
-    .btn-entrar,
-    .btn-criar {
-        padding: 0.9rem;
-        font-size: 1rem;
-    }
+    .personagemImg { left: -2%; width: 28vw; }
+    .painel-nova-senha { flex: 0 0 360px; padding: 1.5rem 2.5rem; margin-right: 1.5rem; }
+    .titulo { font-size: 2.2rem; }
+    .campo label { font-size: 0.95rem; }
+    .campo input { padding: 0.85rem 1rem; font-size: 0.95rem; }
+    .btn-alterar { padding: 0.9rem; font-size: 1rem; }
 }
 
 @media (max-width: 860px) {
@@ -334,13 +260,8 @@ body {
         height: auto;
     }
 
-    .bolhas--front {
-        display: none;
-    }
-
-    .personagem-sombra {
-        display: none;
-    }
+    .estrelas--front { display: none; }
+    .personagem-sombra { display: none; }
 
     .personagem {
         display: flex;
@@ -359,7 +280,7 @@ body {
         z-index: 3;
     }
 
-    .painel-login {
+    .painel-nova-senha {
         margin-left: 0;
         flex: none;
         width: 85vw;
@@ -372,56 +293,17 @@ body {
         border-radius: 20px;
     }
 
-    .titulo {
-        font-size: 2.2rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .campo label {
-        font-size: 0.95rem;
-    }
-
-    .campo input {
-        padding: 0.85rem 1rem;
-        font-size: 0.95rem;
-    }
-
-    .btn-entrar,
-    .btn-criar {
-        padding: 0.9rem;
-        font-size: 1rem;
-    }
-
-    .esqueceu,
-    .voltar,
-    .divider {
-        font-size: 0.85rem;
-    }
+    .titulo { font-size: 2.2rem; margin-bottom: 0.75rem; }
+    .campo label { font-size: 0.95rem; }
+    .campo input { padding: 0.85rem 1rem; font-size: 0.95rem; }
+    .btn-alterar { padding: 0.9rem; font-size: 1rem; }
+    .voltar { font-size: 0.85rem; }
 }
 
 @media (max-width: 600px) {
-    .personagemImg {
-        width: 55vw;
-        max-height: 25vh;
-    }
-
-    .painel-login {
-        width: 75vw;
-        padding: 1.8rem 2rem;
-    }
-
-    .titulo {
-        font-size: 2rem;
-    }
-
-    .campo input {
-        padding: 0.8rem 1rem;
-        font-size: 0.9rem;
-    }
-
-    .btn-entrar,
-    .btn-criar {
-        padding: 0.85rem;
-        font-size: 0.95rem;
-    }
+    .personagemImg { width: 55vw; max-height: 25vh; }
+    .painel-nova-senha { width: 75vw; padding: 1.8rem 2rem; }
+    .titulo { font-size: 2rem; }
+    .campo input { padding: 0.8rem 1rem; font-size: 0.9rem; }
+    .btn-alterar { padding: 0.85rem; font-size: 0.95rem; }
 }

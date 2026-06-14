@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/nova-senha.css">
+    <title>Nova Senha — Sistema</title>
+</head>
+<body>
+    <img src="Assets/nova-senha/estrelas-azul.png" class="estrelas estrelas--back" aria-hidden="true" alt="" />
+
+    <div class="personagem" aria-hidden="true">
+        <div class="personagem-sombra"></div>
+        <img src="Assets/nova-senha/personagem-azul.png" alt="" class="personagemImg"/>
+    </div>
+
+    <main class="painel-nova-senha">
+        <h1 class="titulo">Nova senha</h1>
+
+        <form novalidate>
+            <div class="campo">
+                <label for="senha-nova">Senha Nova</label>
+                <input
+                    type="password"
+                    id="senha-nova"
+                    name="senha-nova"
+                    placeholder="Senha"
+                    autocomplete="new-password"
+                    aria-required="true"
+                />
+            </div>
+
+            <div class="campo">
+                <label for="confirma-senha">Confirmação de Senha</label>
+                <input
+                    type="password"
+                    id="confirma-senha"
+                    name="confirma-senha"
+                    placeholder="Confirma a senha"
+                    autocomplete="new-password"
+                    aria-required="true"
+                />
+            </div>
+
+            <button type="submit" class="btn-alterar">Alterar</button>
+        </form>
+
+        <a href="login.html" class="voltar">Voltar para Login</a>
+    </main>
+
+    <img src="Assets/nova-senha/estrelas-azul.png" class="estrelas estrelas--front" aria-hidden="true" alt="" />
+
+    <button class="btn-tema" onclick="toggleTema()" aria-label="Trocar tema do site">
+        <img src="Assets/nova-senha/avatar-azul.png" alt="" aria-hidden="true" />
+    </button>
+
+    <script src="JS/nova-senha.js"></script>
+</body>
+</html>
