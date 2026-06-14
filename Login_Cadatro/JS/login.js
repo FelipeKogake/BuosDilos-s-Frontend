@@ -19,7 +19,7 @@ const temas = {
         imagens: {
             personagem: 'Assets/login/personagem-azul.png',
             bolhas: 'Assets/login/bolhas-azul.png',
-            avatar: 'Assets/avatar-azul.png',  /* ← novo */
+            avatar: 'Assets/avatar-azul.png',
         }
     },
     rosa: {
@@ -42,7 +42,7 @@ const temas = {
         imagens: {
             personagem: 'Assets/login/personagem-rosa.png',
             bolhas: 'Assets/login/bolhas-rosa.png',
-            avatar: 'Assets/avatar-rosa.png',  /* ← novo */
+            avatar: 'Assets/avatar-rosa.png',
         }
     }
 };
@@ -62,7 +62,7 @@ function aplicarTema(nomeTema) {
         el.src = tema.imagens.bolhas;
     });
     document.querySelector('.personagemImg').src = tema.imagens.personagem;
-    document.querySelector('.btn-tema img').src = tema.imagens.avatar;  /* ← novo */
+    document.querySelector('.btn-tema img').src = tema.imagens.avatar;
 
     localStorage.setItem('tema', nomeTema);
 }

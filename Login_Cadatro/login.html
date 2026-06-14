@@ -4,51 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="CSS/login.css">
-    <title>Document</title>
+    <title>Login</title>
 </head>
 <body>
-  <!-- bolhas de fundo (atrás) -->
-  <img src="Assets/login/bolhas-azul.png" class="bolhas bolhas--back" />
+    <!-- bolhas de fundo (atrás) -->
+    <img src="Assets/login/bolhas-azul.png" class="bolhas bolhas--back" />
 
-  <div class="personagem">
-    <div class="personagem-sombra"></div>
-    <img src="Assets/login/personagem.png" alt="Pamonha" class="personagemImg" />
-  </div>
+    <div class="personagem">
+        <div class="personagem-sombra"></div>
+        <img src="Assets/login/personagem-azul.png" alt="Personagem" class="personagemImg" />
+    </div>
 
-  <div class="painel-login">
-  <h1 class="titulo">Login</h1>
+    <div class="painel-login">
+        <h1 class="titulo">Login</h1>
 
-  <div class="campo">
-    <label for="email">Email</label>
-    <input type="email" id="email" placeholder="Email" />
-  </div>
+        <div class="campo">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Email" />
+        </div>
 
-  <div class="campo">
-    <label for="senha">Senha</label>
-    <input type="password" id="senha" placeholder="Senha" />
-    <a href="#" class="esqueceu">Esqueceu a senha?</a>
-  </div>
+        <div class="campo">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" placeholder="Senha" />
+            <a href="#" class="esqueceu">Esqueceu a senha?</a>
+        </div>
 
-  <button class="btn-entrar">Entrar</button>
+        <button class="btn-entrar">Entrar</button>
 
-  <div class="divider">
-    <hr />
-    <span>ou</span>
-    <hr />
-  </div>
+        <div class="divider">
+            <hr />
+            <span>ou</span>
+            <hr />
+        </div>
 
-  <button class="btn-criar">Criar Conta</button>
+        <button class="btn-criar">Criar Conta</button>
 
-  <a href="#" class="voltar">Voltar para Página inicial</a>
-  </div>
+        <a href="#" class="voltar">Voltar para Página inicial</a>
+    </div>
 
-  <button class="btn-tema" onclick="toggleTema()">
-    <img src="Assets/login/botao-tema.png" alt="Trocar tema" />
-  </button>
+    <!-- bolhas da frente -->
+    <img src="Assets/login/bolhas-azul.png" class="bolhas bolhas--front" />
 
-  <!-- bolhas da frente (na frente do painel branco) -->
-  <img src="Assets/login/bolhas-azul.png" class="bolhas bolhas--front" />
+    <button class="btn-tema" onclick="toggleTema()">
+        <img src="Assets/avatar-azul.png" alt="Trocar tema" />
+    </button>
 
-  <script src="JS/login.js"></script>
+    <script src="JS/login.js"></script>
 </body>
 </html>
