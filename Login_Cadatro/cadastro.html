@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/cadastro.css">
+    <title>cadastro — Sistema</title>
+</head>
+<body>
+    <img src="Assets/cadastro/baloes-azul.png" class="baloes baloes--back" aria-hidden="true" alt="" />
+
+    <div class="personagem" aria-hidden="true">
+        <div class="personagem-sombra"></div>
+        <img src="Assets/cadastro/personagem.png" alt="" class="personagemImg" />
+    </div>
+
+    <main class="painel-cadastro">
+        <h1 class="titulo">cadastro</h1>
+
+        <form novalidate>
+            <div class="campo">
+                <label for="nome">Nome</label>
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    placeholder="Nome"
+                    autocomplete="name"
+                    aria-required="true"
+                />
+            </div>
+
+            <div class="campo">
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Email"
+                    autocomplete="email"
+                    aria-required="true"
+                />
+            </div>
+
+            <div class="campo">
+                <label for="senha">Senha</label>
+                <input
+                    type="password"
+                    id="senha"
+                    name="senha"
+                    placeholder="Senha"
+                    autocomplete="new-password"
+                    aria-required="true"
+                />
+            </div>
+
+            <a type="submit" class="btn-cadastro">cadastro</a>
+        </form>
+
+        <a href="login.html" class="voltar">Voltar para Login</a>
+    </main>
+
+    <img src="Assets/cadastro/baloes-azul.png" class="baloes baloes--front" aria-hidden="true" alt="" />
+
+    <button class="btn-tema" onclick="toggleTema()" aria-label="Trocar tema do site">
+        <img src="Assets/cadastro/avatar-azul.png" alt="" aria-hidden="true" />
+    </button>
+
+    <script src="JS/cadastro.js"></script>
+</body>
+</html>
