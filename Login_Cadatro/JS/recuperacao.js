@@ -126,15 +126,12 @@ function removerErro(input) {
     if (msg) msg.remove();
 }
 
-const btnEntrar = document.querySelector('.btn-entrar');
-
-
-btnEntrar.addEventListener('click', (e) => {
-    console.log('clicou');
+function tentarContinuar() {
     const emailValido = validarEmail();
 
-    if (!emailValido) {
-        e.preventDefault();  // ← bloqueia a navegação
-        inputEmail.focus();  // ← leva o foco para o campo com erro
+    if (emailValido) {
+        window.location.href = 'codigo.html';
+    } else {
+        inputEmail.focus();
     }
-});
+}
