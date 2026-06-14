@@ -75,3 +75,62 @@ function toggleTema() {
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
+
+const inputNome = document.getElementById('nome');
+const inputEmail = document.getElementById('email');
+const inputSenha = document.getElementById('senha');
+
+function validarEmail() {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const valor = inputEmail.value.trim();
+
+    if (valor === '') {
+        aplicarErro(inputEmail, 'Digite um email');
+        return false;
+    }
+
+    if (!regex.test(valor)) {
+        aplicarErro(inputEmail, 'Digite um email válido');
+        return false;
+    }
+
+    removerErro(inputEmail);
+    return true;
+}
+
+async function tentarCadastrar() {
+    const nomeValido = inputNome.value.trim() !== '';
+    const senhaValida = inputSenha.value.trim() !== '';
+    const emailValido = validarEmail();
+
+    if (!nomeValido) aplicarErro(inputNome, 'Digite seu nome');
+    if (!senhaValida) aplicarErro(inputSenha, 'Digite uma senha');
+
+    if (!nomeValido || !emailValido || !senhaValida) return;
+
+    try {
+        // await fetch('/api/cadastro', { method: 'POST', body: ... });
+        window.location.href = 'cadastro-feito.html';
+    } catch (error) {
+        localStorage.setItem('popup', 'erro-cadastro');
+        window.location.href = 'login.html';
+    }
+}
+
+function aplicarErro(input, mensagem) {
+    input.classList.add('input-erro');
+    let msg = input.parentElement.querySelector('.msg-erro');
+    if (!msg) {
+        msg = document.createElement('span');
+        msg.classList.add('msg-erro');
+        msg.setAttribute('role', 'alert');
+        input.parentElement.appendChild(msg);
+    }
+    msg.textContent = mensagem;
+}
+
+function removerErro(input) {
+    input.classList.remove('input-erro');
+    const msg = input.parentElement.querySelector('.msg-erro');
+    if (msg) msg.remove();
+}

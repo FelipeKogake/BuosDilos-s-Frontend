@@ -61,3 +61,8 @@ function toggleTema() {
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
+
+function voltarParaLogin() {
+    localStorage.setItem('popup', 'cadastro-feito');
+    window.location.href = 'login.html';
+}

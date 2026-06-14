@@ -103,6 +103,12 @@ if (popupFlag === 'senha-alterada') {
 } else if (popupFlag === 'erro-senha') {
     localStorage.removeItem('popup');
     mostrarPopup('Erro ao alterar a senha. Tente novamente.', 'erro');
+} else if (popupFlag === 'cadastro-feito') {
+    localStorage.removeItem('popup');
+    mostrarPopup('Conta já disponível!');
+} else if (popupFlag === 'erro-cadastro') {
+    localStorage.removeItem('popup');
+    mostrarPopup('Erro ao realizar cadastro. Tente novamente.', 'erro');
 }
 
 inputEmail.addEventListener('input', () => {
