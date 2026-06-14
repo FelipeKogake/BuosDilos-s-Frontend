@@ -208,6 +208,19 @@ body {
     border: 0;
 }
 
+.campo input.input-erro {
+    outline: 2px solid #e24b4a;
+    outline-offset: 2px;
+    background: #fff0f0;
+}
+
+.msg-erro {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: #e24b4a;
+    margin-top: 0.2rem;
+}
+
 /* ============================================
    MEDIA QUERIES
    ============================================ */

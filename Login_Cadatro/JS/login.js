@@ -75,3 +75,51 @@ function toggleTema() {
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
+
+// validação do email
+const inputEmail = document.getElementById('email');
+
+inputEmail.addEventListener('blur', () => {
+    validarEmail();
+});
+
+inputEmail.addEventListener('input', () => {
+    if (inputEmail.classList.contains('input-erro')) {
+        validarEmail();  // ← atualiza em tempo real só se já estava com erro
+    }
+});
+
+function validarEmail() {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const valor = inputEmail.value.trim();
+
+    if (valor === '') {
+        removerErro(inputEmail);
+        return;
+    }
+
+    if (!regex.test(valor)) {
+        aplicarErro(inputEmail, 'Digite um email válido');
+    } else {
+        removerErro(inputEmail);
+    }
+}
+
+function aplicarErro(input, mensagem) {
+    input.classList.add('input-erro');
+
+    let msg = input.parentElement.querySelector('.msg-erro');
+    if (!msg) {
+        msg = document.createElement('span');
+        msg.classList.add('msg-erro');
+        msg.setAttribute('role', 'alert');  // ← acessibilidade: anuncia o erro
+        input.parentElement.appendChild(msg);
+    }
+    msg.textContent = mensagem;
+}
+
+function removerErro(input) {
+    input.classList.remove('input-erro');
+    const msg = input.parentElement.querySelector('.msg-erro');
+    if (msg) msg.remove();
+}
