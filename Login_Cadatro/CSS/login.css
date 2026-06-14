@@ -259,6 +259,52 @@ body {
     margin-top: 0.2rem;
 }
 
+.popup {
+    position: fixed;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-radius: 16px;
+    font-family: 'Epilogue', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-style: italic;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    animation: slideDown 0.3s ease;
+}
+
+.popup--sucesso {
+    background: #eaf3de;
+    color: #3b6d11;
+    border: 1px solid #97c459;
+}
+
+.popup--erro {
+    background: #fcebeb;
+    color: #a32d2d;
+    border: 1px solid #f09595;
+}
+
+.popup-fechar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: inherit;
+    padding: 0;
+    line-height: 1;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
 /* ============================================
    MEDIA QUERIES
    ============================================ */

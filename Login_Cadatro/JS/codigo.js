@@ -90,3 +90,37 @@ document.querySelectorAll('.input-codigo').forEach((input, index, inputs) => {
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
+
+function aplicarErro(mensagem) {
+    let msg = document.querySelector('.msg-erro');
+    if (!msg) {
+        msg = document.createElement('span');
+        msg.classList.add('msg-erro');
+        msg.setAttribute('role', 'alert');
+        document.querySelector('.codigo-inputs').insertAdjacentElement('afterend', msg);
+    }
+    msg.textContent = mensagem;
+}
+
+function removerErro() {
+    const msg = document.querySelector('.msg-erro');
+    if (msg) msg.remove();
+}
+
+function tentarContinuar() {
+    const inputs = document.querySelectorAll('.input-codigo');
+    const codigo = Array.from(inputs).map(i => i.value).join('');
+
+    if (codigo.length < 6) {
+        aplicarErro('Digite todos os 6 dígitos do código');
+        return;
+    }
+
+    if (codigo !== '123456') {
+        aplicarErro('Código inválido');
+        return;
+    }
+
+    removerErro();
+    window.location.href = 'nova-senha.html';
+}

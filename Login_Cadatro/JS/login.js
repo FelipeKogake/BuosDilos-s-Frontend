@@ -83,6 +83,28 @@ inputEmail.addEventListener('blur', () => {
     validarEmail();
 });
 
+function mostrarPopup(mensagem, tipo = 'sucesso') {
+    const popup = document.createElement('div');
+    popup.classList.add('popup', `popup--${tipo}`);
+    popup.innerHTML = `
+        <span>${mensagem}</span>
+        <button class="popup-fechar" onclick="this.closest('.popup').remove()">✕</button>
+    `;
+    document.body.appendChild(popup);
+
+    setTimeout(() => popup.remove(), 4000); // some após 4s
+}
+
+// verifica ao carregar a página
+const popupFlag = localStorage.getItem('popup');
+if (popupFlag === 'senha-alterada') {
+    localStorage.removeItem('popup');
+    mostrarPopup('Senha alterada com sucesso!');
+} else if (popupFlag === 'erro-senha') {
+    localStorage.removeItem('popup');
+    mostrarPopup('Erro ao alterar a senha. Tente novamente.', 'erro');
+}
+
 inputEmail.addEventListener('input', () => {
     if (inputEmail.classList.contains('input-erro')) {
         validarEmail();  // ← atualiza em tempo real só se já estava com erro

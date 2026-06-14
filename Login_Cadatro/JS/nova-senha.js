@@ -75,3 +75,34 @@ function toggleTema() {
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
+
+async function tentarAlterar() {
+    const senha = document.getElementById('senha-nova').value;
+    const confirma = document.getElementById('confirma-senha').value;
+
+    if (!senha || !confirma) return;
+
+    if (senha !== confirma) {
+        aplicarErro('As senhas não coincidem');
+        return;
+    }
+
+    try {
+        // await fetch('/api/nova-senha', { method: 'POST', body: ... });
+        window.location.href = 'senha-alterada.html';
+    } catch (error) {
+        localStorage.setItem('popup', 'erro-senha');
+        window.location.href = 'login.html';
+    }
+}
+
+function aplicarErro(mensagem) {
+    let msg = document.querySelector('.msg-erro');
+    if (!msg) {
+        msg = document.createElement('span');
+        msg.classList.add('msg-erro');
+        msg.setAttribute('role', 'alert');
+        document.querySelector('.painel-nova-senha form').appendChild(msg);
+    }
+    msg.textContent = mensagem;
+}

@@ -94,8 +94,8 @@ function validarEmail() {
     const valor = inputEmail.value.trim();
 
     if (valor === '') {
-        removerErro(inputEmail);
-        return false; // ← campo vazio também é inválido
+        aplicarErro(inputEmail, 'Digite um email');
+        return false;
     }
 
     if (!regex.test(valor)) {
