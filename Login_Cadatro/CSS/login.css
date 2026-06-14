@@ -37,7 +37,7 @@ body {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    object-fit: fill;
+    object-fit: cover;
 }
 
 .bolhas--back { z-index: 0; }
@@ -65,7 +65,7 @@ body {
 .personagem-sombra {
     position: fixed;
     top: 90%;
-    left: 16%;
+    left: 19%;
     transform: translateY(-50%) rotate(9deg);
     width: clamp(8vw, 17vw, 20vw);
     height: clamp(50vh, 65vh, 75vh);
@@ -282,7 +282,7 @@ body {
 
 @media (max-width: 1200px) {
     .personagemImg {
-        left: 2%;
+        left: 6%;
         width: 32vw;
     }
 
@@ -313,7 +313,7 @@ body {
 
 @media (max-width: 1024px) {
     .personagemImg {
-        left: -2%;
+        left: 10%;
         width: 28vw;
     }
 
