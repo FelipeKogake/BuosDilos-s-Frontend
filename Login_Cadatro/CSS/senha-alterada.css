@@ -163,13 +163,24 @@ body::before {
     body {
         flex-direction: column;
         justify-content: center;
+        align-items: center;
     }
 
     .estrelas--front { display: none; }
 
     .personagemImg {
-        width: 55vw;
-        max-height: 40vh;
+        width: 70vw;
+        max-height: 70vh;
+        margin-bottom: -5rem; /* ← zera todos os margins do desktop */
+        margin-left: 1rem;
+    }
+
+    .conteudo {
+        margin-left: 0; /* ← remove o -20vw do desktop */
+        padding: 0 2rem 2rem;
+        gap: 0.5rem;
+        align-items: center; /* ← garante que o texto e botão ficam centralizados */
+        text-align: center;
     }
 
     .titulo { font-size: 2rem; }
@@ -181,7 +192,11 @@ body::before {
 }
 
 @media (max-width: 600px) {
-    .personagemImg { width: 70vw; max-height: 35vh; }
-    .titulo { font-size: 1.7rem; }
+    .personagemImg { width: 70vw; max-height: 70vh; margin-left: 3vw; margin-bottom: -5rem; }
+    .titulo { 
+        font-size: 1.7rem;
+        text-align: center; /* ← garante centralização */
+        width: 100%;
+    }
     .btn-voltar { padding: 0.85rem 1.5rem; font-size: 0.95rem; }
 }
