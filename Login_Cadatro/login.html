@@ -8,10 +8,11 @@
 </head>
 <body>
   <!-- bolhas de fundo (atrás) -->
-  <img src="Assets/bolhas-azul.png" class="bolhas bolhas--back" />
+  <img src="Assets/login/bolhas-azul.png" class="bolhas bolhas--back" />
 
   <div class="personagem">
-    <img src="Assets/personagem.png" alt="Pamonha" class="personagemImg" />
+    <div class="personagem-sombra"></div>
+    <img src="Assets/login/personagem.png" alt="Pamonha" class="personagemImg" />
   </div>
 
   <div class="painel-login">
@@ -39,9 +40,15 @@
   <button class="btn-criar">Criar Conta</button>
 
   <a href="#" class="voltar">Voltar para Página inicial</a>
-</div>
+  </div>
+
+  <button class="btn-tema" onclick="toggleTema()">
+    <img src="Assets/login/botao-tema.png" alt="Trocar tema" />
+  </button>
 
   <!-- bolhas da frente (na frente do painel branco) -->
-  <img src="Assets/bolhas-azul.png" class="bolhas bolhas--front" />
+  <img src="Assets/login/bolhas-azul.png" class="bolhas bolhas--front" />
+
+  <script src="JS/login.js"></script>
 </body>
 </html>
