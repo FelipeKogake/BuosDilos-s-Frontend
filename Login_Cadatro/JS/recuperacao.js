@@ -1,3 +1,11 @@
+history.pushState(null, null, location.href);
+history.replaceState(null, null, location.href);
+
+window.addEventListener('popstate', () => {
+    history.pushState(null, null, location.href);
+    history.replaceState(null, null, location.href);
+});
+
 const temas = {
     azul: {
         '--cor-fundo': '#DCEAF7',
