@@ -85,12 +85,12 @@ function validarEmail() {
     const valor = inputEmail.value.trim();
 
     if (valor === '') {
-        aplicarErro(inputEmail, 'Digite um email');
+        aplicarErro(inputEmail, 'Digite um e-mail');
         return false;
     }
 
     if (!regex.test(valor)) {
-        aplicarErro(inputEmail, 'Digite um email válido');
+        aplicarErro(inputEmail, 'Digite um e-mail válido');
         return false;
     }
 
@@ -98,24 +98,59 @@ function validarEmail() {
     return true;
 }
 
+const inputConfirmaSenha = document.getElementById('confirma-senha');
+
 async function tentarCadastrar() {
     const nomeValido = inputNome.value.trim() !== '';
-    const senhaValida = inputSenha.value.trim() !== '';
     const emailValido = validarEmail();
+    const senhaValida = inputSenha.value.trim() !== '';
+    const confirmaValida = inputConfirmaSenha.value.trim() !== '';
 
     if (!nomeValido) aplicarErro(inputNome, 'Digite seu nome');
     if (!senhaValida) aplicarErro(inputSenha, 'Digite uma senha');
+    if (!confirmaValida) aplicarErro(inputConfirmaSenha, 'Confirme sua senha');
 
-    if (!nomeValido || !emailValido || !senhaValida) return;
+    if (!nomeValido || !emailValido || !senhaValida || !confirmaValida) return;
+
+    if (inputSenha.value !== inputConfirmaSenha.value) {
+        aplicarErro(inputConfirmaSenha, 'As senhas não coincidem');
+        return;
+    }
 
     try {
-        // await fetch('/api/cadastro', { method: 'POST', body: ... });
         window.location.href = 'cadastro-feito.html';
     } catch (error) {
         localStorage.setItem('popup', 'erro-cadastro');
         window.location.href = 'login.html';
     }
 }
+
+// listener para limpar erro ao digitar
+inputConfirmaSenha.addEventListener('input', () => {
+    if (inputConfirmaSenha.classList.contains('input-erro') && inputConfirmaSenha.value.trim() !== '') {
+        removerErro(inputConfirmaSenha);
+    }
+});
+
+// atualiza o toggleSenha para alternar os dois campos de senha juntos
+function toggleSenha(inputId, btn) {
+    const input1 = document.getElementById('senha');
+    const input2 = document.getElementById('confirma-senha');
+    const btns = document.querySelectorAll('.btn-olho');
+
+    const visivel = input1.type === 'text';
+
+    input1.type = visivel ? 'password' : 'text';
+    input2.type = visivel ? 'password' : 'text';
+
+    btns.forEach(b => {
+        b.innerHTML = visivel ? '&#xf06e;' : '&#xf070;';
+        b.setAttribute('aria-label', visivel ? 'Mostrar senha' : 'Esconder senha');
+    });
+}
+
+
+Clau
 
 function aplicarErro(input, mensagem) {
     input.classList.add('input-erro');
@@ -145,12 +180,19 @@ function removerErro(input) {
 }
 
 function toggleSenha(inputId, btn) {
-    const input = document.getElementById(inputId);
-    const visivel = input.type === 'text';
+    const input1 = document.getElementById('senha');
+    const input2 = document.getElementById('confirma-senha');
+    const btns = document.querySelectorAll('.btn-olho');
 
-    input.type = visivel ? 'password' : 'text';
-    btn.innerHTML = visivel ? '&#xf06e;' : '&#xf070;';
-    btn.setAttribute('aria-label', visivel ? 'Mostrar senha' : 'Esconder senha');
+    const visivel = input1.type === 'text';
+
+    input1.type = visivel ? 'password' : 'text';
+    input2.type = visivel ? 'password' : 'text';
+
+    btns.forEach(b => {
+        b.innerHTML = visivel ? '&#xf06e;' : '&#xf070;';
+        b.setAttribute('aria-label', visivel ? 'Mostrar senha' : 'Esconder senha');
+    });
 }
 
 inputNome.addEventListener('input', () => {
@@ -168,5 +210,11 @@ inputEmail.addEventListener('input', () => {
 inputSenha.addEventListener('input', () => {
     if (inputSenha.classList.contains('input-erro') && inputSenha.value.trim() !== '') {
         removerErro(inputSenha);
+    }
+});
+
+inputConfirmaSenha.addEventListener('input', () => {
+    if (inputConfirmaSenha.classList.contains('input-erro') && inputConfirmaSenha.value.trim() !== '') {
+        removerErro(inputConfirmaSenha);
     }
 });

@@ -141,7 +141,7 @@ function validarEmail() {
     }
 
     if (!regex.test(valor)) {
-        aplicarErro(inputEmail, 'Digite um email válido');
+        aplicarErro(inputEmail, 'Digite um e-mail válido');
     } else {
         removerErro(inputEmail);
     }
@@ -150,19 +150,22 @@ function validarEmail() {
 function aplicarErro(input, mensagem) {
     input.classList.add('input-erro');
 
-    const container = input.closest('.campo');
-    let msg = container.querySelector('.msg-erro');
+    const campo = input.closest('.campo');
+    let msg = campo.querySelector('.msg-erro');
     if (!msg) {
         msg = document.createElement('span');
         msg.classList.add('msg-erro');
         msg.setAttribute('role', 'alert');
 
-        const esqueceu = container.querySelector('.esqueceu');
+        const esqueceu = campo.querySelector('.esqueceu');
+        const wrapper = campo.querySelector('.input-wrapper');
+
         if (esqueceu) {
-            container.insertBefore(msg, esqueceu);
+            campo.insertBefore(msg, esqueceu);  // ← antes do "esqueceu a senha"
+        } else if (wrapper) {
+            wrapper.insertAdjacentElement('afterend', msg);  // ← depois do wrapper
         } else {
-            const wrapper = container.querySelector('.input-wrapper') || input.parentElement;
-            wrapper.insertAdjacentElement('afterend', msg);  // ← insere depois do wrapper
+            input.insertAdjacentElement('afterend', msg);  // ← depois do input direto
         }
     }
     msg.textContent = mensagem;
@@ -170,7 +173,8 @@ function aplicarErro(input, mensagem) {
 
 function removerErro(input) {
     input.classList.remove('input-erro');
-    const msg = input.parentElement.querySelector('.msg-erro');
+    const campo = input.closest('.campo');
+    const msg = campo.querySelector('.msg-erro');
     if (msg) msg.remove();
 }
 
@@ -188,7 +192,7 @@ function validarCampoObrigatorio(input, mensagem) {
 function tentarLogin(e) {
     e.preventDefault();
 
-    const emailValido = validarCampoObrigatorio(inputEmail, 'Digite seu email') && validarEmail();
+    const emailValido = validarCampoObrigatorio(inputEmail, 'Digite seu e-mail') && validarEmail();
     const senhaValida = validarCampoObrigatorio(inputSenha, 'Digite sua senha');
 
     if (!emailValido || !senhaValida) return;
