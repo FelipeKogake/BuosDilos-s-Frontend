@@ -1,3 +1,7 @@
+import { auth } from '../../autthentication/firebase-config.js';
+import { signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+import { traduzirErroFirebase } from '../../autthentication/firebase-erros.js';
+
 history.pushState(null, null, location.href);
 history.replaceState(null, null, location.href);
 
@@ -84,11 +88,19 @@ function toggleTema() {
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
 
-// validação do email
 const inputEmail = document.getElementById('email');
+const inputSenha = document.getElementById('senha');
 
-inputEmail.addEventListener('blur', () => {
-    validarEmail();
+inputEmail.addEventListener('blur', () => validarEmail());
+
+inputEmail.addEventListener('input', () => {
+    if (inputEmail.classList.contains('input-erro')) validarEmail();
+});
+
+inputSenha.addEventListener('input', () => {
+    if (inputSenha.classList.contains('input-erro') && inputSenha.value.trim() !== '') {
+        removerErro(inputSenha);
+    }
 });
 
 function mostrarPopup(mensagem, tipo = 'sucesso') {
@@ -103,12 +115,8 @@ function mostrarPopup(mensagem, tipo = 'sucesso') {
         <div class="popup-barra"></div>
     `;
 
-    popup.querySelector('.popup-fechar').addEventListener('click', () => {
-        fecharPopup(popup);
-    });
-
+    popup.querySelector('.popup-fechar').addEventListener('click', () => fecharPopup(popup));
     document.body.appendChild(popup);
-
     setTimeout(() => fecharPopup(popup), 4000);
 }
 
@@ -117,7 +125,6 @@ function fecharPopup(popup) {
     popup.addEventListener('animationend', () => popup.remove(), { once: true });
 }
 
-// verifica ao carregar a página
 const popupFlag = localStorage.getItem('popup');
 if (popupFlag === 'senha-alterada') {
     localStorage.removeItem('popup');
@@ -133,25 +140,17 @@ if (popupFlag === 'senha-alterada') {
     mostrarPopup('Erro ao realizar cadastro. Tente novamente.', 'erro');
 }
 
-inputEmail.addEventListener('input', () => {
-    if (inputEmail.classList.contains('input-erro')) {
-        validarEmail();  // ← atualiza em tempo real só se já estava com erro
-    }
-});
-
 function validarEmail() {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const valor = inputEmail.value.trim();
 
-    if (valor === '') {
-        removerErro(inputEmail);
-        return;
-    }
+    if (valor === '') { removerErro(inputEmail); return; }
 
     if (!regex.test(valor)) {
         aplicarErro(inputEmail, 'Digite um e-mail válido');
     } else {
         removerErro(inputEmail);
+        return true;
     }
 }
 
@@ -169,11 +168,11 @@ function aplicarErro(input, mensagem) {
         const wrapper = campo.querySelector('.input-wrapper');
 
         if (esqueceu) {
-            campo.insertBefore(msg, esqueceu);  // ← antes do "esqueceu a senha"
+            campo.insertBefore(msg, esqueceu);
         } else if (wrapper) {
-            wrapper.insertAdjacentElement('afterend', msg);  // ← depois do wrapper
+            wrapper.insertAdjacentElement('afterend', msg);
         } else {
-            input.insertAdjacentElement('afterend', msg);  // ← depois do input direto
+            input.insertAdjacentElement('afterend', msg);
         }
     }
     msg.textContent = mensagem;
@@ -186,9 +185,6 @@ function removerErro(input) {
     if (msg) msg.remove();
 }
 
-const btnEntrar = document.querySelector('.btn-entrar');
-const inputSenha = document.getElementById('senha');
-
 function validarCampoObrigatorio(input, mensagem) {
     if (input.value.trim() === '') {
         aplicarErro(input, mensagem);
@@ -197,25 +193,33 @@ function validarCampoObrigatorio(input, mensagem) {
     return true;
 }
 
-function tentarLogin(e) {
+async function tentarLogin(e) {
     e.preventDefault();
 
+    console.log('email:', inputEmail.value);
+    console.log('senha:', inputSenha.value);
+
     const emailValido = validarCampoObrigatorio(inputEmail, 'Digite seu e-mail') && validarEmail();
+    console.log('emailValido:', emailValido);
+
     const senhaValida = validarCampoObrigatorio(inputSenha, 'Digite sua senha');
+    console.log('senhaValida:', senhaValida);
 
-    if (!emailValido || !senhaValida) return;
-
-    // ← aqui você faz a chamada para sua API
-    window.location.href = 'home.html';
-}
-
-inputSenha.addEventListener('input', () => {
-    if (inputSenha.classList.contains('input-erro')) {
-        if (inputSenha.value.trim() !== '') {
-            removerErro(inputSenha);
-        }
+    if (!emailValido || !senhaValida) {
+        console.log('bloqueado na validação');
+        return;
     }
-});
+
+    console.log('chegou no Firebase');
+
+    try {
+        await signInWithEmailAndPassword(auth, inputEmail.value.trim(), inputSenha.value);
+        mostrarPopup('Login realizado com sucesso!');
+    } catch (error) {
+        console.log('Erro:', error.code, error.message);
+        mostrarPopup(traduzirErroFirebase(error.code), 'erro');
+    }
+}
 
 function toggleSenha(inputId, btn) {
     const input = document.getElementById(inputId);
@@ -225,3 +229,8 @@ function toggleSenha(inputId, btn) {
     btn.innerHTML = visivel ? '&#xf06e;' : '&#xf070;';
     btn.setAttribute('aria-label', visivel ? 'Mostrar senha' : 'Esconder senha');
 }
+
+// ← expõe as funções para os onclick do HTML
+window.toggleTema = toggleTema;
+window.tentarLogin = tentarLogin;
+window.toggleSenha = toggleSenha;

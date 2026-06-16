@@ -1,3 +1,7 @@
+import { auth } from '../../autthentication/firebase-config.js';
+import { createUserWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+import { traduzirErroFirebase } from '../../autthentication/firebase-erros.js';
+
 history.pushState(null, null, location.href);
 history.replaceState(null, null, location.href);
 
@@ -87,6 +91,7 @@ aplicarTema(temaSalvo);
 const inputNome = document.getElementById('nome');
 const inputEmail = document.getElementById('email');
 const inputSenha = document.getElementById('senha');
+const inputConfirmaSenha = document.getElementById('confirma-senha');
 
 function validarEmail() {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -96,17 +101,13 @@ function validarEmail() {
         aplicarErro(inputEmail, 'Digite um e-mail');
         return false;
     }
-
     if (!regex.test(valor)) {
         aplicarErro(inputEmail, 'Digite um e-mail válido');
         return false;
     }
-
     removerErro(inputEmail);
     return true;
 }
-
-const inputConfirmaSenha = document.getElementById('confirma-senha');
 
 async function tentarCadastrar() {
     const nomeValido = inputNome.value.trim() !== '';
@@ -117,7 +118,6 @@ async function tentarCadastrar() {
     if (!nomeValido) aplicarErro(inputNome, 'Digite seu nome');
     if (!senhaValida) aplicarErro(inputSenha, 'Digite uma senha');
     if (!confirmaValida) aplicarErro(inputConfirmaSenha, 'Confirme sua senha');
-
     if (!nomeValido || !emailValido || !senhaValida || !confirmaValida) return;
 
     if (inputSenha.value !== inputConfirmaSenha.value) {
@@ -126,39 +126,37 @@ async function tentarCadastrar() {
     }
 
     try {
+        const credencial = await createUserWithEmailAndPassword(
+            auth,
+            inputEmail.value.trim(),
+            inputSenha.value
+        );
+
+        await updateProfile(credencial.user, {
+            displayName: inputNome.value.trim()
+        });
+
+        sessionStorage.setItem('veio-de-cadastro', 'true');
         window.location.href = 'cadastro-feito.html';
+
     } catch (error) {
-        localStorage.setItem('popup', 'erro-cadastro');
-        window.location.href = 'login.html';
+        console.log('Código do erro:', error.code);
+        console.log('Mensagem do erro:', error.message);
+
+        if (error.code === 'auth/weak-password') {
+            aplicarErro(inputSenha, 'A senha deve ter pelo menos 6 caracteres');
+            aplicarErro(inputConfirmaSenha, 'A senha deve ter pelo menos 6 caracteres');
+        } else if (error.code === 'auth/email-already-in-use') {
+            aplicarErro(inputEmail, 'Este e-mail já está cadastrado');
+        } else if (error.code === 'auth/invalid-email') {
+            aplicarErro(inputEmail, 'E-mail inválido');
+        } else {
+            localStorage.setItem('popup', 'erro-cadastro');
+            localStorage.setItem('popup-mensagem', traduzirErroFirebase(error.code));
+            window.location.href = 'login.html';
+        }
     }
 }
-
-// listener para limpar erro ao digitar
-inputConfirmaSenha.addEventListener('input', () => {
-    if (inputConfirmaSenha.classList.contains('input-erro') && inputConfirmaSenha.value.trim() !== '') {
-        removerErro(inputConfirmaSenha);
-    }
-});
-
-// atualiza o toggleSenha para alternar os dois campos de senha juntos
-function toggleSenha(inputId, btn) {
-    const input1 = document.getElementById('senha');
-    const input2 = document.getElementById('confirma-senha');
-    const btns = document.querySelectorAll('.btn-olho');
-
-    const visivel = input1.type === 'text';
-
-    input1.type = visivel ? 'password' : 'text';
-    input2.type = visivel ? 'password' : 'text';
-
-    btns.forEach(b => {
-        b.innerHTML = visivel ? '&#xf06e;' : '&#xf070;';
-        b.setAttribute('aria-label', visivel ? 'Mostrar senha' : 'Esconder senha');
-    });
-}
-
-
-Clau
 
 function aplicarErro(input, mensagem) {
     input.classList.add('input-erro');
@@ -210,9 +208,7 @@ inputNome.addEventListener('input', () => {
 });
 
 inputEmail.addEventListener('input', () => {
-    if (inputEmail.classList.contains('input-erro')) {
-        validarEmail();
-    }
+    if (inputEmail.classList.contains('input-erro')) validarEmail();
 });
 
 inputSenha.addEventListener('input', () => {
@@ -226,3 +222,8 @@ inputConfirmaSenha.addEventListener('input', () => {
         removerErro(inputConfirmaSenha);
     }
 });
+
+// ← expõe as funções para os onclick do HTML
+window.toggleTema = toggleTema;
+window.tentarCadastrar = tentarCadastrar;
+window.toggleSenha = toggleSenha;

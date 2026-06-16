@@ -1,3 +1,7 @@
+import { auth } from '../../autthentication/firebase-config.js';
+import { confirmPasswordReset } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+import { traduzirErroFirebase } from '../../autthentication/firebase-erros.js';
+
 history.pushState(null, null, location.href);
 history.replaceState(null, null, location.href);
 
@@ -69,7 +73,7 @@ function aplicarTema(nomeTema) {
     document.querySelectorAll('.estrelas').forEach(el => {
         el.src = tema.imagens.estrelas;
     });
-    document.querySelector('.personagem img').src = tema.imagens.personagem;
+    document.querySelector('.personagemImg').src = tema.imagens.personagem;
     document.querySelector('.btn-tema img').src = tema.imagens.avatar;
 
     localStorage.setItem('tema', nomeTema);
@@ -84,56 +88,16 @@ function toggleTema() {
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
 
+const oobCode = new URLSearchParams(window.location.search).get('oobCode');
+
+if (!oobCode) {
+    localStorage.setItem('popup', 'erro-senha');
+    window.location.href = 'login.html';
+}
+
 const inputSenhaNova = document.getElementById('senha-nova');
 const inputConfirmaSenha = document.getElementById('confirma-senha');
 
-async function tentarAlterar() {
-    const senhaValida = validarCampoObrigatorio(inputSenhaNova, 'Digite sua nova senha');
-    const confirmaValida = validarCampoObrigatorio(inputConfirmaSenha, 'Confirme sua senha');
-
-    if (!senhaValida || !confirmaValida) return;
-
-    if (inputSenhaNova.value !== inputConfirmaSenha.value) {
-        aplicarErroInput(inputConfirmaSenha, 'As senhas não coincidem');
-        return;
-    }
-
-    try {
-        window.location.href = 'senha-alterada.html';
-    } catch (error) {
-        localStorage.setItem('popup', 'erro-senha');
-        window.location.href = 'login.html';
-    }
-}
-
-function validarCampoObrigatorio(input, mensagem) {
-    if (input.value.trim() === '') {
-        aplicarErroInput(input, mensagem);
-        return false;
-    }
-    removerErro(input);
-    return true;
-}
-
-function aplicarErroInput(input, mensagem) {
-    input.classList.add('input-erro');
-    let msg = input.parentElement.querySelector('.msg-erro');
-    if (!msg) {
-        msg = document.createElement('span');
-        msg.classList.add('msg-erro');
-        msg.setAttribute('role', 'alert');
-        input.parentElement.appendChild(msg);
-    }
-    msg.textContent = mensagem;
-}
-
-function removerErro(input) {
-    input.classList.remove('input-erro');
-    const msg = input.parentElement.querySelector('.msg-erro');
-    if (msg) msg.remove();
-}
-
-// limpa erro ao digitar
 inputSenhaNova.addEventListener('input', () => {
     if (inputSenhaNova.classList.contains('input-erro') && inputSenhaNova.value.trim() !== '') {
         removerErro(inputSenhaNova);
@@ -146,18 +110,46 @@ inputConfirmaSenha.addEventListener('input', () => {
     }
 });
 
-function aplicarErroInput(input, mensagem) {
+async function tentarAlterar() {
+    const senhaValida = validarCampoObrigatorio(inputSenhaNova, 'Digite sua nova senha');
+    const confirmaValida = validarCampoObrigatorio(inputConfirmaSenha, 'Confirme sua senha');
+
+    if (!senhaValida || !confirmaValida) return;
+
+    if (inputSenhaNova.value !== inputConfirmaSenha.value) {
+        aplicarErro(inputConfirmaSenha, 'As senhas não coincidem');
+        return;
+    }
+
+    try {
+        await confirmPasswordReset(auth, oobCode, inputSenhaNova.value);
+        window.location.href = 'senha-alterada.html';
+    } catch (error) {
+        localStorage.setItem('popup', 'erro-senha');
+        window.location.href = 'login.html';
+    }
+}
+
+function validarCampoObrigatorio(input, mensagem) {
+    if (input.value.trim() === '') {
+        aplicarErro(input, mensagem);
+        return false;
+    }
+    removerErro(input);
+    return true;
+}
+
+function aplicarErro(input, mensagem) {
     input.classList.add('input-erro');
-    
+
     const campo = input.closest('.campo');
     let msg = campo.querySelector('.msg-erro');
     if (!msg) {
         msg = document.createElement('span');
         msg.classList.add('msg-erro');
         msg.setAttribute('role', 'alert');
-
         const wrapper = campo.querySelector('.input-wrapper');
-        wrapper.insertAdjacentElement('afterend', msg);  // ← insere depois do wrapper
+        wrapper.insertAdjacentElement('afterend', msg);
     }
     msg.textContent = mensagem;
 }
@@ -184,3 +176,7 @@ function toggleSenha(inputId, btn) {
         b.setAttribute('aria-label', visivel ? 'Mostrar senha' : 'Esconder senha');
     });
 }
+
+window.toggleTema = toggleTema;
+window.tentarAlterar = tentarAlterar;
+window.toggleSenha = toggleSenha;

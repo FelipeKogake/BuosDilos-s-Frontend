@@ -1,50 +1,35 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head>
+<html lang="pt-BR">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="CSS/codigo.css">
-    <title>Digite seu Código</title>
+    <title>Verificando link</title>
 </head>
 <body>
-    <!-- estrelas de fundo (atrás) -->
-    <img src="Assets/estrelas-azul.png" class="estrelas estrelas--back" aria-hidden="true"/>
+    <img src="Assets/codigo/estrelas-azul.png" class="estrelas estrelas--back" aria-hidden="true"/>
 
     <div class="personagem" aria-hidden="true">
         <div class="personagem-sombra"></div>
-        <img src="Assets/personagem-codigo.png" alt="Personagem" class="personagemImg" />
+        <img src="Assets/codigo/personagem-azul.png" alt="Personagem" class="personagemImg" />
     </div>
 
-    <div class="painel-codigo">
-        <h1 class="titulo">Digite seu código</h1>
+    <main class="painel-codigo">
+        <h1 class="titulo">Verificando seu link</h1>
 
-        <p class="descricao">Digite o código que enviamos ao seu email para trocar sua senha.</p>
+        <p class="descricao">Aguarde um momento enquanto validamos seu código de recuperação.</p>
 
-        <form novalidate>
-            <div class="campo">
-                <label>Insira o código</label>
-                <div class="codigo-inputs">
-                    <input type="text" maxlength="1" class="input-codigo" />
-                    <input type="text" maxlength="1" class="input-codigo" />
-                    <input type="text" maxlength="1" class="input-codigo" />
-                    <input type="text" maxlength="1" class="input-codigo" />
-                    <input type="text" maxlength="1" class="input-codigo" />
-                    <input type="text" maxlength="1" class="input-codigo" />
-                </div>
-            </div>
-        </form>
-
-        <button type="button" class="btn-continuar" onclick="tentarContinuar()">Continuar</button>
+        <div class="status-mensagem status--carregando">Verificando...</div>
 
         <a href="login.html" class="voltar">Voltar para Login</a>
-    </div>
+    </main>
 
-    <!-- estrelas da frente -->
-    <img src="Assets/estrelas-azul.png" class="estrelas estrelas--front" aria-hidden="true"/>
+    <img src="Assets/codigo/estrelas-azul.png" class="estrelas estrelas--front" aria-hidden="true"/>
 
-    <button class="btn-tema" onclick="toggleTema()">
+    <button class="btn-tema" onclick="toggleTema()" aria-label="Trocar tema do site">
         <img src="Assets/avatar-azul.png" alt="Trocar tema" />
     </button>
 
-    <script src="JS/codigo.js"></script>
+    <script type="module" src="JS/codigo.js"></script>
 </body>
 </html>

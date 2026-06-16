@@ -1,3 +1,6 @@
+import { auth } from '../../autthentication/firebase-config.js';
+import { verifyPasswordResetCode, applyActionCode } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+
 history.pushState(null, null, location.href);
 history.replaceState(null, null, location.href);
 
@@ -81,54 +84,61 @@ function toggleTema() {
     aplicarTema(proximo);
 }
 
-// navegação automática entre inputs do código
-document.querySelectorAll('.input-codigo').forEach((input, index, inputs) => {
-    input.addEventListener('input', () => {
-        if (input.value.length === 1 && index < inputs.length - 1) {
-            inputs[index + 1].focus();  // avança para o próximo
-        }
-    });
-
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace' && input.value === '' && index > 0) {
-            inputs[index - 1].focus();  // volta para o anterior
-        }
-    });
-});
-
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
 
-function aplicarErro(mensagem) {
-    let msg = document.querySelector('.msg-erro');
-    if (!msg) {
-        msg = document.createElement('span');
-        msg.classList.add('msg-erro');
-        msg.setAttribute('role', 'alert');
-        document.querySelector('.codigo-inputs').insertAdjacentElement('afterend', msg);
-    }
-    msg.textContent = mensagem;
-}
+const params = new URLSearchParams(window.location.search);
+const mode = params.get('mode');
+const oobCode = params.get('oobCode');
 
-function removerErro() {
-    const msg = document.querySelector('.msg-erro');
-    if (msg) msg.remove();
-}
-
-function tentarContinuar() {
-    const inputs = document.querySelectorAll('.input-codigo');
-    const codigo = Array.from(inputs).map(i => i.value).join('');
-
-    if (codigo.length < 6) {
-        aplicarErro('Digite todos os 6 dígitos do código');
+async function processarLink() {
+    if (!mode || !oobCode) {
+        mostrarStatus('Link inválido. Solicite um novo e-mail de recuperação.', 'erro');
         return;
     }
 
-    if (codigo !== '123456') {
-        aplicarErro('Código inválido');
-        return;
-    }
+    switch (mode) {
+        case 'resetPassword':
+            try {
+                await verifyPasswordResetCode(auth, oobCode);
+                window.location.href = `nova-senha.html?oobCode=${oobCode}`;
+            } catch {
+                mostrarStatus('Link inválido ou expirado. Solicite um novo e-mail.', 'erro');
+            }
+            break;
 
-    removerErro();
-    window.location.href = 'nova-senha.html';
+        case 'verifyEmail':
+            try {
+                await applyActionCode(auth, oobCode);
+                mostrarStatus('E-mail verificado com sucesso! Redirecionando...', 'sucesso');
+                setTimeout(() => window.location.href = 'login.html', 2500);
+            } catch {
+                mostrarStatus('Link inválido ou já utilizado.', 'erro');
+            }
+            break;
+
+        case 'recoverEmail':
+            try {
+                await applyActionCode(auth, oobCode);
+                mostrarStatus('E-mail recuperado com sucesso! Redirecionando...', 'sucesso');
+                setTimeout(() => window.location.href = 'login.html', 2500);
+            } catch {
+                mostrarStatus('Não foi possível recuperar o e-mail. Tente novamente.', 'erro');
+            }
+            break;
+
+        default:
+            mostrarStatus('Ação desconhecida. Verifique o link recebido.', 'erro');
+    }
 }
+
+function mostrarStatus(mensagem, tipo = 'carregando') {
+    const el = document.querySelector('.status-mensagem');
+    if (!el) return;
+    el.textContent = mensagem;
+    el.className = `status-mensagem status--${tipo}`;
+}
+
+processarLink();
+
+window.toggleTema = toggleTema;
