@@ -1,11 +1,183 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="Tela_Inicia_Sem_Login/CSS/tela_inicial.css">
+    <title>Início</title>
 </head>
 <body>
-    <a href="Login_Cadatro/login.html"><button>login azul</button></a>
+
+    <!-- BARRA TOPO ESCURA -->
+    <div class="top-bar"></div>
+
+    <!-- NAVBAR -->
+    <div class="navbar-wrapper">
+        <header class="navbar">
+            <a href="#" class="navbar-logo">
+                <img src="Tela_Inicia_Sem_Login/Assets/avatar-azul.png" alt="Logo" class="navbar-logo-img" />
+            </a>
+            <nav class="navbar-links">
+                <a href="#" class="nav-link active">TELA INICIAL</a>
+                <a href="#" class="nav-link" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_item.html'">BONECOS</a>
+                <a href="Tela_Inicia_Sem_Login/tela_item.html#itens" class="nav-link">ITENS</a>
+                <a href="#" class="nav-link" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_carrinho.html'">CARRINHO</a>
+            </nav>
+            <div class="navbar-actions">
+                <button class="icon-btn" aria-label="Notificações" onclick="window.location.href='Login_Cadatro/login.html'">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                </button>
+                <button class="icon-btn" aria-label="Favoritos" onclick="window.location.href='Login_Cadatro/login.html'">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+                <button class="icon-btn" aria-label="Carrinho" onclick="window.location.href='Login_Cadatro/login.html'">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                </button>
+                <a href="Login_Cadatro/login.html" class="btn-entrar-nav">ENTRAR</a>
+            </div>
+        </header>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-titulo">Os personagens<br>mais icônicos em<br>versões exclusivas.</h1>
+            <button class="btn-comprar" onclick="window.location.href='Login_Cadatro/login.html'">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                Comprar
+            </button>
+        </div>
+        <div class="hero-imagens">
+            <img src="Tela_Inicia_Sem_Login/Assets/Subtract.jpg" alt="" class="hero-fundo-img" aria-hidden="true" />
+            <img src="Tela_Inicia_Sem_Login/Assets/login/personagem-azul.png" alt="Personagem" class="hero-img hero-img-1" />
+        </div>
+    </section>
+
+    <!-- NOVOS ITENS COLECIONÁVEIS -->
+    <section class="section-itens">
+        <div class="section-header">
+            <h2 class="section-titulo">Novos Itens Colecionáveis</h2>
+        </div>
+        <div class="itens-scroll">
+            <div class="itens-grid">
+                <div class="item-circular" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_carrinho.html'"><img src="Tela_Inicia_Sem_Login/Assets/avatar-azul.png" alt="Item 1" /></div>
+                <div class="item-circular" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_carrinho.html'"><img src="Tela_Inicia_Sem_Login/Assets/login/personagem-azul.png" alt="Item 2" /></div>
+                <div class="item-circular" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_carrinho.html'"><img src="Tela_Inicia_Sem_Login/Assets/login/personagem-rosa.png" alt="Item 3" /></div>
+                <div class="item-circular" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_carrinho.html'"><img src="Tela_Inicia_Sem_Login/Assets/avatar-rosa.png" alt="Item 4" /></div>
+                <div class="item-circular" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_carrinho.html'"><img src="Tela_Inicia_Sem_Login/Assets/login/personagem-azul.png" alt="Item 5" /></div>
+                <div class="item-circular" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_carrinho.html'"><img src="Tela_Inicia_Sem_Login/Assets/login/personagem-azul.png" alt="Item 6" /></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NOVOS BONECOS -->
+    <section class="section-bonecos">
+        <h2 class="section-titulo">Novos bonecos</h2>
+        <div class="bonecos-grid">
+            <div class="boneco-card" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_carrinho.html'">
+                <div class="boneco-img-wrap"><img src="Tela_Inicia_Sem_Login/Assets/login/personagem-azul.png" alt="Boneco 1" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">EDDIE BROCK</p>
+                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+            <div class="boneco-card" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_carrinho.html'">
+                <div class="boneco-img-wrap dark"><img src="Tela_Inicia_Sem_Login/Assets/login/personagem-rosa.png" alt="Boneco 2" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">LARA ADRIANO</p>
+                    <p class="boneco-subtitulo">LARA ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+            <div class="boneco-card" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_carrinho.html'">
+                <div class="boneco-img-wrap"><img src="Tela_Inicia_Sem_Login/Assets/login/personagem-azul.png" alt="Boneco 3" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">PEDRO ADRIANO</p>
+                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+            <div class="boneco-card" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_carrinho.html'">
+                <div class="boneco-img-wrap dark"><img src="Tela_Inicia_Sem_Login/Assets/login/personagem-rosa.png" alt="Boneco 4" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">CAPITÃO S</p>
+                    <p class="boneco-subtitulo">LARA ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+            <div class="boneco-card" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_carrinho.html'">
+                <div class="boneco-img-wrap"><img src="Tela_Inicia_Sem_Login/Assets/login/personagem-azul.png" alt="Boneco 5" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">CAROL S</p>
+                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- BANNER DUPLO CTA -->
+    <section class="section-cta">
+        <div class="cta-card cta-dark">
+            <h3>PARTICIPE DO GRUPO<br>DO INSTITUTO JEF –<br>GERMINARE</h3>
+            <p>Clique no link do botão para mais informações</p>
+            <button class="btn-participar" onclick="location.href='https://institutojef.org.br/'">ENTRAR</button>
+        </div>
+        <div class="cta-card cta-light">
+            <h3>Veja todos os<br>bonecos e<br>colecionáveis</h3>
+            <p>Veja novos bonecos e colecionáveis disponíveis</p>
+            <button class="btn-ver" onclick="window.location.href='Tela_Inicia_Sem_Login/tela_item.html'">Ver</button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <p class="footer-name">Name</p>
+
+            </div>
+            <div class="footer-cols">
+                <div class="footer-col">
+                    <p class="footer-col-title">PRODUTOS</p>
+                    <a href="#" onclick="window.location.href='tela_item.html'">Bonecos</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">SUPORTE</p>
+                    <a href="#" onclick="window.location.href='mailto:contato@exemplo.com'">Suporte</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">COMPANHIA</p>
+                    <a href="#" onclick="location.href='https://institutojef.org.br/'">Sobre Germinare</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Name. Escola Germinare Tech.</p>
+        </div>
+    </footer>
+
+    <!-- Botão tema -->
+    <button class="btn-tema" onclick="toggleTema()">
+        <img src="Tela_Inicia_Sem_Login/Assets/avatar-azul.png" alt="Trocar tema" />
+    </button>
+
+    <script src="Tela_Inicia_Sem_Login/JS/tela_inicial.js"></script>
 </body>
 </html>
