@@ -22,8 +22,8 @@ const temas = {
         '--cor-cta-light': '#88a8f1',
         '--cor-cta-light-border': '#A5B8E0',
         imagens: {
-            avatar: 'Assets/avatar-azul.png',
-            heroFundo: 'Assets/Subtract2.jpg',
+            avatar: 'Tela_Inicia_Sem_Login/Assets/avatar-azul.png',
+            heroFundo: 'Tela_Inicia_Sem_Login/Assets/Subtract2.jpg',
         }
     },
     rosa: {
@@ -49,8 +49,8 @@ const temas = {
         '--cor-cta-light': '#f18888',
         '--cor-cta-light-border': '#FFA5A5',
         imagens: {
-            avatar: 'Assets/avatar-rosa.png',
-            heroFundo: 'Assets/Subtract.jpg',
+            avatar: 'Tela_Inicia_Sem_Login/Assets/avatar-rosa.png',
+            heroFundo: 'Tela_Inicia_Sem_Login/Assets/Subtract.jpg',
         }
     }
 };
