@@ -1,5 +1,6 @@
-import { auth } from '../../autthentication/firebase-config.js';
+import { auth, db } from '../../autthentication/firebase-config.js';
 import { signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
 import { traduzirErroFirebase } from '../../autthentication/firebase-erros.js';
 
 history.pushState(null, null, location.href);
@@ -196,27 +197,25 @@ function validarCampoObrigatorio(input, mensagem) {
 async function tentarLogin(e) {
     e.preventDefault();
 
-    console.log('email:', inputEmail.value);
-    console.log('senha:', inputSenha.value);
-
     const emailValido = validarCampoObrigatorio(inputEmail, 'Digite seu e-mail') && validarEmail();
-    console.log('emailValido:', emailValido);
-
     const senhaValida = validarCampoObrigatorio(inputSenha, 'Digite sua senha');
-    console.log('senhaValida:', senhaValida);
-
-    if (!emailValido || !senhaValida) {
-        console.log('bloqueado na validação');
-        return;
-    }
-
-    console.log('chegou no Firebase');
+    if (!emailValido || !senhaValida) return;
 
     try {
-        await signInWithEmailAndPassword(auth, inputEmail.value.trim(), inputSenha.value);
-        mostrarPopup('Login realizado com sucesso!');
+        const credencial = await signInWithEmailAndPassword(auth, inputEmail.value.trim(), inputSenha.value);
+
+        // Verifica se é admin no Firestore
+        const snap = await getDoc(doc(db, 'admins', credencial.user.uid));
+
+        if (snap.exists()) {
+            window.location.href = '../../admin/admin.html'; // redireciona para painel admin
+        } else {
+            window.location.href = ''; // redireciona para área comum
+            mostrarPopup('Login realizado com sucesso!', 'sucesso');
+        }
+
     } catch (error) {
-        console.log('Erro:', error.code, error.message);
+        console.log(error);
         mostrarPopup(traduzirErroFirebase(error.code), 'erro');
     }
 }
