@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/iconfont/tabler-icons.min.css">
+    <title>Painel Administrativo</title>
+</head>
+<body>
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar">
+        <div class="sidebar-topo">
+            <h1 class="sidebar-titulo">Admin</h1>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Navegação principal">
+            <button class="nav-item nav-item--ativo" data-aba="produtos">
+                <i class="ti ti-shopping-bag" aria-hidden="true"></i>
+                <span>Produtos</span>
+            </button>
+            <button class="nav-item" data-aba="inativos">
+                <i class="ti ti-eye-off" aria-hidden="true"></i>
+                <span>Inativos</span>
+            </button>
+            <button class="nav-item" data-aba="usuarios">
+                <i class="ti ti-users" aria-hidden="true"></i>
+                <span>Usuários</span>
+            </button>
+        </nav>
+
+        <button class="sidebar-sair" id="btn-sair">
+            <i class="ti ti-logout" aria-hidden="true"></i>
+            <span>Sair</span>
+        </button>
+    </aside>
+
+    <!-- ===================== CONTEÚDO ===================== -->
+    <main class="conteudo">
+
+        <!-- ---------- ABA PRODUTOS ---------- -->
+        <section class="aba aba--ativa" id="aba-produtos" aria-labelledby="titulo-produtos">
+            <header class="aba-header">
+                <div>
+                    <h2 id="titulo-produtos">Produtos</h2>
+                    <p class="aba-subtitulo">Gerencie o catálogo da loja</p>
+                </div>
+                <button class="btn-primario" id="btn-novo-produto">
+                    <i class="ti ti-plus" aria-hidden="true"></i>
+                    Novo produto
+                </button>
+            </header>
+
+            <div class="toolbar">
+                <div class="busca-wrapper">
+                    <i class="ti ti-search" aria-hidden="true"></i>
+                    <input type="search" id="busca-produtos" placeholder="Buscar produto por nome..." aria-label="Buscar produto" />
+                </div>
+                <select id="filtro-categoria" aria-label="Filtrar por categoria">
+                    <option value="">Todas as categorias</option>
+                </select>
+            </div>
+
+            <div id="produtos-estado-carregando" class="estado-carregando">
+                <div class="spinner" aria-hidden="true"></div>
+                <p>Carregando produtos...</p>
+            </div>
+
+            <div id="produtos-estado-vazio" class="estado-vazio" hidden>
+                <i class="ti ti-package-off" aria-hidden="true"></i>
+                <p>Nenhum produto encontrado</p>
+            </div>
+
+            <div class="grid-produtos" id="grid-produtos" hidden></div>
+        </section>
+
+        <!-- ---------- ABA INATIVOS ---------- -->
+        <section class="aba" id="aba-inativos" aria-labelledby="titulo-inativos" hidden>
+            <header class="aba-header">
+                <div>
+                    <h2 id="titulo-inativos">Produtos Inativos</h2>
+                    <p class="aba-subtitulo">Produtos removidos do catálogo</p>
+                </div>
+            </header>
+
+            <div id="inativos-estado-vazio" class="estado-vazio" hidden>
+                <i class="ti ti-package-off" aria-hidden="true"></i>
+                <p>Nenhum produto inativo</p>
+            </div>
+
+            <div class="grid-produtos" id="grid-inativos" hidden></div>
+        </section>
+
+        <!-- ---------- ABA USUÁRIOS ---------- -->
+        <section class="aba" id="aba-usuarios" aria-labelledby="titulo-usuarios" hidden>
+            <header class="aba-header">
+                <div>
+                    <h2 id="titulo-usuarios">Usuários</h2>
+                    <p class="aba-subtitulo">Todos os usuários cadastrados no Firebase</p>
+                </div>
+                <button class="btn-secundario" id="btn-atualizar-usuarios">
+                    <i class="ti ti-refresh" aria-hidden="true"></i>
+                    Atualizar
+                </button>
+            </header>
+
+            <div class="toolbar">
+                <div class="busca-wrapper">
+                    <i class="ti ti-search" aria-hidden="true"></i>
+                    <input type="search" id="busca-usuarios" placeholder="Buscar usuário por nome ou e-mail..." aria-label="Buscar usuário" />
+                </div>
+            </div>
+
+            <div id="usuarios-estado-carregando" class="estado-carregando">
+                <div class="spinner" aria-hidden="true"></div>
+                <p>Carregando usuários...</p>
+            </div>
+
+            <div id="usuarios-estado-vazio" class="estado-vazio" hidden>
+                <i class="ti ti-users" aria-hidden="true"></i>
+                <p>Nenhum usuário encontrado</p>
+            </div>
+
+            <div class="tabela-wrapper" id="tabela-usuarios-wrapper" hidden>
+                <table class="tabela" aria-label="Lista de usuários">
+                    <thead>
+                        <tr>
+                            <th scope="col">Usuário</th>
+                            <th scope="col">E-mail</th>
+                            <th scope="col">Cadastrado em</th>
+                            <th scope="col">Último login</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"><span class="sr-only">Ações</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-usuarios-corpo"></tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===================== MODAL PRODUTO ===================== -->
+    <div class="modal-overlay" id="modal-produto" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-produto-titulo">
+            <header class="modal-header">
+                <h3 id="modal-produto-titulo">Novo produto</h3>
+                <button class="modal-fechar" id="modal-produto-fechar" aria-label="Fechar">
+                    <i class="ti ti-x" aria-hidden="true"></i>
+                </button>
+            </header>
+
+            <form class="modal-body" id="form-produto" novalidate>
+                <input type="hidden" id="produto-id" />
+
+                <div class="campo-grupo">
+                    <label for="produto-imagem-input">Imagem do produto</label>
+                    <div class="upload-imagem" id="upload-imagem-wrapper">
+                        <img id="preview-imagem" alt="" hidden />
+                        <div class="upload-placeholder" id="upload-placeholder">
+                            <i class="ti ti-photo-plus" aria-hidden="true"></i>
+                            <span>Clique para enviar uma imagem</span>
+                        </div>
+                        <input type="file" id="produto-imagem-input" accept="image/*" class="sr-only" />
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="produto-image-url">URL da imagem</label>
+                    <input type="url" id="produto-image-url" placeholder="https://..." />
+                </div>
+
+                <div class="campo">
+                    <label for="produto-nome">Nome</label>
+                    <input type="text" id="produto-nome" placeholder="Nome do produto" required />
+                </div>
+
+                <div class="campo">
+                    <label for="produto-sku">SKU</label>
+                    <input type="text" id="produto-sku" placeholder="Ex: CAM-001, ACES-42..." />
+                </div>
+
+                <div class="campo-linha">
+                    <div class="campo">
+                        <label for="produto-preco">Preço (R$)</label>
+                        <input type="number" id="produto-preco" placeholder="0,00" step="0.01" min="0" required />
+                    </div>
+                    <div class="campo">
+                        <label for="produto-estoque">Estoque</label>
+                        <input type="number" id="produto-estoque" placeholder="0" step="1" min="0" required />
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="produto-categoria">Categoria</label>
+                    <input type="text" id="produto-categoria" placeholder="Ex: Camisetas, Acessórios..." />
+                </div>
+
+                <div class="campo">
+                    <label for="produto-descricao">Descrição</label>
+                    <textarea id="produto-descricao" rows="4" placeholder="Descreva o produto..."></textarea>
+                </div>
+
+                <div class="campo campo--checkbox">
+                    <label for="produto-ativo">
+                        <input type="checkbox" id="produto-ativo" checked />
+                        Produto visível na loja
+                    </label>
+                </div>
+            </form>
+
+            <footer class="modal-footer">
+                <button type="button" class="btn-secundario" id="modal-produto-cancelar">Cancelar</button>
+                <button type="button" class="btn-secundario" id="modal-produto-toggle" hidden>
+                    <i class="ti ti-eye" aria-hidden="true"></i>
+                    <span id="modal-produto-toggle-texto">Ativar</span>
+                </button>
+                <button type="submit" form="form-produto" class="btn-primario" id="modal-produto-salvar">
+                    <span class="btn-texto">Salvar produto</span>
+                    <div class="btn-spinner" hidden></div>
+                </button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL CONFIRMAÇÃO ===================== -->
+    <div class="modal-overlay" id="modal-confirmar" hidden>
+        <div class="modal modal--pequeno" role="alertdialog" aria-modal="true" aria-labelledby="confirmar-titulo">
+            <header class="modal-header">
+                <h3 id="confirmar-titulo">Tem certeza?</h3>
+            </header>
+            <div class="modal-body">
+                <p id="confirmar-mensagem">Esta ação não pode ser desfeita.</p>
+            </div>
+            <footer class="modal-footer">
+                <button type="button" class="btn-secundario" id="confirmar-cancelar">Cancelar</button>
+                <button type="button" class="btn-perigo" id="confirmar-aceitar">Confirmar</button>
+            </footer>
+        </div>
+    </div>
+
+
+    <script type="module" src="JS/admin.js"></script>
+</body>
+</html>

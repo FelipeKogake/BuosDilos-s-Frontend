@@ -27,7 +27,7 @@ async function testar() {
     .update('teste.jpg', novoFile, { contentType: 'image/jpeg' })
   console.log('Update erro?', errUpdate)
 
-  4. Delete
+  // 4. Delete
   const { error: errDel } = await supabase.storage.from(BUCKET).remove(['teste.jpg'])
   console.log('Delete erro?', errDel)
 }

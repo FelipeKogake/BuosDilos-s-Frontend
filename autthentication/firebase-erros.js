@@ -10,5 +10,6 @@ export function traduzirErroFirebase(codigo) {
         'auth/network-request-failed': 'Erro de conexão. Verifique sua internet.',
         'auth/invalid-credential': 'Email ou senha incorretos.',
     };
+    console.log(erros[codigo]);
     return erros[codigo] || 'Ocorreu um erro. Tente novamente.';
 }
