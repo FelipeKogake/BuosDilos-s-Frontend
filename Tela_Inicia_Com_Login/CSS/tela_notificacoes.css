@@ -212,7 +212,6 @@ body {
     padding: 1rem 1.25rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     transition: box-shadow 0.2s, transform 0.2s;
-    cursor: pointer;
 }
 
 

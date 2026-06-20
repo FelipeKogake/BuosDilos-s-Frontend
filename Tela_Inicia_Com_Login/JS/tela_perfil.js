@@ -1,8 +1,12 @@
+// ===================== TEMAS =====================
+
 const temas = {
     azul: {
         "--cor-fundo": "#DCEAF7",
         "--cor-painel": "#ffffff",
         "--cor-primaria": "#cccaf1",
+        "--cor-botao-principal": "#BCC7EA",
+        "--cor-botao-principal-hover": "#bfd4e8",
         "--cor-label": "#4a7fa5",
         "--cor-texto-titulo": "#111",
         "--cor-texto-secundario": "#555",
@@ -16,6 +20,8 @@ const temas = {
         "--cor-fundo": "#F9EBEB",
         "--cor-painel": "#ffffff",
         "--cor-primaria": "#F1CECE",
+        "--cor-botao-principal": "#F1CECE",
+        "--cor-botao-principal-hover": "#e6b2b2",
         "--cor-label": "#E3676b",
         "--cor-texto-titulo": "#111",
         "--cor-texto-secundario": "#ccc",
@@ -46,6 +52,8 @@ function toggleTema() {
 
 aplicarTema(localStorage.getItem("tema") || "azul");
 
+// ===================== BTN TEMA (posição) =====================
+
 function ajustarBtnTema() {
     const btn = document.querySelector(".btn-tema");
     const footer = document.querySelector(".footer");
@@ -53,8 +61,41 @@ function ajustarBtnTema() {
     const footerTop = footer.getBoundingClientRect().top;
     const windowHeight = window.innerHeight;
     btn.style.bottom =
-    footerTop < windowHeight ? windowHeight - footerTop + 20 + "px" : "2rem";
+        footerTop < windowHeight ? windowHeight - footerTop + 20 + "px" : "2rem";
 }
 
 window.addEventListener("scroll", ajustarBtnTema);
 ajustarBtnTema();
+
+// ===================== POPUPS =====================
+
+function abrirPopup(id) {
+    const overlay = document.getElementById(id);
+    if (!overlay) return;
+    overlay.classList.add("ativo");
+    document.body.style.overflow = "hidden";
+}
+
+function fecharPopup(id) {
+    const overlay = document.getElementById(id);
+    if (!overlay) return;
+    overlay.classList.remove("ativo");
+    document.body.style.overflow = "";
+}
+
+// Fecha ao clicar fora (no overlay, não no popup-box)
+function fecharPopupOverlay(event, id) {
+    if (event.target === document.getElementById(id)) {
+        fecharPopup(id);
+    }
+}
+
+// Fecha qualquer popup aberto com ESC
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        document.querySelectorAll(".popup-overlay.ativo").forEach((overlay) => {
+            overlay.classList.remove("ativo");
+        });
+        document.body.style.overflow = "";
+    }
+});

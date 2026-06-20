@@ -30,7 +30,7 @@
                         <span>Email: luiza@email.com</span>
                     </div>
                 </div>
-                <button class="btn-editar">
+                <button class="btn-editar" onclick="abrirPopup('popup-editar')">
                     Editar Perfil
                 </button>
             </div>
@@ -48,7 +48,17 @@
                                 <span class="cartao-numero">•••• •••• •••• 1234</span>
                                 <span class="cartao-nome">LUIZA VICENTE</span>
                             </div>
-                            <span class="cartao-tag">PRIMARY</span>
+                            <div class="cartao-acoes">
+                                <span class="cartao-tag">PRIMARY</span>
+                                <button class="btn-excluir-cartao" onclick="abrirPopup('popup-excluir-cartao')" title="Excluir cartão">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <polyline points="3 6 5 6 21 6"/>
+                                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                                        <path d="M10 11v6M14 11v6"/>
+                                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                         <div class="cartao">
                             <div class="cartao-esquerda">
@@ -56,14 +66,28 @@
                                 <span class="cartao-numero">•••• •••• •••• 8892</span>
                                 <span class="cartao-nome">L. VICENTE</span>
                             </div>
-                            <span class="cartao-icone">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <line x1="12" y1="8" x2="12" y2="16"/>
-                                    <line x1="8" y1="12" x2="16" y2="12"/>
-                                </svg>
-                            </span>
+                            <div class="cartao-acoes">
+                                <button class="btn-tornar-primary" title="Tornar principal">Tornar primary</button>
+                                <button class="btn-excluir-cartao" onclick="abrirPopup('popup-excluir-cartao')" title="Excluir cartão">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <polyline points="3 6 5 6 21 6"/>
+                                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                                        <path d="M10 11v6M14 11v6"/>
+                                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
+
+                        <!-- BOTÃO ADICIONAR CARTÃO -->
+                        <button class="btn-adicionar-cartao" onclick="abrirPopup('popup-adicionar-cartao')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="16"/>
+                                <line x1="8" y1="12" x2="16" y2="12"/>
+                            </svg>
+                            Adicionar cartão
+                        </button>
                     </div>
                 </div>
 
@@ -76,9 +100,12 @@
 
             </div>
 
-            <!-- BTN SAIR DA CONTA -->
-            <div class="btn-sair-wrap">
-                <button class="btn-sair">
+            <!-- BOTÕES INFERIORES -->
+            <div class="btns-inferiores">
+                <button class="btn-alterar-endereco" onclick="abrirPopup('popup-alterar-endereco')">
+                    Alterar endereço
+                </button>
+                <button class="btn-sair" onclick="abrirPopup('popup-sair')">
                     Sair da conta
                 </button>
             </div>
@@ -116,6 +143,182 @@
     <button class="btn-tema" onclick="toggleTema()">
         <img src="Assets/avatar-azul.png" alt="Trocar tema" />
     </button>
+
+    <!-- ===================== OVERLAYS ===================== -->
+
+    <!-- POPUP: EDITAR PERFIL -->
+    <div class="popup-overlay" id="popup-editar" onclick="fecharPopupOverlay(event, 'popup-editar')">
+        <div class="popup-box">
+            <div class="popup-header">
+                <h2 class="popup-titulo">Editar Perfil</h2>
+                <button class="popup-fechar" onclick="fecharPopup('popup-editar')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="popup-corpo">
+                <div class="campo-grupo">
+                    <label class="campo-label">Nome completo</label>
+                    <input class="campo-input" type="text" value="Luiza Vicente" placeholder="Seu nome" />
+                </div>
+                <div class="campo-grupo">
+                    <label class="campo-label">Idade</label>
+                    <input class="campo-input" type="number" value="22" placeholder="Sua idade" />
+                </div>
+                <div class="campo-grupo">
+                    <label class="campo-label">Telefone</label>
+                    <input class="campo-input" type="tel" value="(11) 99999-9999" placeholder="(00) 00000-0000" />
+                </div>
+                <div class="campo-grupo">
+                    <label class="campo-label">E-mail</label>
+                    <input class="campo-input" type="email" value="luiza@email.com" placeholder="seu@email.com" />
+                </div>
+            </div>
+            <div class="popup-rodape">
+                <button class="popup-btn-cancelar" onclick="fecharPopup('popup-editar')">Cancelar</button>
+                <button class="popup-btn-salvar">Salvar alterações</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP: ADICIONAR CARTÃO -->
+    <div class="popup-overlay" id="popup-adicionar-cartao" onclick="fecharPopupOverlay(event, 'popup-adicionar-cartao')">
+        <div class="popup-box">
+            <div class="popup-header">
+                <h2 class="popup-titulo">Adicionar Cartão</h2>
+                <button class="popup-fechar" onclick="fecharPopup('popup-adicionar-cartao')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="popup-corpo">
+                <div class="campo-grupo">
+                    <label class="campo-label">Número do cartão</label>
+                    <input class="campo-input campo-cartao-num" type="text" placeholder="0000 0000 0000 0000" maxlength="19" />
+                </div>
+                <div class="campo-grupo">
+                    <label class="campo-label">Nome no cartão</label>
+                    <input class="campo-input" type="text" placeholder="NOME SOBRENOME" />
+                </div>
+                <div class="campos-inline">
+                    <div class="campo-grupo">
+                        <label class="campo-label">Validade</label>
+                        <input class="campo-input" type="text" placeholder="MM/AA" maxlength="5" />
+                    </div>
+                    <div class="campo-grupo">
+                        <label class="campo-label">CVV</label>
+                        <input class="campo-input" type="text" placeholder="000" maxlength="3" />
+                    </div>
+                </div>
+            </div>
+            <div class="popup-rodape">
+                <button class="popup-btn-cancelar" onclick="fecharPopup('popup-adicionar-cartao')">Cancelar</button>
+                <button class="popup-btn-salvar">Adicionar cartão</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP: EXCLUIR CARTÃO -->
+    <div class="popup-overlay" id="popup-excluir-cartao" onclick="fecharPopupOverlay(event, 'popup-excluir-cartao')">
+        <div class="popup-box popup-box--compacto">
+            <div class="popup-header">
+                <h2 class="popup-titulo">Excluir cartão</h2>
+                <button class="popup-fechar" onclick="fecharPopup('popup-excluir-cartao')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="popup-corpo">
+                <div class="popup-aviso">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <p class="popup-aviso-texto">Tem certeza que deseja excluir este cartão? Essa ação não pode ser desfeita.</p>
+                </div>
+            </div>
+            <div class="popup-rodape">
+                <button class="popup-btn-cancelar" onclick="fecharPopup('popup-excluir-cartao')">Cancelar</button>
+                <button class="popup-btn-perigo">Excluir cartão</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP: ALTERAR ENDEREÇO -->
+    <div class="popup-overlay" id="popup-alterar-endereco" onclick="fecharPopupOverlay(event, 'popup-alterar-endereco')">
+        <div class="popup-box">
+            <div class="popup-header">
+                <h2 class="popup-titulo">Alterar endereço</h2>
+                <button class="popup-fechar" onclick="fecharPopup('popup-alterar-endereco')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="popup-corpo">
+                <div class="campo-grupo">
+                    <label class="campo-label">Rua / Logradouro</label>
+                    <input class="campo-input" type="text" value="10880 Malibu Point" placeholder="Rua, número" />
+                </div>
+                <div class="campo-grupo">
+                    <label class="campo-label">Cidade</label>
+                    <input class="campo-input" type="text" value="Malibu" placeholder="Cidade" />
+                </div>
+                <div class="campos-inline">
+                    <div class="campo-grupo">
+                        <label class="campo-label">Estado</label>
+                        <input class="campo-input" type="text" value="California" placeholder="Estado" />
+                    </div>
+                    <div class="campo-grupo">
+                        <label class="campo-label">CEP</label>
+                        <input class="campo-input" type="text" value="90265" placeholder="00000-000" />
+                    </div>
+                </div>
+            </div>
+            <div class="popup-rodape">
+                <button class="popup-btn-cancelar" onclick="fecharPopup('popup-alterar-endereco')">Cancelar</button>
+                <button class="popup-btn-salvar">Salvar endereço</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP: SAIR DA CONTA -->
+    <div class="popup-overlay" id="popup-sair" onclick="fecharPopupOverlay(event, 'popup-sair')">
+        <div class="popup-box popup-box--compacto">
+            <div class="popup-header">
+                <h2 class="popup-titulo">Sair da conta</h2>
+                <button class="popup-fechar" onclick="fecharPopup('popup-sair')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="popup-corpo">
+                <div class="popup-aviso">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    <p class="popup-aviso-texto">Tem certeza que deseja sair da sua conta?</p>
+                </div>
+            </div>
+            <div class="popup-rodape">
+                <button class="popup-btn-cancelar" onclick="fecharPopup('popup-sair')">Cancelar</button>
+                <a href="../Login_Cadatro/login.html" class="popup-btn-perigo">Sair da conta</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="JS/tela_perfil.js"></script>
 </body>
-<script src="JS/tela_perfil.js"></script>
 </html>
