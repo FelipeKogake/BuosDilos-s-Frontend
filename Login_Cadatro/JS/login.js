@@ -208,7 +208,7 @@ async function tentarLogin(e) {
         const snap = await getDoc(doc(db, 'admins', credencial.user.uid));
 
         if (snap.exists()) {
-            window.location.href = 'admin/admin.html'; // redireciona para painel admin
+            window.location.href = '/BuosDilos-s-Frontend/admin/admin.html'; // redireciona para painel admin
         } else {
             window.location.href = ''; // redireciona para área comum
             mostrarPopup('Login realizado com sucesso!', 'sucesso');
