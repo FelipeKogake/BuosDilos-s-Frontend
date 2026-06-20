@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/tela_favoritos.css">
+    <title>Favoritos</title>
+</head>
+<body>
+
+    <!-- BARRA TOPO ESCURA -->
+    <div class="top-bar"></div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <!-- CONTEÚDO PRINCIPAL -->
+        <div class="favoritos-container">
+
+            <!-- HEADER -->
+            <div class="favoritos-header">
+                <button class="btn-voltar" onclick="history.back()">
+                    VOLTAR
+                </button>
+            </div>
+
+            <h1 class="favoritos-titulo" style="margin-bottom: 1.5rem;">Seus Favoritos</h1>
+
+            <!-- LISTA -->
+            <div class="favoritos-lista" id="lista-favoritos">
+
+                <div class="favorito-card" data-id="1">
+                    <div class="favorito-img-wrap">
+                        <img src="Assets/login/personagem-azul.png" alt="Funko Pop Eddie Brock" />
+                    </div>
+                    <div class="favorito-info">
+                        <p class="favorito-nome">Funko Pop da Sabrina Carpenter</p>
+                        <p class="favorito-preco">R$ 120,99</p>
+                    </div>
+                    <div class="favorito-acoes">
+                        <button class="btn-fav-ativo" aria-label="Remover dos favoritos" onclick="removerFavorito(this)">
+                            <svg width="25" height="25" viewBox="0 0 24 24" fill="#e24b4a" stroke="#e24b4a" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        </button>
+                        <button class="btn-comprar-fav" onclick="window.location.href='tela_carrinho.html'">COMPRAR</button>
+                    </div>
+                </div>
+
+                <div class="favorito-card" data-id="2">
+                    <div class="favorito-img-wrap">
+                        <img src="Assets/login/personagem-azul.png" alt="Funko Pop Lara" />
+                    </div>
+                    <div class="favorito-info">
+                        <p class="favorito-nome">Funko Pop da Sabrina Carpenter</p>
+                        <p class="favorito-preco">R$ 120,99</p>
+                    </div>
+                    <div class="favorito-acoes">
+                        <button class="btn-fav-ativo" aria-label="Remover dos favoritos" onclick="removerFavorito(this)">
+                            <svg width="25" height="25" viewBox="0 0 24 24" fill="#e24b4a" stroke="#e24b4a" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        </button>
+                        <button class="btn-comprar-fav" onclick="window.location.href='tela_carrinho.html'">COMPRAR</button>
+                    </div>
+                </div>
+
+                <div class="favorito-card" data-id="3">
+                    <div class="favorito-img-wrap">
+                        <img src="Assets/login/personagem-rosa.png" alt="Funko Pop Carol" />
+                    </div>
+                    <div class="favorito-info">
+                        <p class="favorito-nome">Funko Pop da Sabrina Carpenter</p>
+                        <p class="favorito-preco">R$ 120,99</p>
+                    </div>
+                    <div class="favorito-acoes">
+                        <button class="btn-fav-ativo" aria-label="Remover dos favoritos" onclick="removerFavorito(this)">
+                            <svg width="25" height="25" viewBox="0 0 24 24" fill="#e24b4a" stroke="#e24b4a" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        </button>
+                        <button class="btn-comprar-fav" onclick="window.location.href='tela_carrinho.html'">COMPRAR</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- NOVOS BONECOS -->
+    <section class="section-bonecos">
+        <h2 class="section-titulo">Novos bonecos</h2>
+        <div class="bonecos-grid">
+            <div class="boneco-card" onclick="window.location.href='tela_carrinho.html'">
+                <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Boneco 1" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">EDDIE BROCK</p>
+                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+            <div class="boneco-card" onclick="window.location.href='tela_carrinho.html'">
+                <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Boneco 2" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">LARA ADRIANO</p>
+                    <p class="boneco-subtitulo">LARA ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+            <div class="boneco-card" onclick="window.location.href='tela_carrinho.html'">
+                <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Boneco 3" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">PEDRO ADRIANO</p>
+                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+            <div class="boneco-card" onclick="window.location.href='tela_carrinho.html'">
+                <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Boneco 4" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">CAPITÃO S</p>
+                    <p class="boneco-subtitulo">LARA ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+            <div class="boneco-card" onclick="window.location.href='tela_carrinho.html'">
+                <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Boneco 5" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">CAROL S</p>
+                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <p class="footer-name">Name</p>
+
+            </div>
+            <div class="footer-cols">
+                <div class="footer-col">
+                    <p class="footer-col-title">PRODUTOS</p>
+                    <a href="#" onclick="window.location.href='tela_item.html'">Bonecos</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">SUPORTE</p>
+                    <a href="#" onclick="window.location.href='mailto:contato@exemplo.com'">Suporte</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">COMPANHIA</p>
+                    <a href="#" onclick="location.href='https://institutojef.org.br/'">Sobre Germinare</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Name. Escola Germinare Tech.</p>
+        </div>
+    </footer>
+
+    <!-- Botão tema -->
+    <button class="btn-tema" onclick="toggleTema()">
+        <img src="Assets/avatar-azul.png" alt="Trocar tema" />
+    </button>
+
+    <script src="JS/tela_favoritos.js"></script>
+</body>
+</html>

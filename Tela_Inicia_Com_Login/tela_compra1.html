@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/tela_compra1.css">
+    <title>Carrinho</title>
+</head>
+<body>
+
+    <!-- BARRA TOPO ESCURA -->
+    <div class="top-bar"></div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="favoritos-container">
+
+            <div class="favoritos-header">
+                <button class="btn-voltar" onclick="history.back()">VOLTAR</button>
+            </div>
+
+            <h1 class="favoritos-titulo" style="margin-bottom: 1.5rem;">Seu Carrinho</h1>
+
+            <div class="carrinho-grid">
+
+                <!-- LISTA DE ITENS -->
+                <div class="favoritos-lista" id="lista-carrinho">
+
+                    <div class="favorito-card" data-id="1" data-preco="120.99">
+                        <div class="favorito-img-wrap">
+                            <img src="Assets/login/personagem-azul.png" alt="Funko Pop da Sabrina Carpenter" />
+                        </div>
+                        <div class="favorito-info">
+                            <p class="favorito-nome">Funko Pop da Sabrina Carpenter</p>
+                            <p class="favorito-preco">R$ 120,99</p>
+                        </div>
+                        <div class="favorito-acoes">
+                            <button class="btn-fav-ativo" onclick="toggleFav(this)" aria-label="Favoritar">
+                                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                            </button>
+                            <button class="btn-qty" onclick="alterarQty(this, -1)">−</button>
+                            <span class="qty-valor">1</span>
+                            <button class="btn-qty" onclick="alterarQty(this, 1)">+</button>
+                            <button class="btn-remover" onclick="removerItem(this)" aria-label="Remover">
+                                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RESUMO -->
+                <div class="resumo-card">
+                    <h2 class="resumo-titulo">Resumo</h2>
+                    <hr class="resumo-divisor" />
+                    <div class="resumo-linha">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">R$ 120,99</span>
+                    </div>
+                    <div class="resumo-linha">
+                        <span>Frete:</span>
+                        <span id="frete">R$ 14,00</span>
+                    </div>
+                    <div class="resumo-linha">
+                        <span>Taxa:</span>
+                        <span id="taxa">R$ 00,00</span>
+                    </div>
+                    <div class="cupom-wrap">
+                        <input class="cupom-input" type="text" placeholder="Cupom" id="cupom-input" />
+                        <button class="btn-adicionar" onclick="aplicarCupom()">Adicionar</button>
+                    </div>
+                    <hr class="resumo-divisor" />
+                    <div class="resumo-total">
+                        <span>Total:</span>
+                        <span id="total">R$ 134,99</span>
+                    </div>
+                    <button class="btn-fechar-pedido" onclick="fecharPedido()">
+                        Fechar Pedido
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- NOVOS BONECOS -->
+    <section class="section-bonecos">
+        <h2 class="section-titulo">Outros bonecos</h2>
+        <div class="bonecos-grid">
+            <div class="boneco-card" onclick="window.location.href='tela_carrinho.html'">
+                <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Boneco 1" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">EDDIE BROCK</p>
+                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+            <div class="boneco-card" onclick="window.location.href='tela_carrinho.html'">
+                <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Boneco 2" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">LARA ADRIANO</p>
+                    <p class="boneco-subtitulo">LARA ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+            <div class="boneco-card" onclick="window.location.href='tela_carrinho.html'">
+                <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Boneco 3" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">PEDRO ADRIANO</p>
+                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+            <div class="boneco-card" onclick="window.location.href='tela_carrinho.html'">
+                <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Boneco 4" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">CAPITÃO S</p>
+                    <p class="boneco-subtitulo">LARA ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+            <div class="boneco-card" onclick="window.location.href='tela_carrinho.html'">
+                <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Boneco 5" /></div>
+                <div class="boneco-info">
+                    <p class="boneco-nome">CAROL S</p>
+                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
+                    <p class="boneco-preco">R$42,5</p>
+                </div>
+                <button class="boneco-fav" aria-label="Favoritar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <p class="footer-name">Name</p>
+            </div>
+            <div class="footer-cols">
+                <div class="footer-col">
+                    <p class="footer-col-title">PRODUTOS</p>
+                    <a href="#" onclick="window.location.href='tela_item.html'">Bonecos</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">SUPORTE</p>
+                    <a href="#" onclick="window.location.href='mailto:contato@exemplo.com'">Suporte</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">COMPANHIA</p>
+                    <a href="#" onclick="location.href='https://institutojef.org.br/'">Sobre Germinare</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Name. Escola Germinare Tech.</p>
+        </div>
+    </footer>
+
+    <!-- Botão tema -->
+    <button class="btn-tema" onclick="toggleTema()">
+        <img src="Assets/avatar-azul.png" alt="Trocar tema" />
+    </button>
+
+    <script src="JS/tela_compra1.js"></script>
+</body>
+</html>
