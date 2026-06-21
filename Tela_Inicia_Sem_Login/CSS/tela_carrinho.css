@@ -292,7 +292,7 @@ body {
 
 .hero-descricao {
     font-size: 0.95rem;
-    color: var(--cor-texto-secundario);
+    color: #555;
     line-height: 1.6;
     max-width: 480px;
 }
