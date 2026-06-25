@@ -66,7 +66,7 @@ function aplicarTema(nomeTema) {
         }
     });
 
-    const logoImgs = document.querySelectorAll('.navbar-logo-img, .footer-logo');
+    const logoImgs = document.querySelectorAll('.footer-logo');
     const btnTemaImg = document.querySelector('.btn-tema img');
     const sectionAvatar = document.querySelector('.section-avatar');
     const heroFundoImg = document.querySelector('.hero-fundo-img');
