@@ -24,6 +24,9 @@ const temas = {
         imagens: {
             avatar: 'Assets/avatar-azul.png',
             heroFundo: 'Assets/Subtract2.jpg',
+            logo: 'Assets/logo-azul.png',
+            favicon: 'Assets/logo-azul.png'
+
         }
     },
     rosa: {
@@ -51,6 +54,8 @@ const temas = {
         imagens: {
             avatar: 'Assets/avatar-rosa.png',
             heroFundo: 'Assets/Subtract.jpg',
+            logo: 'Assets/logo-rosa2.png',
+            favicon: 'Assets/logo-rosa.png'
         }
     }
 };
@@ -66,16 +71,19 @@ function aplicarTema(nomeTema) {
         }
     });
 
-    const logoImgs = document.querySelectorAll('.navbar-logo-img, .footer-logo');
+    const logoImgs = document.querySelectorAll('.footer-logo');
     const btnTemaImg = document.querySelector('.btn-tema img');
     const sectionAvatar = document.querySelector('.section-avatar');
     const heroFundoImg = document.querySelector('.hero-fundo-img');
+    const logoImg = document.querySelector('.navbar-logo-img');
+    const favicon = document.querySelector('#favicon');
 
     logoImgs.forEach(el => el.src = tema.imagens.avatar);
     if (btnTemaImg) btnTemaImg.src = tema.imagens.avatar;
     if (sectionAvatar) sectionAvatar.src = tema.imagens.avatar;
     if (heroFundoImg) heroFundoImg.src = tema.imagens.heroFundo;
-
+    if (logoImg) logoImg.src = tema.imagens.logo;
+    if (favicon) favicon.href = tema.imagens.favicon;
     localStorage.setItem('tema', nomeTema);
 }
 
@@ -173,3 +181,4 @@ window.addEventListener('scroll', () => {
         linkBonecos?.classList.add('active');
     }
 });
+

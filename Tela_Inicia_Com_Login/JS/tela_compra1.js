@@ -26,6 +26,7 @@ const temas = {
         imagens: {
             avatar: 'Assets/avatar-azul.png',
             heroFundo: 'Assets/Subtract2.jpg',
+            fravicon: 'Assets/logo-azul.png',
         }
     },
     rosa: {
@@ -55,6 +56,7 @@ const temas = {
         imagens: {
             avatar: 'Assets/avatar-rosa.png',
             heroFundo: 'Assets/Subtract.jpg',
+            fravicon: 'Assets/logo-rosa.png',
         }
     }
 };
@@ -71,7 +73,9 @@ function aplicarTema(nomeTema) {
     });
 
     const btnTemaImg = document.querySelector('.btn-tema img');
+    const favicon = document.querySelector('#favicon');
     if (btnTemaImg) btnTemaImg.src = tema.imagens.avatar;
+    if (favicon) favicon.href = tema.imagens.favicon;
 
     localStorage.setItem('tema', nomeTema);
 }
