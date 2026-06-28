@@ -56,7 +56,7 @@ const temas = {
         imagens: {
             avatar: 'Assets/avatar-rosa.png',
             heroFundo: 'Assets/Subtract.jpg',
-            fravicon: 'Assets/logo-rosa.png',
+            fravicon: 'Assets/logo-rosa2.png',
         }
     }
 };

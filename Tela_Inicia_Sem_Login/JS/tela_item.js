@@ -24,6 +24,8 @@ const temas = {
         imagens: {
             avatar: 'Assets/avatar-azul.png',
             heroFundo: 'Assets/Subtract2.jpg',
+            logo: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
+            favicon: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
         }
     },
     rosa: {
@@ -51,6 +53,8 @@ const temas = {
         imagens: {
             avatar: 'Assets/avatar-rosa.png',
             heroFundo: 'Assets/Subtract.jpg',
+            logo: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
+            favicon: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
         }
     }
 };
@@ -70,11 +74,15 @@ function aplicarTema(nomeTema) {
     const btnTemaImg = document.querySelector('.btn-tema img');
     const sectionAvatar = document.querySelector('.section-avatar');
     const heroFundoImg = document.querySelector('.hero-fundo-img');
+    const logoImg = document.querySelector('.navbar-logo-img');
+    const faviconLink = document.getElementById('favicon');
 
     logoImgs.forEach(el => el.src = tema.imagens.avatar);
     if (btnTemaImg) btnTemaImg.src = tema.imagens.avatar;
     if (sectionAvatar) sectionAvatar.src = tema.imagens.avatar;
     if (heroFundoImg) heroFundoImg.src = tema.imagens.heroFundo;
+    if (logoImg) logoImg.src = tema.imagens.logo;
+    if (faviconLink) faviconLink.href = tema.imagens.favicon;
 
     localStorage.setItem('tema', nomeTema);
 }

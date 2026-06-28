@@ -29,7 +29,7 @@ const temas = {
         "--cor-borda": "#cbc3c3",
         "--cor-divisor": "#cbc3c3",
         "--cor-top-bar": "#d4a0a0",
-        imagens: { avatar: "Assets/avatar-rosa.png", favicon: "Assets/logo-rosa.png" },
+        imagens: { avatar: "Assets/avatar-rosa.png", favicon: "Assets/logo-rosa2.png" },
     },
 };
 
