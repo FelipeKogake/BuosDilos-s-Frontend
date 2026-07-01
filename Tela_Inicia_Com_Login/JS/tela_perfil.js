@@ -14,7 +14,7 @@ const temas = {
         "--cor-borda": "#ccc",
         "--cor-divisor": "#e0e0e0",
         "--cor-top-bar": "#a0b8d4",
-        imagens: { avatar: "Assets/avatar-azul.png" },
+        imagens: { avatar: "Assets/avatar-azul.png", favicon: "Assets/logo-azul.png" },
     },
     rosa: {
         "--cor-fundo": "#F9EBEB",
@@ -29,7 +29,7 @@ const temas = {
         "--cor-borda": "#cbc3c3",
         "--cor-divisor": "#cbc3c3",
         "--cor-top-bar": "#d4a0a0",
-        imagens: { avatar: "Assets/avatar-rosa.png" },
+        imagens: { avatar: "Assets/avatar-rosa.png", favicon: "Assets/logo-rosa2.png" },
     },
 };
 
@@ -41,7 +41,9 @@ function aplicarTema(nomeTema) {
         if (prop !== "imagens") root.style.setProperty(prop, val);
     });
     const btnTemaImg = document.querySelector(".btn-tema img");
+    const favicon = document.querySelector('#favicon');
     if (btnTemaImg) btnTemaImg.src = tema.imagens.avatar;
+    if (favicon) favicon.href = tema.imagens.favicon;
     localStorage.setItem("tema", nomeTema);
 }
 

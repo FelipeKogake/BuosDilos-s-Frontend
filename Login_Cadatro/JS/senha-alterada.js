@@ -21,6 +21,7 @@ const temas = {
             personagem: 'Assets/senha-alterada/personagem-azul.png',
             estrelas: 'Assets/senha-alterada/estrelas-azul.png',
             avatar: 'Assets/avatar-azul.png',
+            favicon: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
         }
     },
     rosa: {
@@ -37,6 +38,7 @@ const temas = {
             personagem: 'Assets/senha-alterada/personagem-rosa.png',
             estrelas: 'Assets/senha-alterada/estrelas-rosa.png',
             avatar: 'Assets/avatar-rosa.png',
+            favicon: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
         }
     }
 };
@@ -57,6 +59,7 @@ function aplicarTema(nomeTema) {
     });
     document.querySelector('.personagemImg').src = tema.imagens.personagem;
     document.querySelector('.btn-tema img').src = tema.imagens.avatar;
+    document.getElementById('favicon').href = tema.imagens.favicon;
 
     localStorage.setItem('tema', nomeTema);
 }

@@ -21,6 +21,7 @@ const temas = {
             personagem: 'Assets/cadastro-feito/personagem-azul.png',
             estrelas: 'Assets/cadastro-feito/estrelas-azul.png',
             avatar: 'Assets/avatar-azul.png',
+            favicon: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
         }
     },
     rosa: {
@@ -37,6 +38,7 @@ const temas = {
             personagem: 'Assets/cadastro-feito/personagem-rosa.png',
             estrelas: 'Assets/cadastro-feito/estrelas-rosa.png',
             avatar: 'Assets/avatar-rosa.png',
+            favicon: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
         }
     }
 };
@@ -57,6 +59,7 @@ function aplicarTema(nomeTema) {
     });
     document.querySelector('.personagemImg').src = tema.imagens.personagem;
     document.querySelector('.btn-tema img').src = tema.imagens.avatar;
+    document.getElementById('favicon').href = tema.imagens.favicon;
 
     localStorage.setItem('tema', nomeTema);
 }
@@ -67,8 +70,13 @@ function toggleTema() {
     aplicarTema(proximo);
 }
 
-const temaSalvo = localStorage.getItem('tema') || 'azul';
-aplicarTema(temaSalvo);
+// const temaSalvo = localStorage.getItem('tema') || 'azul';
+// aplicarTema(temaSalvo);
+
+window.addEventListener("DOMContentLoaded", () => {
+    const temaSalvo = localStorage.getItem("tema") || "azul";
+    aplicarTema(temaSalvo);
+});
 
 function voltarParaLogin() {
     localStorage.setItem('popup', 'cadastro-feito');
