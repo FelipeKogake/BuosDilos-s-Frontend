@@ -210,7 +210,8 @@ async function tentarLogin(e) {
         if (snap.exists()) {
             window.location.href = '/BuosDilos-s-Frontend/admin/admin.html'; // redireciona para painel admin
         } else {
-            window.location.href = ''; // redireciona para área comum
+            window.location.href = '../../Tela_Inicia_Com_Login/tela_inicial.html'; // redireciona para área comum
+            // /BuosDilos-s-Frontend/Tela_Inicia_Com_Login/tela_inicial.html
             mostrarPopup('Login realizado com sucesso!', 'sucesso');
         }
 

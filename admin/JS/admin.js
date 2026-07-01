@@ -9,6 +9,9 @@ import {
     atualizarProduto,
     deletarProduto,
     inativarProduto,
+    listarFotos,
+    adicionarFoto,
+    deletarFoto,
 } from './produtos.js';
 
 import {
@@ -18,7 +21,7 @@ import {
 } from './usuarios.js';
 
 // ============================================
-// PROTEÇÃO DE ROTA — só admin logado acessa
+// PROTEÇÃO DE ROTA
 // ============================================
 onAuthStateChanged(auth, (usuario) => {
     if (!usuario) window.location.replace('login.html');
@@ -30,7 +33,7 @@ document.getElementById('btn-sair').addEventListener('click', async () => {
 });
 
 // ============================================
-// NAVEGAÇÃO ENTRE ABAS
+// NAVEGAÇÃO ENTRE ABAS (sidebar)
 // ============================================
 const navItens = document.querySelectorAll('.nav-item');
 const abas     = document.querySelectorAll('.aba');
@@ -38,16 +41,13 @@ const abas     = document.querySelectorAll('.aba');
 navItens.forEach((item) => {
     item.addEventListener('click', () => {
         const abaAlvo = item.dataset.aba;
-
         navItens.forEach((i) => i.classList.remove('nav-item--ativo'));
         item.classList.add('nav-item--ativo');
-
         abas.forEach((aba) => {
             const estaAtiva = aba.id === `aba-${abaAlvo}`;
             aba.hidden = !estaAtiva;
             aba.classList.toggle('aba--ativa', estaAtiva);
         });
-
         if (abaAlvo === 'usuarios' && !usuariosCarregados) carregarUsuarios();
     });
 });
@@ -67,9 +67,9 @@ function mostrarToast(mensagem, tipo = 'sucesso') {
 }
 
 // ============================================
-// MODAL DE CONFIRMAÇÃO (genérico)
+// MODAL DE CONFIRMAÇÃO
 // ============================================
-const modalConfirmar   = document.getElementById('modal-confirmar');
+const modalConfirmar    = document.getElementById('modal-confirmar');
 const confirmarMensagem = document.getElementById('confirmar-mensagem');
 const confirmarAceitar  = document.getElementById('confirmar-aceitar');
 const confirmarCancelar = document.getElementById('confirmar-cancelar');
@@ -85,7 +85,7 @@ function pedirConfirmacao(mensagem) {
             confirmarCancelar.removeEventListener('click', cancelar);
             resolve(resultado);
         }
-        function aceitar() { limpar(true); }
+        function aceitar()  { limpar(true);  }
         function cancelar() { limpar(false); }
 
         confirmarAceitar.addEventListener('click', aceitar);
@@ -96,16 +96,15 @@ function pedirConfirmacao(mensagem) {
 // ============================================
 // PRODUTOS
 // ============================================
-
 let todosProdutos          = [];
 let produtoEmEdicao        = null;
-let arquivoImagemSelecionado = null;
 
-const gridProdutos      = document.getElementById('grid-produtos');
+const gridProdutos       = document.getElementById('grid-produtos');
 const produtosCarregando = document.getElementById('produtos-estado-carregando');
-const produtosVazio     = document.getElementById('produtos-estado-vazio');
-const buscaProdutos     = document.getElementById('busca-produtos');
-const filtroCategoria   = document.getElementById('filtro-categoria');
+const produtosVazio      = document.getElementById('produtos-estado-vazio');
+const buscaProdutos      = document.getElementById('busca-produtos');
+const filtroCategoria    = document.getElementById('filtro-categoria');
+const btnRecarregarProduto = document.getElementById('btn-recarregar-produto');
 
 function separarProdutos(produtos) {
     return {
@@ -116,10 +115,10 @@ function separarProdutos(produtos) {
 
 async function carregarProdutos() {
     produtosCarregando.hidden = false;
-    gridProdutos.hidden = true;
-    produtosVazio.hidden = true;
-    document.getElementById('grid-inativos').hidden = true;
-    document.getElementById('inativos-estado-vazio').hidden = true;
+    gridProdutos.hidden       = true;
+    produtosVazio.hidden      = true;
+    document.getElementById('grid-inativos').hidden          = true;
+    document.getElementById('inativos-estado-vazio').hidden  = true;
 
     try {
         todosProdutos = await listarProdutos();
@@ -136,7 +135,7 @@ async function carregarProdutos() {
 }
 
 function preencherFiltroCategorias(produtos) {
-    const categorias = [...new Set(produtos.map((p) => p.categoria).filter(Boolean))];
+    const categorias = [...new Set(produtos.map(p => p.categoria).filter(Boolean))];
     filtroCategoria.innerHTML = '<option value="">Todas as categorias</option>';
     categorias.forEach((cat) => {
         const opt = document.createElement('option');
@@ -162,8 +161,8 @@ function renderizarProdutos(produtos, gridId = 'grid-produtos', vazioId = 'produ
     grid.innerHTML = produtos.map((p) => `
         <article class="card-produto" data-id="${p.id}">
             <div class="card-produto-imagem">
-                ${p.image
-                    ? `<img src="${p.image}" alt="${p.nome}" loading="lazy" />`
+                ${p.fotoUrl
+                    ? `<img src="${p.fotoUrl}" alt="${p.nome}" loading="lazy" />`
                     : `<i class="ti ti-photo" aria-hidden="true"></i>`
                 }
             </div>
@@ -187,28 +186,25 @@ function filtrarProdutos() {
     const termo     = buscaProdutos.value.trim().toLowerCase();
     const categoria = filtroCategoria.value;
     const ativos    = todosProdutos.filter(p => p.ativo);
-
     const filtrados = ativos.filter((p) => {
         const bateTermo     = !termo     || p.nome.toLowerCase().includes(termo);
         const bateCategoria = !categoria || p.categoria === categoria;
         return bateTermo && bateCategoria;
     });
-
     renderizarProdutos(filtrados, 'grid-produtos', 'produtos-estado-vazio');
 }
 
 buscaProdutos.addEventListener('input', filtrarProdutos);
 filtroCategoria.addEventListener('change', filtrarProdutos);
 
-// Delegação de eventos nos cards
 gridProdutos.addEventListener('click', async (e) => {
-    const botao  = e.target.closest('button[data-acao]');
+    const botao   = e.target.closest('button[data-acao]');
     if (!botao) return;
 
-    const card   = botao.closest('.card-produto');
-    const id     = card.dataset.id;
-    const produto = todosProdutos.find((p) => String(p.id) === String(id));
-    const acao   = botao.dataset.acao;
+    const card    = botao.closest('.card-produto');
+    const id      = card.dataset.id;
+    const produto = todosProdutos.find(p => String(p.id) === String(id));
+    const acao    = botao.dataset.acao;
 
     if (acao === 'editar') {
         try {
@@ -223,7 +219,7 @@ gridProdutos.addEventListener('click', async (e) => {
         const confirmado = await pedirConfirmacao(`Excluir "${produto.nome}" permanentemente?`);
         if (!confirmado) return;
         try {
-            await deletarProduto(id, produto.image);
+            await deletarProduto(id);
             mostrarToast('Produto excluído');
             carregarProdutos();
         } catch {
@@ -232,8 +228,13 @@ gridProdutos.addEventListener('click', async (e) => {
     }
 });
 
-// ── Modal de produto ──────────────────────────────────────────────────────────
+btnRecarregarProduto.addEventListener('click', async (e) => {
+    renderizarProdutos()
+});
 
+// ============================================
+// MODAL PRODUTO — abas internas
+// ============================================
 const modalProduto       = document.getElementById('modal-produto');
 const modalProdutoTitulo = document.getElementById('modal-produto-titulo');
 const formProduto        = document.getElementById('form-produto');
@@ -245,61 +246,70 @@ const inputEstoque       = document.getElementById('produto-estoque');
 const inputCategoria     = document.getElementById('produto-categoria');
 const inputDescricao     = document.getElementById('produto-descricao');
 const inputAtivo         = document.getElementById('produto-ativo');
-const inputImagem        = document.getElementById('produto-imagem-input');
-const inputImageUrl      = document.getElementById('produto-image-url');
-const previewImagem      = document.getElementById('preview-imagem');
-const uploadPlaceholder  = document.getElementById('upload-placeholder');
-const uploadWrapper      = document.getElementById('upload-imagem-wrapper');
 const btnSalvarProduto   = document.getElementById('modal-produto-salvar');
 const btnToggleProduto   = document.getElementById('modal-produto-toggle');
 const btnToggleTexto     = document.getElementById('modal-produto-toggle-texto');
+const tabFotos           = document.getElementById('tab-fotos');
+const painelFotos        = document.getElementById('painel-fotos');
+
+// Troca de abas dentro do modal
+document.querySelectorAll('.modal-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        if (tab.disabled) return;
+        document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('modal-tab--ativa'));
+        tab.classList.add('modal-tab--ativa');
+
+        const painel = tab.dataset.tab;
+        formProduto.hidden  = painel !== 'dados';
+        painelFotos.hidden  = painel !== 'fotos';
+        btnSalvarProduto.hidden = painel !== 'dados';
+
+        if (painel === 'fotos' && produtoEmEdicao) carregarFotosProduto(produtoEmEdicao.id);
+    });
+});
 
 function abrirModalProduto(produto = null) {
-    produtoEmEdicao          = produto;
-    arquivoImagemSelecionado = null;
+    produtoEmEdicao = produto;
     formProduto.reset();
+
+    // Volta para aba de dados
+    document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('modal-tab--ativa'));
+    document.querySelector('.modal-tab[data-tab="dados"]').classList.add('modal-tab--ativa');
+    formProduto.hidden  = false;
+    painelFotos.hidden  = true;
+    btnSalvarProduto.hidden = false;
 
     if (produto) {
         modalProdutoTitulo.textContent = 'Editar produto';
         btnToggleProduto.hidden        = false;
         btnToggleTexto.textContent     = produto.ativo ? 'Inativar' : 'Ativar';
         btnToggleProduto.querySelector('i').className = `ti ti-${produto.ativo ? 'eye-off' : 'eye'}`;
+        tabFotos.disabled = false; // habilita aba de fotos só para produtos existentes
 
-        inputProdutoId.value   = produto.id;
-        inputNome.value        = produto.nome;
-        inputSku.value         = produto.sku   || '';
-        inputPreco.value       = produto.preco;
-        inputEstoque.value     = produto.estoque || '';
-        inputCategoria.value   = produto.categoria || '';
-        inputDescricao.value   = produto.descricao || '';
-        inputAtivo.checked     = produto.ativo;
-        inputImageUrl.value    = produto.image || '';
-
-        if (produto.image) {
-            previewImagem.src    = produto.image;
-            previewImagem.hidden = false;
-            uploadPlaceholder.hidden = true;
-        } else {
-            previewImagem.hidden     = true;
-            uploadPlaceholder.hidden = false;
-        }
+        inputProdutoId.value  = produto.id;
+        inputNome.value       = produto.nome;
+        inputSku.value        = produto.sku       || '';
+        inputPreco.value      = produto.preco;
+        inputEstoque.value    = produto.estoque   || '';
+        inputCategoria.value  = produto.categoria || '';
+        inputDescricao.value  = produto.descricao || '';
+        inputAtivo.checked    = produto.ativo;
     } else {
-        modalProdutoTitulo.textContent   = 'Novo produto';
-        btnToggleProduto.hidden          = true;
-        inputProdutoId.value             = '';
-        inputAtivo.checked               = true;
-        inputImageUrl.value              = '';
-        previewImagem.hidden             = true;
-        uploadPlaceholder.hidden         = false;
+        modalProdutoTitulo.textContent = 'Novo produto';
+        btnToggleProduto.hidden        = true;
+        tabFotos.disabled              = true; // fotos só depois de criar
+        inputProdutoId.value           = '';
+        inputAtivo.checked             = true;
     }
 
     modalProduto.hidden = false;
 }
 
 function fecharModalProduto() {
-    modalProduto.hidden      = true;
-    produtoEmEdicao          = null;
-    arquivoImagemSelecionado = null;
+    modalProduto.hidden = true;
+    produtoEmEdicao     = null;
+    arquivoFotoSelecionado = null;
+    resetarFormFoto();
 }
 
 document.getElementById('btn-novo-produto').addEventListener('click', () => abrirModalProduto());
@@ -320,51 +330,17 @@ btnToggleProduto.addEventListener('click', async () => {
     }
 });
 
-// Upload de arquivo — atualiza preview e limpa campo de URL
-uploadWrapper.addEventListener('click', () => inputImagem.click());
-
-inputImagem.addEventListener('change', () => {
-    const arquivo = inputImagem.files[0];
-    if (!arquivo) return;
-
-    arquivoImagemSelecionado = arquivo;
-    inputImageUrl.value      = ''; // será substituída pela URL do Storage após salvar
-
-    const leitor = new FileReader();
-    leitor.onload = (e) => {
-        previewImagem.src        = e.target.result;
-        previewImagem.hidden     = false;
-        uploadPlaceholder.hidden = true;
-    };
-    leitor.readAsDataURL(arquivo);
-});
-
-// Campo de URL — atualiza preview ao digitar
-inputImageUrl.addEventListener('input', () => {
-    const url = inputImageUrl.value.trim();
-    if (url) {
-        previewImagem.src        = url;
-        previewImagem.hidden     = false;
-        uploadPlaceholder.hidden = true;
-        arquivoImagemSelecionado = null; // URL manual tem prioridade sobre arquivo
-    } else {
-        previewImagem.hidden     = true;
-        uploadPlaceholder.hidden = false;
-    }
-});
-
 formProduto.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const dados = {
         nome:      inputNome.value.trim(),
-        sku:       inputSku.value.trim() || null,
+        sku:       inputSku.value.trim()      || null,
         preco:     parseFloat(inputPreco.value),
         estoque:   parseInt(inputEstoque.value, 10) || null,
         categoria: inputCategoria.value.trim() || null,
         descricao: inputDescricao.value.trim() || null,
         ativo:     inputAtivo.checked,
-        image:     inputImageUrl.value.trim() || null,
     };
 
     if (!dados.nome) {
@@ -373,16 +349,23 @@ formProduto.addEventListener('submit', async (e) => {
     }
 
     btnSalvarProduto.disabled = true;
-    btnSalvarProduto.querySelector('.btn-texto').hidden  = true;
+    btnSalvarProduto.querySelector('.btn-texto').hidden   = true;
     btnSalvarProduto.querySelector('.btn-spinner').hidden = false;
 
     try {
         if (produtoEmEdicao) {
-            await atualizarProduto(produtoEmEdicao.id, dados, arquivoImagemSelecionado, produtoEmEdicao.image);
-            mostrarToast('Produto atualizado com sucesso!');
+            await atualizarProduto(produtoEmEdicao.id, dados);
+            mostrarToast('Produto atualizado!');
         } else {
-            await criarProduto(dados, arquivoImagemSelecionado);
-            mostrarToast('Produto criado com sucesso!');
+            const novoProduto = await criarProduto(dados);
+            mostrarToast('Produto criado! Agora adicione as fotos na aba Fotos.');
+            // Abre o modal no produto recém criado com aba de fotos disponível
+            const produtoCriado = await buscarProduto(novoProduto.id);
+            fecharModalProduto();
+            abrirModalProduto(produtoCriado);
+            // Muda automaticamente para aba de fotos
+            document.querySelector('.modal-tab[data-tab="fotos"]').click();
+            return;
         }
         fecharModalProduto();
         carregarProdutos();
@@ -391,7 +374,7 @@ formProduto.addEventListener('submit', async (e) => {
         mostrarToast('Erro ao salvar produto', 'erro');
     } finally {
         btnSalvarProduto.disabled = false;
-        btnSalvarProduto.querySelector('.btn-texto').hidden  = false;
+        btnSalvarProduto.querySelector('.btn-texto').hidden   = false;
         btnSalvarProduto.querySelector('.btn-spinner').hidden = true;
     }
 });
@@ -412,17 +395,175 @@ function aplicarErroCampo(input, mensagem) {
 }
 
 // ============================================
+// FOTOS
+// ============================================
+let fotosDoProduto         = [];
+let arquivoFotoSelecionado = null;
+
+const fotosGrid          = document.getElementById('fotos-grid');
+const inputFotoArquivo   = document.getElementById('foto-arquivo-input');
+const inputFotoUrl       = document.getElementById('foto-url');
+const inputFotoLado      = document.getElementById('foto-lado');
+const inputFotoOrdem     = document.getElementById('foto-ordem');
+const previewFoto        = document.getElementById('preview-foto');
+const uploadFotoWrapper  = document.getElementById('upload-foto-wrapper');
+const uploadFotoPlaceholder = document.getElementById('upload-foto-placeholder');
+const btnAdicionarFoto   = document.getElementById('btn-adicionar-foto');
+
+const LADOS = ['caixa', 'frontal', 'direita', 'esquerda', 'traseira'];
+const LABEL_LADO = {
+    caixa:     'Caixa (principal)',
+    frontal:   'Frontal',
+    direita:   'Direita',
+    esquerda:  'Esquerda',
+    traseira:  'Traseira',
+};
+
+async function carregarFotosProduto(produtoId) {
+    fotosGrid.innerHTML = '<p style="color:#aaa;font-size:0.85rem">Carregando fotos...</p>';
+    try {
+        fotosDoProduto = await listarFotos(produtoId);
+        renderizarFotos();
+    } catch {
+        fotosGrid.innerHTML = '<p style="color:var(--cor-erro);font-size:0.85rem">Erro ao carregar fotos.</p>';
+    }
+}
+
+function renderizarFotos() {
+    if (fotosDoProduto.length === 0) {
+        fotosGrid.innerHTML = '<p style="color:#aaa;font-size:0.85rem">Nenhuma foto adicionada ainda.</p>';
+        return;
+    }
+
+    fotosGrid.innerHTML = fotosDoProduto
+        .sort((a, b) => a.ordem - b.ordem)
+        .map(foto => `
+            <div class="foto-card" data-foto-id="${foto.id}">
+                <img src="${foto.fotoUrl}" alt="${foto.lado}" />
+                <div class="foto-card-info">
+                    <span class="foto-card-lado">${LABEL_LADO[foto.lado] || foto.lado}</span>
+                    <span class="foto-card-ordem">Ordem ${foto.ordem}</span>
+                </div>
+                <button class="foto-card-remover" data-acao="remover-foto" aria-label="Remover foto">
+                    <i class="ti ti-trash"></i>
+                </button>
+            </div>
+        `).join('');
+}
+
+// Delegação para remover foto
+fotosGrid.addEventListener('click', async (e) => {
+    const botao = e.target.closest('[data-acao="remover-foto"]');
+    if (!botao) return;
+
+    const card   = botao.closest('.foto-card');
+    const fotoId = card.dataset.fotoId;
+    const foto   = fotosDoProduto.find(f => String(f.id) === String(fotoId));
+
+    const confirmado = await pedirConfirmacao(`Remover foto "${LABEL_LADO[foto.lado] || foto.lado}"?`);
+    if (!confirmado) return;
+
+    try {
+        await deletarFoto(produtoEmEdicao.id, fotoId, foto.fotoUrl);
+        mostrarToast('Foto removida');
+        fotosDoProduto = fotosDoProduto.filter(f => String(f.id) !== String(fotoId));
+        renderizarFotos();
+        carregarProdutos(); // atualiza card no grid
+    } catch {
+        mostrarToast('Erro ao remover foto', 'erro');
+    }
+});
+
+// Upload de arquivo
+uploadFotoWrapper.addEventListener('click', () => inputFotoArquivo.click());
+
+inputFotoArquivo.addEventListener('change', () => {
+    const arquivo = inputFotoArquivo.files[0];
+    if (!arquivo) return;
+
+    arquivoFotoSelecionado = arquivo;
+    inputFotoUrl.value     = '';
+
+    const leitor = new FileReader();
+    leitor.onload = (e) => {
+        previewFoto.src             = e.target.result;
+        previewFoto.hidden          = false;
+        uploadFotoPlaceholder.hidden = true;
+    };
+    leitor.readAsDataURL(arquivo);
+});
+
+// URL manual
+inputFotoUrl.addEventListener('input', () => {
+    const url = inputFotoUrl.value.trim();
+    if (url) {
+        previewFoto.src              = url;
+        previewFoto.hidden           = false;
+        uploadFotoPlaceholder.hidden = true;
+        arquivoFotoSelecionado       = null;
+    } else {
+        previewFoto.hidden           = true;
+        uploadFotoPlaceholder.hidden = false;
+    }
+});
+
+btnAdicionarFoto.addEventListener('click', async () => {
+    const fotoUrl = inputFotoUrl.value.trim();
+    const lado    = inputFotoLado.value;
+    const ordem   = parseInt(inputFotoOrdem.value, 10) || 1;
+
+    if (!arquivoFotoSelecionado && !fotoUrl) {
+        mostrarToast('Selecione um arquivo ou cole uma URL', 'erro');
+        return;
+    }
+
+    btnAdicionarFoto.disabled = true;
+    btnAdicionarFoto.querySelector('.btn-texto').hidden   = true;
+    btnAdicionarFoto.querySelector('.btn-spinner').hidden = false;
+
+    try {
+        await adicionarFoto(produtoEmEdicao.id, {
+            fotoUrl,
+            arquivo:     arquivoFotoSelecionado,
+            lado,
+            ordem,
+            nomeProduto: produtoEmEdicao.nome,
+        });
+        mostrarToast('Foto adicionada!');
+        resetarFormFoto();
+        await carregarFotosProduto(produtoEmEdicao.id);
+        carregarProdutos();
+    } catch (error) {
+        console.error(error);
+        mostrarToast('Erro ao adicionar foto', 'erro');
+    } finally {
+        btnAdicionarFoto.disabled = false;
+        btnAdicionarFoto.querySelector('.btn-texto').hidden   = false;
+        btnAdicionarFoto.querySelector('.btn-spinner').hidden = true;
+    }
+});
+
+function resetarFormFoto() {
+    arquivoFotoSelecionado       = null;
+    inputFotoArquivo.value       = '';
+    inputFotoUrl.value           = '';
+    inputFotoLado.value          = 'caixa';
+    inputFotoOrdem.value         = '1';
+    previewFoto.hidden           = true;
+    uploadFotoPlaceholder.hidden = false;
+}
+
+// ============================================
 // USUÁRIOS
 // ============================================
-
-let todosUsuarios    = [];
+let todosUsuarios     = [];
 let usuariosCarregados = false;
 
-const usuariosCarregando     = document.getElementById('usuarios-estado-carregando');
-const usuariosVazio          = document.getElementById('usuarios-estado-vazio');
-const tabelaUsuariosWrapper  = document.getElementById('tabela-usuarios-wrapper');
-const tabelaUsuariosCorpo    = document.getElementById('tabela-usuarios-corpo');
-const buscaUsuarios          = document.getElementById('busca-usuarios');
+const usuariosCarregando    = document.getElementById('usuarios-estado-carregando');
+const usuariosVazio         = document.getElementById('usuarios-estado-vazio');
+const tabelaUsuariosWrapper = document.getElementById('tabela-usuarios-wrapper');
+const tabelaUsuariosCorpo   = document.getElementById('tabela-usuarios-corpo');
+const buscaUsuarios         = document.getElementById('busca-usuarios');
 
 async function carregarUsuarios() {
     usuariosCarregando.hidden    = false;
@@ -436,7 +577,7 @@ async function carregarUsuarios() {
         renderizarUsuarios(todosUsuarios);
     } catch (error) {
         console.error(error);
-        mostrarToast('Erro ao carregar usuários — verifique se o backend está rodando', 'erro');
+        mostrarToast('Erro ao carregar usuários', 'erro');
     } finally {
         usuariosCarregando.hidden = true;
     }
@@ -495,8 +636,8 @@ function renderizarUsuarios(usuarios) {
 }
 
 buscaUsuarios.addEventListener('input', () => {
-    const termo    = buscaUsuarios.value.trim().toLowerCase();
-    const filtrados = todosUsuarios.filter((u) =>
+    const termo     = buscaUsuarios.value.trim().toLowerCase();
+    const filtrados = todosUsuarios.filter(u =>
         u.nome.toLowerCase().includes(termo) || u.email.toLowerCase().includes(termo)
     );
     renderizarUsuarios(filtrados);
@@ -505,12 +646,12 @@ buscaUsuarios.addEventListener('input', () => {
 document.getElementById('btn-atualizar-usuarios').addEventListener('click', carregarUsuarios);
 
 tabelaUsuariosCorpo.addEventListener('click', async (e) => {
-    const botao  = e.target.closest('button[data-acao]');
+    const botao   = e.target.closest('button[data-acao]');
     if (!botao) return;
 
     const linha   = botao.closest('tr');
     const uid     = linha.dataset.uid;
-    const usuario = todosUsuarios.find((u) => u.uid === uid);
+    const usuario = todosUsuarios.find(u => u.uid === uid);
     const acao    = botao.dataset.acao;
 
     if (acao === 'toggle-status') {

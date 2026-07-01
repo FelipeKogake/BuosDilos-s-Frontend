@@ -230,6 +230,10 @@ body {
     animation: girar 0.6s linear infinite;
 }
 
+#btn-recarregar-produtos {
+    margin-left: auto;
+}
+
 @keyframes girar { to { transform: rotate(360deg); } }
 
 /* ============================================
@@ -718,3 +722,156 @@ body {
 
     .campo-linha { flex-direction: column; }
 }
+
+/* ============================================
+   MODAL LARGO (produto com abas)
+   ============================================ */
+
+.modal--largo { max-width: 640px; }
+
+/* ============================================
+   ABAS DO MODAL
+   ============================================ */
+
+.modal-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--cor-borda);
+    padding: 0 1.5rem;
+}
+
+.modal-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.75rem 1.2rem;
+    font-family: 'Epilogue', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--cor-texto-terciario);
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.modal-tab:hover:not(:disabled) { color: var(--cor-texto-titulo); }
+
+.modal-tab--ativa {
+    color: var(--cor-primaria-hover);
+    border-bottom-color: var(--cor-primaria-hover);
+}
+
+.modal-tab:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   PAINEL DE FOTOS
+   ============================================ */
+
+.fotos-instrucao {
+    font-size: 0.85rem;
+    color: var(--cor-texto-terciario);
+    margin: 0 0 1rem;
+}
+
+.fotos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.foto-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--cor-borda);
+    background: #f0f0f2;
+    aspect-ratio: 1;
+}
+
+.foto-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.foto-card-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.55);
+    padding: 4px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.foto-card-lado {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.foto-card-ordem {
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.75);
+}
+
+.foto-card-remover {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(226,75,74,0.85);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.foto-card:hover .foto-card-remover { opacity: 1; }
+
+/* ============================================
+   FORMULÁRIO DE ADICIONAR FOTO
+   ============================================ */
+
+.foto-adicionar {
+    border-top: 1px solid var(--cor-borda);
+    padding-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.foto-adicionar-titulo {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--cor-texto-titulo);
+}
+
+#foto-lado, #foto-ordem {
+    font-family: 'Epilogue', sans-serif;
+    padding: 0.65rem 0.85rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--cor-borda);
+    font-size: 0.9rem;
+    outline: none;
+    width: 100%;
+    background: var(--cor-painel);
+}
+
+#foto-lado:focus, #foto-ordem:focus { border-color: var(--cor-primaria); }

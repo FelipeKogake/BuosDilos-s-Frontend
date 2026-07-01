@@ -117,7 +117,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (texto === 'BONECOS') {
                 e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                const secaoBonecos = document.querySelector('#bonecos');
+                if (secaoBonecos) {
+                    const navbar = document.querySelector('.navbar-wrapper');
+                    const offset = navbar ? navbar.offsetHeight : 0;
+                    const top = secaoBonecos.getBoundingClientRect().top + window.scrollY - offset - 30;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                }
             }
 
             if (texto === 'ITENS') {

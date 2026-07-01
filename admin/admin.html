@@ -14,7 +14,6 @@
         <div class="sidebar-topo">
             <h1 class="sidebar-titulo">Admin</h1>
         </div>
-
         <nav class="sidebar-nav" aria-label="Navegação principal">
             <button class="nav-item nav-item--ativo" data-aba="produtos">
                 <i class="ti ti-shopping-bag" aria-hidden="true"></i>
@@ -29,7 +28,6 @@
                 <span>Usuários</span>
             </button>
         </nav>
-
         <button class="sidebar-sair" id="btn-sair">
             <i class="ti ti-logout" aria-hidden="true"></i>
             <span>Sair</span>
@@ -46,12 +44,14 @@
                     <h2 id="titulo-produtos">Produtos</h2>
                     <p class="aba-subtitulo">Gerencie o catálogo da loja</p>
                 </div>
+                <button class="btn-secundario" id="btn-recarregar-produtos">
+                    Recarregar produtos
+                </button>
                 <button class="btn-primario" id="btn-novo-produto">
                     <i class="ti ti-plus" aria-hidden="true"></i>
                     Novo produto
                 </button>
             </header>
-
             <div class="toolbar">
                 <div class="busca-wrapper">
                     <i class="ti ti-search" aria-hidden="true"></i>
@@ -61,17 +61,14 @@
                     <option value="">Todas as categorias</option>
                 </select>
             </div>
-
             <div id="produtos-estado-carregando" class="estado-carregando">
                 <div class="spinner" aria-hidden="true"></div>
                 <p>Carregando produtos...</p>
             </div>
-
             <div id="produtos-estado-vazio" class="estado-vazio" hidden>
                 <i class="ti ti-package-off" aria-hidden="true"></i>
                 <p>Nenhum produto encontrado</p>
             </div>
-
             <div class="grid-produtos" id="grid-produtos" hidden></div>
         </section>
 
@@ -83,12 +80,10 @@
                     <p class="aba-subtitulo">Produtos removidos do catálogo</p>
                 </div>
             </header>
-
             <div id="inativos-estado-vazio" class="estado-vazio" hidden>
                 <i class="ti ti-package-off" aria-hidden="true"></i>
                 <p>Nenhum produto inativo</p>
             </div>
-
             <div class="grid-produtos" id="grid-inativos" hidden></div>
         </section>
 
@@ -104,24 +99,20 @@
                     Atualizar
                 </button>
             </header>
-
             <div class="toolbar">
                 <div class="busca-wrapper">
                     <i class="ti ti-search" aria-hidden="true"></i>
                     <input type="search" id="busca-usuarios" placeholder="Buscar usuário por nome ou e-mail..." aria-label="Buscar usuário" />
                 </div>
             </div>
-
             <div id="usuarios-estado-carregando" class="estado-carregando">
                 <div class="spinner" aria-hidden="true"></div>
                 <p>Carregando usuários...</p>
             </div>
-
             <div id="usuarios-estado-vazio" class="estado-vazio" hidden>
                 <i class="ti ti-users" aria-hidden="true"></i>
                 <p>Nenhum usuário encontrado</p>
             </div>
-
             <div class="tabela-wrapper" id="tabela-usuarios-wrapper" hidden>
                 <table class="tabela" aria-label="Lista de usuários">
                     <thead>
@@ -143,7 +134,7 @@
 
     <!-- ===================== MODAL PRODUTO ===================== -->
     <div class="modal-overlay" id="modal-produto" hidden>
-        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-produto-titulo">
+        <div class="modal modal--largo" role="dialog" aria-modal="true" aria-labelledby="modal-produto-titulo">
             <header class="modal-header">
                 <h3 id="modal-produto-titulo">Novo produto</h3>
                 <button class="modal-fechar" id="modal-produto-fechar" aria-label="Fechar">
@@ -151,25 +142,15 @@
                 </button>
             </header>
 
-            <form class="modal-body" id="form-produto" novalidate>
+            <!-- ABAS DO MODAL -->
+            <div class="modal-tabs">
+                <button class="modal-tab modal-tab--ativa" data-tab="dados">Dados</button>
+                <button class="modal-tab" data-tab="fotos" id="tab-fotos" disabled>Fotos</button>
+            </div>
+
+            <!-- PAINEL DADOS -->
+            <form class="modal-body" id="form-produto" novalidate data-panel="dados">
                 <input type="hidden" id="produto-id" />
-
-                <div class="campo-grupo">
-                    <label for="produto-imagem-input">Imagem do produto</label>
-                    <div class="upload-imagem" id="upload-imagem-wrapper">
-                        <img id="preview-imagem" alt="" hidden />
-                        <div class="upload-placeholder" id="upload-placeholder">
-                            <i class="ti ti-photo-plus" aria-hidden="true"></i>
-                            <span>Clique para enviar uma imagem</span>
-                        </div>
-                        <input type="file" id="produto-imagem-input" accept="image/*" class="sr-only" />
-                    </div>
-                </div>
-
-                <div class="campo">
-                    <label for="produto-image-url">URL da imagem</label>
-                    <input type="url" id="produto-image-url" placeholder="https://..." />
-                </div>
 
                 <div class="campo">
                     <label for="produto-nome">Nome</label>
@@ -188,7 +169,7 @@
                     </div>
                     <div class="campo">
                         <label for="produto-estoque">Estoque</label>
-                        <input type="number" id="produto-estoque" placeholder="0" step="1" min="0" required />
+                        <input type="number" id="produto-estoque" placeholder="0" step="1" min="0" />
                     </div>
                 </div>
 
@@ -209,6 +190,61 @@
                     </label>
                 </div>
             </form>
+
+            <!-- PAINEL FOTOS -->
+            <div class="modal-body" id="painel-fotos" data-panel="fotos" hidden>
+
+                <p class="fotos-instrucao">Adicione fotos por ângulo. A foto da <strong>caixa</strong> é a imagem principal exibida na loja.</p>
+
+                <!-- Grid de lados -->
+                <div class="fotos-grid" id="fotos-grid">
+                    <!-- Renderizado via JS para cada lado -->
+                </div>
+
+                <!-- Formulário para adicionar nova foto -->
+                <div class="foto-adicionar">
+                    <h4 class="foto-adicionar-titulo">Adicionar foto</h4>
+                    <div class="campo-linha">
+                        <div class="campo">
+                            <label for="foto-lado">Ângulo</label>
+                            <select id="foto-lado">
+                                <option value="caixa">Caixa (principal)</option>
+                                <option value="frontal">Frontal</option>
+                                <option value="direita">Direita</option>
+                                <option value="esquerda">Esquerda</option>
+                                <option value="traseira">Traseira</option>
+                            </select>
+                        </div>
+                        <div class="campo">
+                            <label for="foto-ordem">Ordem</label>
+                            <input type="number" id="foto-ordem" min="1" value="1" />
+                        </div>
+                    </div>
+
+                    <div class="campo">
+                        <label>Imagem</label>
+                        <div class="upload-imagem" id="upload-foto-wrapper">
+                            <img id="preview-foto" alt="" hidden />
+                            <div class="upload-placeholder" id="upload-foto-placeholder">
+                                <i class="ti ti-photo-plus" aria-hidden="true"></i>
+                                <span>Clique para enviar</span>
+                            </div>
+                            <input type="file" id="foto-arquivo-input" accept="image/*" class="sr-only" />
+                        </div>
+                    </div>
+
+                    <div class="campo">
+                        <label for="foto-url">Ou cole uma URL</label>
+                        <input type="url" id="foto-url" placeholder="https://..." />
+                    </div>
+
+                    <button type="button" class="btn-primario" id="btn-adicionar-foto" style="width:100%">
+                        <i class="ti ti-plus" aria-hidden="true"></i>
+                        <span class="btn-texto">Adicionar foto</span>
+                        <div class="btn-spinner" hidden></div>
+                    </button>
+                </div>
+            </div>
 
             <footer class="modal-footer">
                 <button type="button" class="btn-secundario" id="modal-produto-cancelar">Cancelar</button>
@@ -239,7 +275,6 @@
             </footer>
         </div>
     </div>
-
 
     <script type="module" src="JS/admin.js"></script>
 </body>

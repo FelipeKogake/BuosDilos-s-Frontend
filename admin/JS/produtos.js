@@ -3,11 +3,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 // JS/produtos.js
 // ─────────────────────────────────────────────────────────────────────────────
 // Integração de produtos com backend REST + Supabase Storage para imagens.
+// Fotos gerenciadas via endpoint próprio /api/produtos/{id}/fotos
 // ─────────────────────────────────────────────────────────────────────────────
 
-// ── Configuração ──────────────────────────────────────────────────────────────
-
-const BASE_URL          = 'https://ecommerce-api-p2jw.onrender.com/api'; // ← ajuste para produção
+const BASE_URL          = 'https://ecommerce-api-p2jw.onrender.com/api';
 const SUPABASE_URL      = 'https://aicybssjnwtbyaequbee.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_uyPVsR2YGr6RpY2wz27Ixg_en3bQ8HD';
 const BUCKET            = 'produtos';
@@ -17,15 +16,16 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // ── Storage ───────────────────────────────────────────────────────────────────
 
 /**
- * Faz upload de um File para thumbs/{nomeProduto}.ext
- * Retorna a URL pública. Retorna null se sem arquivo.
+ * Faz upload de um File para thumbs/{nomeProduto}-{lado}.ext
+ * Retorna a URL pública.
  */
-async function uploadImagem(arquivo, nomeProduto) {
+export async function uploadImagem(arquivo, nomeProduto, lado = '') {
     if (!arquivo) return null;
 
-    const ext          = arquivo.name.split('.').pop();
-    const nomeArquivo  = nomeProduto.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-    const caminho      = `thumbs/${nomeArquivo}.${ext}`;
+    const ext         = arquivo.name.split('.').pop();
+    const nomeBase    = nomeProduto.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const sufixo      = lado ? `-${lado}` : '';
+    const caminho     = `thumbs/${nomeBase}${sufixo}.${ext}`;
 
     const { error } = await supabase.storage
         .from(BUCKET)
@@ -37,7 +37,7 @@ async function uploadImagem(arquivo, nomeProduto) {
 }
 
 /** Remove imagem do Storage pela URL pública. Falha silenciosa. */
-async function removerImagem(imageUrl) {
+export async function removerImagem(imageUrl) {
     if (!imageUrl) return;
     try {
         const marcador = `/object/public/${BUCKET}/`;
@@ -50,7 +50,6 @@ async function removerImagem(imageUrl) {
 
 // ── Helpers internos ──────────────────────────────────────────────────────────
 
-/** Faz fetch no backend e trata erros HTTP, devolvendo o JSON parseado. */
 async function apiFetch(path, options = {}) {
     const resposta = await fetch(`${BASE_URL}${path}`, {
         headers: { 'Content-Type': 'application/json', ...options.headers },
@@ -66,9 +65,9 @@ async function apiFetch(path, options = {}) {
     return resposta.json();
 }
 
-// ── API pública ───────────────────────────────────────────────────────────────
+// ── Produtos ──────────────────────────────────────────────────────────────────
 
-/** Lista todos os produtos. Retorna: Array<{ id, nome, preco, sku, ativo, image }> */
+/** Lista todos os produtos. */
 export async function listarProdutos() {
     return apiFetch('/produtos');
 }
@@ -78,20 +77,16 @@ export async function buscarProduto(id) {
     return apiFetch(`/produtos/${id}`);
 }
 
-/**
- * Cria um novo produto.
- * Se `arquivo` for passado, faz upload em thumbs/{nome}.ext e usa a URL como `image`.
- * Caso contrário, usa `dados.image` (URL digitada manualmente).
- */
-export async function criarProduto(dados, arquivo = null) {
-    const imageUrl = await uploadImagem(arquivo, dados.nome);
-
+/** Cria um novo produto (sem imagem — foto é adicionada separadamente). */
+export async function criarProduto(dados) {
     const payload = {
-        nome:  dados.nome,
-        preco: dados.preco,
-        sku:   dados.sku,
-        ativo: dados.ativo,
-        image: imageUrl ?? dados.image ?? null,
+        nome:      dados.nome,
+        preco:     dados.preco,
+        sku:       dados.sku       || null,
+        estoque:   dados.estoque   || null,
+        categoria: dados.categoria || null,
+        descricao: dados.descricao || null,
+        ativo:     dados.ativo,
     };
 
     return apiFetch('/produtos', {
@@ -100,34 +95,17 @@ export async function criarProduto(dados, arquivo = null) {
     });
 }
 
-/**
- * Atualiza um produto existente.
- * Se novo `arquivo` for enviado, faz upload, remove a imagem antiga e usa a nova URL.
- * Caso contrário, usa `dados.image` (URL editada manualmente no campo).
- */
-export async function atualizarProduto(id, dados, arquivo = null, imageUrlAtual = null) {
-    let imageUrl = dados.image ?? imageUrlAtual;
-
-    console.log('dados.image:', dados.image);
-    console.log('imageUrlAtual:', imageUrlAtual);
-    console.log('imageUrl final:', imageUrl);
-
-    if (arquivo) {
-        const novaUrl = await uploadImagem(arquivo, dados.nome);
-        await removerImagem(imageUrlAtual);
-        imageUrl = novaUrl;
-    }
-
+/** Atualiza um produto existente (sem imagem). */
+export async function atualizarProduto(id, dados) {
     const payload = {
-        nome:  dados.nome,
-        preco: dados.preco,
-        sku:   dados.sku,
-        ativo: dados.ativo,
-        image: imageUrl ?? null,
+        nome:      dados.nome,
+        preco:     dados.preco,
+        sku:       dados.sku       || null,
+        estoque:   dados.estoque   || null,
+        categoria: dados.categoria || null,
+        descricao: dados.descricao || null,
+        ativo:     dados.ativo,
     };
-
-    console.log('payload enviado:', JSON.stringify(payload)); // ← adiciona isso
-    console.log('id:', id); // ← e isso
 
     return apiFetch(`/produtos/${id}`, {
         method: 'PUT',
@@ -135,16 +113,66 @@ export async function atualizarProduto(id, dados, arquivo = null, imageUrlAtual 
     });
 }
 
-/**
- * Inativa um produto via PATCH /produtos/{id}/inativar.
- * (Endpoint de ativar ainda não disponível)
- */
+/** Inativa um produto. */
 export async function inativarProduto(id) {
     return apiFetch(`/produtos/${id}/inativar`, { method: 'PATCH' });
 }
 
-/** Exclui um produto e remove sua imagem do Storage. */
-export async function deletarProduto(id, imageUrl = null) {
-    await apiFetch(`/produtos/${id}`, { method: 'DELETE' });
-    await removerImagem(imageUrl);
+/** Exclui um produto. */
+export async function deletarProduto(id) {
+    return apiFetch(`/produtos/${id}`, { method: 'DELETE' });
+}
+
+// ── Fotos ─────────────────────────────────────────────────────────────────────
+
+/**
+ * Lista todas as fotos de um produto.
+ * Retorna: Array<{ id, produtoId, fotoUrl, lado, ordem }>
+ */
+export async function listarFotos(produtoId) {
+    return apiFetch(`/produtos/${produtoId}/fotos`);
+}
+
+/**
+ * Adiciona uma foto a um produto.
+ * Se `arquivo` for passado, faz upload no Supabase e usa a URL gerada.
+ * Caso contrário, usa `fotoUrl` diretamente.
+ */
+export async function adicionarFoto(produtoId, { fotoUrl, arquivo, lado, ordem, nomeProduto }) {
+    let url = fotoUrl;
+
+    if (arquivo) {
+        url = await uploadImagem(arquivo, nomeProduto, lado);
+    }
+
+    if (!url) throw new Error('É necessário uma URL ou arquivo de imagem');
+
+    return apiFetch(`/produtos/${produtoId}/fotos`, {
+        method: 'POST',
+        body: JSON.stringify({ fotoUrl: url, lado, ordem }),
+    });
+}
+
+/**
+ * Atualiza uma foto existente (PATCH).
+ */
+export async function atualizarFoto(produtoId, fotoId, { fotoUrl, arquivo, lado, ordem, nomeProduto }) {
+    let url = fotoUrl;
+
+    if (arquivo) {
+        url = await uploadImagem(arquivo, nomeProduto, lado);
+    }
+
+    return apiFetch(`/produtos/${produtoId}/fotos/${fotoId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ fotoUrl: url, lado, ordem }),
+    });
+}
+
+/**
+ * Remove uma foto do produto e apaga do Supabase Storage.
+ */
+export async function deletarFoto(produtoId, fotoId, fotoUrl) {
+    await apiFetch(`/produtos/${produtoId}/fotos/${fotoId}`, { method: 'DELETE' });
+    await removerImagem(fotoUrl);
 }
