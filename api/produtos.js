@@ -7,6 +7,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 // ─────────────────────────────────────────────────────────────────────────────
 
 const BASE_URL          = 'https://ecommerce-api-p2jw.onrender.com/api';
+// const BASE_URL          = 'http://localhost:2102/api';
 const SUPABASE_URL      = 'https://aicybssjnwtbyaequbee.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_uyPVsR2YGr6RpY2wz27Ixg_en3bQ8HD';
 const BUCKET            = 'produtos';

@@ -1,3 +1,9 @@
+import { listarProdutos } from '../../api/produtos.js';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMA (claro/escuro "azul"/"rosa")
+// ─────────────────────────────────────────────────────────────────────────────
+
 const temas = {
     azul: {
         '--cor-fundo': '#DCEAF7',
@@ -75,6 +81,7 @@ function aplicarTema(nomeTema) {
     const sectionAvatar = document.querySelector('.section-avatar');
     const heroFundoImg = document.querySelector('.hero-fundo-img');
     const logoImg = document.querySelector('.navbar-logo-img');
+    const favicon = document.getElementById('favicon');
 
     logoImgs.forEach(el => el.src = tema.imagens.avatar);
     if (btnTemaImg) btnTemaImg.src = tema.imagens.avatar;
@@ -90,6 +97,7 @@ function toggleTema() {
     const proximo = atual === 'azul' ? 'rosa' : 'azul';
     aplicarTema(proximo);
 }
+window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
@@ -101,7 +109,6 @@ function ajustarBtnTema() {
 
     const footerTop = footer.getBoundingClientRect().top;
     const windowHeight = window.innerHeight;
-    const btnHeight = btn.offsetHeight;
 
     if (footerTop < windowHeight) {
         btn.style.bottom = (windowHeight - footerTop + 20) + 'px';
@@ -113,7 +120,10 @@ function ajustarBtnTema() {
 window.addEventListener('scroll', ajustarBtnTema);
 ajustarBtnTema();
 
-// Scroll dos links da navbar
+// ─────────────────────────────────────────────────────────────────────────────
+// SCROLL DOS LINKS DA NAVBAR
+// ─────────────────────────────────────────────────────────────────────────────
+
 document.addEventListener('DOMContentLoaded', () => {
     const links = document.querySelectorAll('.nav-link');
 
@@ -129,3 +139,114 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PRODUTOS DINÂMICOS (Itens Colecionáveis + Novos Bonecos)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const QTD_ITENS_COLECIONAVEIS = 6;
+const QTD_BONECOS             = 5;
+
+// Placeholder usado quando o produto não tem foto cadastrada.
+const IMAGEM_PADRAO = 'Assets/login/personagem-azul.png';
+
+/**
+ * Extrai a URL da foto principal ("caixa") de um produto.
+ * Ajuste este ponto único caso o nome do campo na API seja diferente
+ * (ex: 'fotoUrl', 'imagemPrincipal', etc.)
+ */
+function obterFotoPrincipal(produto) {
+    return produto.fotoPrincipal || produto.fotoUrl || IMAGEM_PADRAO;
+}
+
+function formatarPreco(preco) {
+    const numero = Number(preco);
+    if (Number.isNaN(numero)) return 'R$ --';
+    return `R$${numero.toFixed(2).replace('.', ',')}`;
+}
+
+function irParaProduto(id) {
+    window.location.href = `tela_item.html?id=${encodeURIComponent(id)}`;
+}
+
+function renderizarItensColecionaveis(produtos) {
+    const grid = document.querySelector('.itens-grid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    produtos.slice(0, QTD_ITENS_COLECIONAVEIS).forEach(produto => {
+        const div = document.createElement('div');
+        div.className = 'item-circular';
+        div.addEventListener('click', () => irParaProduto(produto.id));
+
+        const img = document.createElement('img');
+        img.src = obterFotoPrincipal(produto);
+        img.alt = produto.nome || '';
+
+        div.appendChild(img);
+        grid.appendChild(div);
+    });
+}
+
+function criarIconeFavorito() {
+    const btn = document.createElement('button');
+    btn.className = 'boneco-fav';
+    btn.setAttribute('aria-label', 'Favoritar');
+    btn.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+    `;
+    // Evita que o clique no coração também dispare a navegação do card
+    btn.addEventListener('click', (e) => e.stopPropagation());
+    return btn;
+}
+
+function renderizarBonecos(produtos) {
+    const grid = document.querySelector('.bonecos-grid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    produtos.slice(0, QTD_BONECOS).forEach((produto, index) => {
+        const card = document.createElement('div');
+        card.className = 'boneco-card';
+        card.addEventListener('click', () => irParaProduto(produto.id));
+
+        const imgWrap = document.createElement('div');
+        imgWrap.className = 'boneco-img-wrap' + (index % 2 === 1 ? ' dark' : '');
+
+        const img = document.createElement('img');
+        img.src = obterFotoPrincipal(produto);
+        img.alt = produto.nome || '';
+        imgWrap.appendChild(img);
+
+        const info = document.createElement('div');
+        info.className = 'boneco-info';
+        info.innerHTML = `
+            <p class="boneco-nome">${produto.nome ?? ''}</p>
+            <p class="boneco-subtitulo">${produto.categoria ?? ''}</p>
+            <p class="boneco-preco">${formatarPreco(produto.preco)}</p>
+        `;
+
+        card.appendChild(imgWrap);
+        card.appendChild(info);
+        card.appendChild(criarIconeFavorito());
+        grid.appendChild(card);
+    });
+}
+
+async function carregarProdutosTelaInicial() {
+    try {
+        const produtos = await listarProdutos();
+        const ativos = produtos.filter(p => p.ativo);
+
+        renderizarItensColecionaveis(ativos);
+        renderizarBonecos(ativos);
+    } catch (error) {
+        console.error('Erro ao carregar produtos na tela inicial:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', carregarProdutosTelaInicial);

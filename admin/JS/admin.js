@@ -12,7 +12,7 @@ import {
     listarFotos,
     adicionarFoto,
     deletarFoto,
-} from './produtos.js';
+} from '../../api/produtos.js';
 
 import {
     listarUsuarios,
@@ -228,9 +228,9 @@ gridProdutos.addEventListener('click', async (e) => {
     }
 });
 
-btnRecarregarProduto.addEventListener('click', async (e) => {
-    renderizarProdutos()
-});
+// btnRecarregarProduto.addEventListener('click', async (e) => {
+//     renderizarProdutos()
+// });
 
 // ============================================
 // MODAL PRODUTO — abas internas
