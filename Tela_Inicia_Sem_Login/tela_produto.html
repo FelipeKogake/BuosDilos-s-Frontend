@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="../api/temaPreload.js" data-paleta="app"></script>
+    <script src="../api/acessibilidadeWidget.js" defer></script>
+    <script src="../api/splashScreen.js" defer></script>
     <link rel="stylesheet" href="CSS/tela_produto.css">
     <link id="favicon" rel="icon" type="image/png" href="/Tela_Inicia_Com_Login/Assets/logo-azul.png">
-    <title>Carrinho</title>
+    <title>Produto</title>
 </head>
 <body>
 
@@ -16,12 +18,12 @@
     <!-- NAVBAR -->
     <div class="navbar-wrapper">
         <header class="navbar">
-            <a href="#" class="navbar-logo">
+            <a href="../index.html" class="navbar-logo">
                 <img src="/Tela_Inicia_Com_Login/Assets/logo-azul.png" alt="Logo" class="navbar-logo-img" />
             </a>
             <nav class="navbar-links">
-                <a href="#" class="nav-link" onclick="window.location.href='../index.html'">TELA INICIAL</a>
-                <a href="#" class="nav-link" onclick="window.location.href='tela_catalogo.html'">BONECOS</a>
+                <a href="../index.html" class="nav-link">TELA INICIAL</a>
+                <a href="tela_catalogo.html" class="nav-link">BONECOS</a>
                 <a href="tela_catalogo.html#itens" class="nav-link">ITENS</a>
             </nav>
             <div class="navbar-actions">
@@ -44,6 +46,8 @@
             </div>
         </header>
     </div>
+
+    <main id="conteudo-principal">
 
     <!-- HERO -->
     <section class="hero">
@@ -78,63 +82,75 @@
     <section class="section-bonecos">
         <h2 class="section-titulo">Outros produtos</h2>
         <div class="bonecos-grid">
-            <div class="boneco-card" onclick="window.location.href='tela_produto.html'">
-                <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Boneco 1" /></div>
-                <div class="boneco-info">
-                    <p class="boneco-nome">EDDIE BROCK</p>
-                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
-                    <p class="boneco-preco">R$42,5</p>
-                </div>
+            <div class="boneco-card">
+                <a class="boneco-card-link" href="tela_produto.html" style="display:contents;color:inherit;text-decoration:none;">
+                    <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Eddie Brock" /></div>
+                    <div class="boneco-info">
+                        <p class="boneco-nome">EDDIE BROCK</p>
+                        <p class="boneco-subtitulo">CANARY ADRIANO</p>
+                        <p class="boneco-preco">R$42,5</p>
+                    </div>
+                </a>
                 <button class="boneco-fav" aria-label="Favoritar">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 </button>
             </div>
-            <div class="boneco-card" onclick="window.location.href='tela_produto.html'">
-                <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Boneco 2" /></div>
-                <div class="boneco-info">
-                    <p class="boneco-nome">LARA ADRIANO</p>
-                    <p class="boneco-subtitulo">LARA ADRIANO</p>
-                    <p class="boneco-preco">R$42,5</p>
-                </div>
+            <div class="boneco-card">
+                <a class="boneco-card-link" href="tela_produto.html" style="display:contents;color:inherit;text-decoration:none;">
+                    <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Lara Adriano" /></div>
+                    <div class="boneco-info">
+                        <p class="boneco-nome">LARA ADRIANO</p>
+                        <p class="boneco-subtitulo">LARA ADRIANO</p>
+                        <p class="boneco-preco">R$42,5</p>
+                    </div>
+                </a>
                 <button class="boneco-fav" aria-label="Favoritar">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 </button>
             </div>
-            <div class="boneco-card" onclick="window.location.href='tela_produto.html'">
-                <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Boneco 3" /></div>
-                <div class="boneco-info">
-                    <p class="boneco-nome">PEDRO ADRIANO</p>
-                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
-                    <p class="boneco-preco">R$42,5</p>
-                </div>
+            <div class="boneco-card">
+                <a class="boneco-card-link" href="tela_produto.html" style="display:contents;color:inherit;text-decoration:none;">
+                    <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Pedro Adriano" /></div>
+                    <div class="boneco-info">
+                        <p class="boneco-nome">PEDRO ADRIANO</p>
+                        <p class="boneco-subtitulo">CANARY ADRIANO</p>
+                        <p class="boneco-preco">R$42,5</p>
+                    </div>
+                </a>
                 <button class="boneco-fav" aria-label="Favoritar">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 </button>
             </div>
-            <div class="boneco-card" onclick="window.location.href='tela_produto.html'">
-                <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Boneco 4" /></div>
-                <div class="boneco-info">
-                    <p class="boneco-nome">CAPITÃO S</p>
-                    <p class="boneco-subtitulo">LARA ADRIANO</p>
-                    <p class="boneco-preco">R$42,5</p>
-                </div>
+            <div class="boneco-card">
+                <a class="boneco-card-link" href="tela_produto.html" style="display:contents;color:inherit;text-decoration:none;">
+                    <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Capitão S" /></div>
+                    <div class="boneco-info">
+                        <p class="boneco-nome">CAPITÃO S</p>
+                        <p class="boneco-subtitulo">LARA ADRIANO</p>
+                        <p class="boneco-preco">R$42,5</p>
+                    </div>
+                </a>
                 <button class="boneco-fav" aria-label="Favoritar">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 </button>
             </div>
-            <div class="boneco-card" onclick="window.location.href='tela_produto.html'">
-                <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Boneco 5" /></div>
-                <div class="boneco-info">
-                    <p class="boneco-nome">CAROL S</p>
-                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
-                    <p class="boneco-preco">R$42,5</p>
-                </div>
+            <div class="boneco-card">
+                <a class="boneco-card-link" href="tela_produto.html" style="display:contents;color:inherit;text-decoration:none;">
+                    <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Carol S" /></div>
+                    <div class="boneco-info">
+                        <p class="boneco-nome">CAROL S</p>
+                        <p class="boneco-subtitulo">CANARY ADRIANO</p>
+                        <p class="boneco-preco">R$42,5</p>
+                    </div>
+                </a>
                 <button class="boneco-fav" aria-label="Favoritar">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 </button>
             </div>
         </div>
     </section>
+
+    </main>
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -146,15 +162,15 @@
             <div class="footer-cols">
                 <div class="footer-col">
                     <p class="footer-col-title">PRODUTOS</p>
-                    <a href="#" onclick="window.location.href='tela_catalogo.html'">Bonecos</a>
+                    <a href="tela_catalogo.html">Bonecos</a>
                 </div>
                 <div class="footer-col">
                     <p class="footer-col-title">SUPORTE</p>
-                    <a href="#" onclick="window.location.href='mailto:contato@exemplo.com'">Suporte</a>
+                    <a href="mailto:contato@exemplo.com">Suporte</a>
                 </div>
                 <div class="footer-col">
                     <p class="footer-col-title">COMPANHIA</p>
-                    <a href="#" onclick="location.href='https://institutojef.org.br/'">Sobre Germinare</a>
+                    <a href="https://institutojef.org.br/">Sobre Germinare</a>
                 </div>
             </div>
         </div>

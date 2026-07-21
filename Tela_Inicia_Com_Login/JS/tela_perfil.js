@@ -87,7 +87,14 @@ function abrirPopup(id) {
     const overlay = document.getElementById(id);
     if (!overlay) return;
     overlay.classList.add("ativo");
+    overlay.inert = false;
     document.body.style.overflow = "hidden";
+
+    const box = overlay.querySelector(".popup-box");
+    if (box) {
+        if (!box.hasAttribute("tabindex")) box.setAttribute("tabindex", "-1");
+        box.focus();
+    }
 }
 window.abrirPopup = abrirPopup;
 
@@ -95,6 +102,7 @@ function fecharPopup(id) {
     const overlay = document.getElementById(id);
     if (!overlay) return;
     overlay.classList.remove("ativo");
+    overlay.inert = true;
     document.body.style.overflow = "";
 }
 window.fecharPopup = fecharPopup;
@@ -112,6 +120,7 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
         document.querySelectorAll(".popup-overlay.ativo").forEach((overlay) => {
             overlay.classList.remove("ativo");
+            overlay.inert = true;
         });
         document.body.style.overflow = "";
     }

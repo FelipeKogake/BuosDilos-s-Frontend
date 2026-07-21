@@ -139,8 +139,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const QTD_BONECOS = 5;
 
+function urlProduto(id) {
+    return `tela_produto.html?id=${encodeURIComponent(id)}&origem=favoritos`;
+}
+
 function irParaProduto(id) {
-    window.location.href = `tela_produto.html?id=${encodeURIComponent(id)}&origem=favoritos`;
+    window.location.href = urlProduto(id);
 }
 
 function atualizarEstadoVazio() {
@@ -238,13 +242,13 @@ async function carregarNovosBonecos() {
     try {
         const produtos = await obterProdutos();
         const ativos = produtos.filter(p => p.ativo).slice(0, QTD_BONECOS);
-        renderizarBonecosEmGrids('.bonecos-grid', ativos, irParaProduto);
+        renderizarBonecosEmGrids('.bonecos-grid', ativos, urlProduto);
     } catch (error) {
         console.error('Erro ao carregar novos bonecos:', error);
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    carregarFavoritos();
-    carregarNovosBonecos();
+    Promise.all([carregarFavoritos(), carregarNovosBonecos()])
+        .finally(() => window.SplashScreen?.esconder());
 });

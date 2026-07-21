@@ -44,11 +44,20 @@ function criarIconeFavorito(produtoId) {
     return btn;
 }
 
-/** Cria o card usado nos grids "Novos bonecos"/"Outros produtos". */
-export function criarBonecoCard(produto, aoClicar, escuro = false) {
+/**
+ * Cria o card usado nos grids "Novos bonecos"/"Outros produtos".
+ * `obterUrl(produtoId)` deve retornar a URL de destino — o card inteiro
+ * (exceto o botão de favoritar) é um <a> nativo: focável e ativável
+ * por teclado sem precisar de role/tabindex artificiais.
+ */
+export function criarBonecoCard(produto, obterUrl, escuro = false) {
     const card = document.createElement('div');
     card.className = 'boneco-card';
-    card.addEventListener('click', () => aoClicar(produto.id));
+
+    const link = document.createElement('a');
+    link.className = 'boneco-card-link';
+    link.href = obterUrl(produto.id);
+    link.style.cssText = 'display:contents;color:inherit;text-decoration:none;';
 
     const imgWrap = document.createElement('div');
     imgWrap.className = 'boneco-img-wrap' + (escuro ? ' dark' : '');
@@ -66,24 +75,30 @@ export function criarBonecoCard(produto, aoClicar, escuro = false) {
         <p class="boneco-preco">${formatarPreco(produto.preco)}</p>
     `;
 
-    card.appendChild(imgWrap);
-    card.appendChild(info);
+    link.appendChild(imgWrap);
+    link.appendChild(info);
+
+    card.appendChild(link);
     card.appendChild(criarIconeFavorito(produto.id));
     return card;
 }
 
-/** Cria o item circular usado nos carrosséis "Itens Colecionáveis". */
-export function criarItemCircular(produto, aoClicar) {
-    const div = document.createElement('div');
-    div.className = 'item-circular';
-    div.addEventListener('click', () => aoClicar(produto.id));
+/**
+ * Cria o item circular usado nos carrosséis "Itens Colecionáveis".
+ * `obterUrl(produtoId)` deve retornar a URL de destino.
+ */
+export function criarItemCircular(produto, obterUrl) {
+    const link = document.createElement('a');
+    link.className = 'item-circular';
+    link.href = obterUrl(produto.id);
+    link.style.cssText = 'color:inherit;text-decoration:none;';
 
     const img = document.createElement('img');
     img.src = obterFotoPrincipal(produto);
     img.alt = produto.nome || '';
 
-    div.appendChild(img);
-    return div;
+    link.appendChild(img);
+    return link;
 }
 
 const PRODUTOS_POR_LINHA = 5;
@@ -111,12 +126,12 @@ function criarBotaoVerMais(classe, aoClicar, texto = null) {
  * Com `limitar: true`, mostra no máximo LIMITE_GRID cards, trocando o último por um
  * botão "Ver mais" que revela o restante ao ser clicado.
  */
-export function renderizarBonecosEmGrids(seletorGrid, produtos, aoClicar, { limitar = false } = {}) {
+export function renderizarBonecosEmGrids(seletorGrid, produtos, obterUrl, { limitar = false } = {}) {
     document.querySelectorAll(seletorGrid).forEach(grid => {
         const preencher = (lista, comVerMais) => {
             grid.innerHTML = '';
             lista.forEach((produto, index) => {
-                grid.appendChild(criarBonecoCard(produto, aoClicar, index % 2 === 1));
+                grid.appendChild(criarBonecoCard(produto, obterUrl, index % 2 === 1));
             });
             if (comVerMais) {
                 grid.appendChild(criarBotaoVerMais('boneco-card boneco-card--ver-mais', () => preencher(produtos, false), 'Ver mais'));
@@ -136,11 +151,11 @@ export function renderizarBonecosEmGrids(seletorGrid, produtos, aoClicar, { limi
  * Com `limitar: true`, mostra no máximo LIMITE_GRID itens, trocando o último por um
  * botão "Ver mais" que revela o restante ao ser clicado.
  */
-export function renderizarItensEmGrids(seletorGrid, produtos, aoClicar, { limitar = false } = {}) {
+export function renderizarItensEmGrids(seletorGrid, produtos, obterUrl, { limitar = false } = {}) {
     document.querySelectorAll(seletorGrid).forEach(grid => {
         const preencher = (lista, comVerMais) => {
             grid.innerHTML = '';
-            lista.forEach(produto => grid.appendChild(criarItemCircular(produto, aoClicar)));
+            lista.forEach(produto => grid.appendChild(criarItemCircular(produto, obterUrl)));
             if (comVerMais) {
                 grid.appendChild(criarBotaoVerMais('item-circular item-circular--ver-mais', () => preencher(produtos, false), 'Ver mais'));
             }

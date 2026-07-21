@@ -127,8 +127,8 @@ window.exigirLogin = exigirLogin; // usado pelo onclick inline no HTML
 
 let todosOsProdutos = [];
 
-function irParaProduto(id) {
-    window.location.href = `tela_produto.html?id=${encodeURIComponent(id)}&origem=busca`;
+function urlProduto(id) {
+    return `tela_produto.html?id=${encodeURIComponent(id)}&origem=busca`;
 }
 
 /** Remove acentos e caixa pra comparar termos sem distinção. */
@@ -161,7 +161,7 @@ function aplicarFiltros() {
         return combinaNome && combinaCategoria;
     });
 
-    renderizarBonecosEmGrids('#grid-resultados', filtrados, irParaProduto);
+    renderizarBonecosEmGrids('#grid-resultados', filtrados, urlProduto);
     atualizarContagem(filtrados.length);
     document.getElementById('busca-vazio').hidden = filtrados.length > 0;
     atualizarBotaoLimpar();
@@ -216,6 +216,8 @@ async function carregarBusca() {
     } catch (error) {
         console.error('Erro ao carregar busca:', error);
         document.getElementById('busca-contagem').textContent = 'Erro ao carregar produtos.';
+    } finally {
+        window.SplashScreen?.esconder();
     }
 }
 

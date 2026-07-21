@@ -210,8 +210,8 @@ window.addEventListener('scroll', () => {
 // CATÁLOGO DE PRODUTOS (Novos Bonecos + Itens Colecionáveis)
 // ─────────────────────────────────────────────────────────────────────────────
 
-function irParaProduto(id) {
-    window.location.href = `tela_produto.html?id=${encodeURIComponent(id)}&origem=catalogo`;
+function urlProduto(id) {
+    return `tela_produto.html?id=${encodeURIComponent(id)}&origem=catalogo`;
 }
 
 async function carregarCatalogo() {
@@ -219,10 +219,12 @@ async function carregarCatalogo() {
         const produtos = await obterProdutos();
         const ativos = produtos.filter(p => p.ativo);
 
-        renderizarBonecosEmGrids('.bonecos-grid', ativos, irParaProduto, { limitar: true });
-        renderizarItensEmGrids('.itens-grid', ativos, irParaProduto, { limitar: true });
+        renderizarBonecosEmGrids('.bonecos-grid', ativos, urlProduto, { limitar: true });
+        renderizarItensEmGrids('.itens-grid', ativos, urlProduto, { limitar: true });
     } catch (error) {
         console.error('Erro ao carregar catálogo de produtos:', error);
+    } finally {
+        window.SplashScreen?.esconder();
     }
 }
 

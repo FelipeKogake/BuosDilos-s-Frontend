@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="../api/temaPreload.js" data-paleta="app"></script>
+    <script src="../api/acessibilidadeWidget.js" defer></script>
+    <script src="../api/splashScreen.js" defer></script>
     <link rel="stylesheet" href="CSS/tela_catalogo.css">
     <link id="favicon" rel="icon" type="image/png" href="/Tela_Inicia_Com_Login/Assets/logo-azul.png">
     <title>Bonecos e itens</title>
@@ -16,13 +18,13 @@
     <!-- NAVBAR -->
     <div class="navbar-wrapper">
         <header class="navbar">
-            <a href="#" class="navbar-logo">
-                <img src="Assets/avatar-azul.png" alt="Logo" class="navbar-logo-img" />
+            <a href="../index.html" class="navbar-logo">
+                <img src="Assets/logo-azul.png" alt="Logo" class="navbar-logo-img" />
             </a>
             <nav class="navbar-links">
-                <a href="#" class="nav-link" onclick="window.location.href='../index.html'">TELA INICIAL</a>
-                <a href="#" class="nav-link active">BONECOS</a>
-                <a href="#" class="nav-link">ITENS</a>
+                <a href="../index.html" class="nav-link">TELA INICIAL</a>
+                <a href="tela_catalogo.html" class="nav-link active" aria-current="page">BONECOS</a>
+                <a href="tela_catalogo.html#itens" class="nav-link">ITENS</a>
             </nav>
             <div class="navbar-actions">
                 <div class="busca-nav" id="busca-nav">
@@ -40,10 +42,12 @@
                 <button class="icon-btn" aria-label="Carrinho" onclick="exigirLogin()">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                 </button>
-                <a href="../Login_Cadatro/login.html" class="btn-entrar-nav" onclick="window.location.href='../Login_Cadatro/login.html'">ENTRAR</a>
+                <a href="../Login_Cadatro/login.html" class="btn-entrar-nav">ENTRAR</a>
             </div>
         </header>
     </div>
+
+    <main id="conteudo-principal">
 
     <!-- HERO -->
     <section class="hero">
@@ -74,6 +78,8 @@
         <div class="itens-grid itens-grid--wrap"></div>
     </section>
 
+    </main>
+
     <!-- FOOTER -->
     <footer class="footer">
         <div class="footer-inner">
@@ -84,15 +90,15 @@
             <div class="footer-cols">
                 <div class="footer-col">
                     <p class="footer-col-title">PRODUTOS</p>
-                    <a href="#" onclick="window.location.href='tela_catalogo.html'">Bonecos</a>
+                    <a href="tela_catalogo.html">Bonecos</a>
                 </div>
                 <div class="footer-col">
                     <p class="footer-col-title">SUPORTE</p>
-                    <a href="#" onclick="window.location.href='mailto:contato@exemplo.com'">Suporte</a>
+                    <a href="mailto:contato@exemplo.com">Suporte</a>
                 </div>
                 <div class="footer-col">
                     <p class="footer-col-title">COMPANHIA</p>
-                    <a href="#" onclick="location.href='https://institutojef.org.br/'">Sobre Germinare</a>
+                    <a href="https://institutojef.org.br/">Sobre Germinare</a>
                 </div>
             </div>
         </div>

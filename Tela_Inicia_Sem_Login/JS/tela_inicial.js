@@ -156,8 +156,8 @@ window.exigirLogin = exigirLogin; // usado pelo onclick inline no HTML
 const QTD_ITENS_COLECIONAVEIS = 6;
 const QTD_BONECOS             = 5;
 
-function irParaProduto(id) {
-    window.location.href = `Tela_Inicia_Sem_Login/tela_produto.html?id=${encodeURIComponent(id)}&origem=inicial`;
+function urlProduto(id) {
+    return `Tela_Inicia_Sem_Login/tela_produto.html?id=${encodeURIComponent(id)}&origem=inicial`;
 }
 
 async function carregarProdutosTelaInicial() {
@@ -165,10 +165,12 @@ async function carregarProdutosTelaInicial() {
         const produtos = await obterProdutos();
         const ativos = produtos.filter(p => p.ativo);
 
-        renderizarItensEmGrids('.itens-grid', ativos.slice(0, QTD_ITENS_COLECIONAVEIS), irParaProduto);
-        renderizarBonecosEmGrids('.bonecos-grid', ativos.slice(0, QTD_BONECOS), irParaProduto);
+        renderizarItensEmGrids('.itens-grid', ativos.slice(0, QTD_ITENS_COLECIONAVEIS), urlProduto);
+        renderizarBonecosEmGrids('.bonecos-grid', ativos.slice(0, QTD_BONECOS), urlProduto);
     } catch (error) {
         console.error('Erro ao carregar produtos na tela inicial:', error);
+    } finally {
+        window.SplashScreen?.esconder();
     }
 }
 

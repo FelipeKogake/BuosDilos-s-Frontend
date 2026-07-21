@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="../api/temaPreload.js" data-paleta="app"></script>
+    <script src="../api/acessibilidadeWidget.js" defer></script>
     <title>Perfil</title>
     <link rel="stylesheet" href="CSS/tela_perfil.css">
     <link id="favicon" rel="icon" type="image/png" href="Assets/logo-azul.png">
@@ -13,7 +14,7 @@
     <div class="top-bar"></div>
 
     <div class="perfil-page">
-        <div class="perfil-container">
+        <main class="perfil-container" id="conteudo-principal">
 
             <button class="btn-voltar" onclick="history.back()">VOLTAR</button>
 
@@ -79,7 +80,7 @@
                 </button>
             </div>
 
-        </div>
+        </main>
 
         <!-- FOOTER -->
         <footer class="footer">
@@ -116,10 +117,10 @@
     <!-- ===================== OVERLAYS ===================== -->
 
     <!-- POPUP: EDITAR PERFIL -->
-    <div class="popup-overlay" id="popup-editar" onclick="fecharPopupOverlay(event, 'popup-editar')">
-        <div class="popup-box">
+    <div class="popup-overlay" id="popup-editar" onclick="fecharPopupOverlay(event, 'popup-editar')" inert>
+        <div class="popup-box" role="dialog" aria-modal="true" aria-labelledby="popup-editar-titulo">
             <div class="popup-header">
-                <h2 class="popup-titulo">Editar Perfil</h2>
+                <h2 class="popup-titulo" id="popup-editar-titulo">Editar Perfil</h2>
                 <button class="popup-fechar" onclick="fecharPopup('popup-editar')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"/>
@@ -153,10 +154,10 @@
     </div>
 
     <!-- POPUP: ADICIONAR CARTÃO -->
-    <div class="popup-overlay" id="popup-adicionar-cartao" onclick="fecharPopupOverlay(event, 'popup-adicionar-cartao')">
-        <div class="popup-box">
+    <div class="popup-overlay" id="popup-adicionar-cartao" onclick="fecharPopupOverlay(event, 'popup-adicionar-cartao')" inert>
+        <div class="popup-box" role="dialog" aria-modal="true" aria-labelledby="popup-adicionar-cartao-titulo">
             <div class="popup-header">
-                <h2 class="popup-titulo">Adicionar Cartão</h2>
+                <h2 class="popup-titulo" id="popup-adicionar-cartao-titulo">Adicionar Cartão</h2>
                 <button class="popup-fechar" onclick="fecharPopup('popup-adicionar-cartao')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"/>
@@ -192,10 +193,10 @@
     </div>
 
     <!-- POPUP: EXCLUIR CARTÃO -->
-    <div class="popup-overlay" id="popup-excluir-cartao" onclick="fecharPopupOverlay(event, 'popup-excluir-cartao')">
-        <div class="popup-box popup-box--compacto">
+    <div class="popup-overlay" id="popup-excluir-cartao" onclick="fecharPopupOverlay(event, 'popup-excluir-cartao')" inert>
+        <div class="popup-box popup-box--compacto" role="dialog" aria-modal="true" aria-labelledby="popup-excluir-cartao-titulo">
             <div class="popup-header">
-                <h2 class="popup-titulo">Excluir cartão</h2>
+                <h2 class="popup-titulo" id="popup-excluir-cartao-titulo">Excluir cartão</h2>
                 <button class="popup-fechar" onclick="fecharPopup('popup-excluir-cartao')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"/>
@@ -221,10 +222,10 @@
     </div>
 
     <!-- POPUP: ALTERAR ENDEREÇO -->
-    <div class="popup-overlay" id="popup-alterar-endereco" onclick="fecharPopupOverlay(event, 'popup-alterar-endereco')">
-        <div class="popup-box">
+    <div class="popup-overlay" id="popup-alterar-endereco" onclick="fecharPopupOverlay(event, 'popup-alterar-endereco')" inert>
+        <div class="popup-box" role="dialog" aria-modal="true" aria-labelledby="popup-alterar-endereco-titulo">
             <div class="popup-header">
-                <h2 class="popup-titulo">Alterar endereço</h2>
+                <h2 class="popup-titulo" id="popup-alterar-endereco-titulo">Alterar endereço</h2>
                 <button class="popup-fechar" onclick="fecharPopup('popup-alterar-endereco')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"/>
@@ -260,10 +261,10 @@
     </div>
 
     <!-- POPUP: SAIR DA CONTA -->
-    <div class="popup-overlay" id="popup-sair" onclick="fecharPopupOverlay(event, 'popup-sair')">
-        <div class="popup-box popup-box--compacto">
+    <div class="popup-overlay" id="popup-sair" onclick="fecharPopupOverlay(event, 'popup-sair')" inert>
+        <div class="popup-box popup-box--compacto" role="dialog" aria-modal="true" aria-labelledby="popup-sair-titulo">
             <div class="popup-header">
-                <h2 class="popup-titulo">Sair da conta</h2>
+                <h2 class="popup-titulo" id="popup-sair-titulo">Sair da conta</h2>
                 <button class="popup-fechar" onclick="fecharPopup('popup-sair')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"/>
@@ -289,10 +290,10 @@
     </div>
 
     <!-- POPUP: FOTO DE PERFIL -->
-    <div class="popup-overlay" id="popup-foto-perfil" onclick="fecharPopupOverlay(event, 'popup-foto-perfil')">
-        <div class="popup-box">
+    <div class="popup-overlay" id="popup-foto-perfil" onclick="fecharPopupOverlay(event, 'popup-foto-perfil')" inert>
+        <div class="popup-box" role="dialog" aria-modal="true" aria-labelledby="popup-foto-perfil-titulo">
             <div class="popup-header">
-                <h2 class="popup-titulo">Escolher foto de perfil</h2>
+                <h2 class="popup-titulo" id="popup-foto-perfil-titulo">Escolher foto de perfil</h2>
                 <button class="popup-fechar" onclick="fecharPopup('popup-foto-perfil')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"/>

@@ -145,9 +145,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const QTD_OUTROS_PRODUTOS = 5;
 
-function irParaProduto(id) {
+function urlProduto(id) {
     const origem = new URLSearchParams(window.location.search).get('origem') || 'catalogo';
-    window.location.href = `tela_produto.html?id=${encodeURIComponent(id)}&origem=${origem}`;
+    return `tela_produto.html?id=${encodeURIComponent(id)}&origem=${origem}`;
 }
 
 /** Mantém ativa a aba de onde o usuário veio (tela inicial ou catálogo), como se esta fosse uma página modal. */
@@ -177,6 +177,7 @@ async function carregarProduto() {
 
     const id = new URLSearchParams(window.location.search).get('id');
     if (!id) {
+        window.SplashScreen?.esconder();
         window.location.href = 'tela_catalogo.html';
         return;
     }
@@ -189,10 +190,12 @@ async function carregarProduto() {
         const outros = produtos
             .filter(p => p.ativo && String(p.id) !== String(id))
             .slice(0, QTD_OUTROS_PRODUTOS);
-        renderizarBonecosEmGrids('.bonecos-grid', outros, irParaProduto);
+        renderizarBonecosEmGrids('.bonecos-grid', outros, urlProduto);
     } catch (error) {
         console.error('Erro ao carregar produto:', error);
         window.location.href = 'tela_catalogo.html';
+    } finally {
+        window.SplashScreen?.esconder();
     }
 }
 
