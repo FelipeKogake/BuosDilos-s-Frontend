@@ -28,8 +28,8 @@ const temas = {
         imagens: {
             avatar: 'Tela_Inicia_Sem_Login/Assets/avatar-azul.png',
             heroFundo: 'Tela_Inicia_Sem_Login/Assets/Subtract2.jpg',
-            logo: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
-            favicon: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
+            logo: 'Tela_Inicia_Com_Login/Assets/logo-azul.png',
+            favicon: 'Tela_Inicia_Com_Login/Assets/logo-azul.png',
         }
     },
     rosa: {
@@ -57,8 +57,8 @@ const temas = {
         imagens: {
             avatar: 'Tela_Inicia_Sem_Login/Assets/avatar-rosa.png',
             heroFundo: 'Tela_Inicia_Sem_Login/Assets/Subtract.jpg',
-            logo: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
-            favicon: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
+            logo: 'Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
+            favicon: 'Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
         }
     }
 };

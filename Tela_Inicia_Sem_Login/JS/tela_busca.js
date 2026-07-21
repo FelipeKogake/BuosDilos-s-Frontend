@@ -29,8 +29,8 @@ const temas = {
         '--cor-cta-light-border': '#A5B8E0',
         imagens: {
             avatar: 'Assets/avatar-azul.png',
-            logo: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
-            favicon: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
+            logo: '../Tela_Inicia_Com_Login/Assets/logo-azul.png',
+            favicon: '../Tela_Inicia_Com_Login/Assets/logo-azul.png',
         }
     },
     rosa: {
@@ -55,8 +55,8 @@ const temas = {
         '--cor-cta-light-border': '#FFA5A5',
         imagens: {
             avatar: 'Assets/avatar-rosa.png',
-            logo: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
-            favicon: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
+            logo: '../Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
+            favicon: '../Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
         }
     }
 };

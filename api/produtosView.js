@@ -5,7 +5,12 @@
 
 import { ehFavorito, alternarFavorito } from './favoritos.js';
 
-export const IMAGEM_PADRAO = '/Tela_Inicia_Com_Login/Assets/login/personagem-azul.png';
+// Resolvido a partir da localização deste módulo (não da página atual), pois
+// este arquivo é usado tanto por páginas na raiz (index.html) quanto por
+// páginas um nível abaixo (Tela_Inicia_*/*.html) — um caminho relativo à
+// página quebraria em uma das duas profundidades. Também funciona hospedado
+// em subpasta (ex.: GitHub Pages de projeto), diferente de um caminho absoluto "/...".
+export const IMAGEM_PADRAO = new URL('../Tela_Inicia_Com_Login/Assets/login/personagem-azul.png', import.meta.url).href;
 
 /** Extrai a URL da foto principal ("caixa") de um produto. */
 export function obterFotoPrincipal(produto) {

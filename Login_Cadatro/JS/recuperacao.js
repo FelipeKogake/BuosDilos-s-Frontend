@@ -32,7 +32,7 @@ const temas = {
             personagem: 'Assets/recuperacao/personagem-azul.png',
             estrelas: 'Assets/recuperacao/estrelas-azul.png',
             avatar: 'Assets/avatar-azul.png',
-            favicon: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
+            favicon: '../Tela_Inicia_Com_Login/Assets/logo-azul.png',
         }
     },
     rosa: {
@@ -56,7 +56,7 @@ const temas = {
             personagem: 'Assets/recuperacao/personagem-rosa.png',
             estrelas: 'Assets/recuperacao/estrelas-rosa.png',
             avatar: 'Assets/avatar-rosa.png',
-            favicon: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
+            favicon: '../Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
         }
     }
 };

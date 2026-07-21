@@ -436,8 +436,12 @@ body {
 
 .bonecos-grid--wrap {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(212px, 1fr));
     gap: 1.5rem;
+}
+
+.bonecos-grid--wrap .boneco-card {
+    width: 100%;
 }
 
 /* ============================================
@@ -556,10 +560,6 @@ body {
         padding-left: 3rem;
         padding-right: 3rem;
     }
-
-    .bonecos-grid--wrap {
-        grid-template-columns: repeat(3, 1fr);
-    }
 }
 
 @media (max-width: 860px) {
@@ -575,10 +575,6 @@ body {
         flex: none;
         width: 100%;
         position: static;
-    }
-
-    .bonecos-grid--wrap {
-        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -602,7 +598,7 @@ body {
     }
 
     .bonecos-grid--wrap {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 1rem;
     }
 }

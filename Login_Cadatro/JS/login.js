@@ -33,7 +33,7 @@ const temas = {
             personagem: 'Assets/login/personagem-azul.png',
             bolhas: 'Assets/login/bolhas-azul.png',
             avatar: 'Assets/avatar-azul.png',
-            favicon: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
+            favicon: '../Tela_Inicia_Com_Login/Assets/logo-azul.png',
         }
     },
     rosa: {
@@ -57,7 +57,7 @@ const temas = {
             personagem: 'Assets/login/personagem-rosa.png',
             bolhas: 'Assets/login/bolhas-rosa.png',
             avatar: 'Assets/avatar-rosa.png',
-            favicon: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
+            favicon: '../Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
         }
     }
 };
@@ -214,10 +214,9 @@ async function tentarLogin(e) {
         const snap = await getDoc(doc(db, 'admins', credencial.user.uid));
 
         if (snap.exists()) {
-            window.location.href = '/BuosDilos-s-Frontend/admin/admin.html'; // redireciona para painel admin
+            window.location.href = '../admin/admin.html'; // redireciona para painel admin
         } else {
-            window.location.href = '../../Tela_Inicia_Com_Login/tela_inicial.html'; // redireciona para área comum
-            // /BuosDilos-s-Frontend/Tela_Inicia_Com_Login/tela_inicial.html
+            window.location.href = '../Tela_Inicia_Com_Login/tela_inicial.html'; // redireciona para área comum
             mostrarPopup('Login realizado com sucesso!', 'sucesso');
         }
 
