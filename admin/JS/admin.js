@@ -3,8 +3,6 @@ import { auth } from '../../autthentication/firebase-config.js';
 import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
 
 import {
-    listarProdutos,
-    buscarProduto,
     criarProduto,
     atualizarProduto,
     deletarProduto,
@@ -13,6 +11,12 @@ import {
     adicionarFoto,
     deletarFoto,
 } from '../../api/produtos.js';
+
+import {
+    obterProdutos,
+    obterProdutoPorId,
+    invalidarCacheProdutos,
+} from '../../api/produtosStore.js';
 
 import {
     listarUsuarios,
@@ -121,7 +125,7 @@ async function carregarProdutos() {
     document.getElementById('inativos-estado-vazio').hidden  = true;
 
     try {
-        todosProdutos = await listarProdutos();
+        todosProdutos = await obterProdutos();
         const { ativos, inativos } = separarProdutos(todosProdutos);
         preencherFiltroCategorias(ativos);
         renderizarProdutos(ativos,   'grid-produtos', 'produtos-estado-vazio');
@@ -208,7 +212,7 @@ gridProdutos.addEventListener('click', async (e) => {
 
     if (acao === 'editar') {
         try {
-            const produtoAtualizado = await buscarProduto(produto.id);
+            const produtoAtualizado = await obterProdutoPorId(produto.id);
             abrirModalProduto(produtoAtualizado);
         } catch {
             mostrarToast('Erro ao carregar produto', 'erro');
@@ -220,6 +224,7 @@ gridProdutos.addEventListener('click', async (e) => {
         if (!confirmado) return;
         try {
             await deletarProduto(id);
+            invalidarCacheProdutos();
             mostrarToast('Produto excluído');
             carregarProdutos();
         } catch {
@@ -322,6 +327,7 @@ btnToggleProduto.addEventListener('click', async () => {
     if (!confirmado) return;
     try {
         await inativarProduto(produtoEmEdicao.id);
+        invalidarCacheProdutos();
         mostrarToast('Produto inativado');
         fecharModalProduto();
         carregarProdutos();
@@ -355,12 +361,14 @@ formProduto.addEventListener('submit', async (e) => {
     try {
         if (produtoEmEdicao) {
             await atualizarProduto(produtoEmEdicao.id, dados);
+            invalidarCacheProdutos();
             mostrarToast('Produto atualizado!');
         } else {
             const novoProduto = await criarProduto(dados);
+            invalidarCacheProdutos();
             mostrarToast('Produto criado! Agora adicione as fotos na aba Fotos.');
             // Abre o modal no produto recém criado com aba de fotos disponível
-            const produtoCriado = await buscarProduto(novoProduto.id);
+            const produtoCriado = await obterProdutoPorId(novoProduto.id);
             fecharModalProduto();
             abrirModalProduto(produtoCriado);
             // Muda automaticamente para aba de fotos

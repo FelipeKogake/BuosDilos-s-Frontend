@@ -142,6 +142,9 @@ if (popupFlag === 'senha-alterada') {
 } else if (popupFlag === 'erro-cadastro') {
     localStorage.removeItem('popup');
     mostrarPopup('Erro ao realizar cadastro. Tente novamente.', 'erro');
+} else if (popupFlag === 'login-necessario') {
+    localStorage.removeItem('popup');
+    mostrarPopup('Faça login para continuar.', 'erro');
 }
 
 function validarEmail() {

@@ -1,3 +1,14 @@
+import { auth } from '../../autthentication/firebase-config.js';
+import { onAuthStateChanged, updateProfile, signOut } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+import {
+    obterPerfilExtra,
+    atualizarPerfilExtra,
+    adicionarCartao,
+    removerCartao,
+    tornarCartaoPrincipal,
+    FOTOS_DISPONIVEIS,
+} from '../../api/perfil.js';
+
 // ===================== TEMAS =====================
 
 const temas = {
@@ -51,6 +62,7 @@ function toggleTema() {
     const atual = localStorage.getItem("tema") || "azul";
     aplicarTema(atual === "azul" ? "rosa" : "azul");
 }
+window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
 
 aplicarTema(localStorage.getItem("tema") || "azul");
 
@@ -77,6 +89,7 @@ function abrirPopup(id) {
     overlay.classList.add("ativo");
     document.body.style.overflow = "hidden";
 }
+window.abrirPopup = abrirPopup;
 
 function fecharPopup(id) {
     const overlay = document.getElementById(id);
@@ -84,6 +97,7 @@ function fecharPopup(id) {
     overlay.classList.remove("ativo");
     document.body.style.overflow = "";
 }
+window.fecharPopup = fecharPopup;
 
 // Fecha ao clicar fora (no overlay, não no popup-box)
 function fecharPopupOverlay(event, id) {
@@ -91,6 +105,7 @@ function fecharPopupOverlay(event, id) {
         fecharPopup(id);
     }
 }
+window.fecharPopupOverlay = fecharPopupOverlay;
 
 // Fecha qualquer popup aberto com ESC
 document.addEventListener("keydown", (e) => {
@@ -100,4 +115,269 @@ document.addEventListener("keydown", (e) => {
         });
         document.body.style.overflow = "";
     }
+});
+
+// ===================== PERFIL =====================
+
+let usuarioAtual  = null;
+let cartaoParaExcluir = null;
+let fotoSelecionadaTemp = null;
+
+function formatarEndereco(endereco) {
+    if (!endereco || !endereco.rua) {
+        return { linha1: 'Endereço não cadastrado', linha2: '' };
+    }
+    return {
+        linha1: endereco.rua,
+        linha2: [endereco.cidade, endereco.estado, endereco.cep].filter(Boolean).join(', '),
+    };
+}
+
+function criarCartaoElemento(cartao) {
+    const div = document.createElement('div');
+    div.className = 'cartao';
+    div.innerHTML = `
+        <div class="cartao-esquerda">
+            <span class="cartao-bandeira">${cartao.bandeira}</span>
+            <span class="cartao-numero">•••• •••• •••• ${cartao.ultimosDigitos}</span>
+            <span class="cartao-nome">${cartao.nomeCartao}</span>
+        </div>
+        <div class="cartao-acoes">
+            ${cartao.principal
+                ? '<span class="cartao-tag">PRIMARY</span>'
+                : '<button class="btn-tornar-primary" title="Tornar principal">Tornar primary</button>'}
+            <button class="btn-excluir-cartao" title="Excluir cartão">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6M14 11v6"/>
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                </svg>
+            </button>
+        </div>
+    `;
+
+    const btnPrimary = div.querySelector('.btn-tornar-primary');
+    if (btnPrimary) {
+        btnPrimary.addEventListener('click', () => {
+            tornarCartaoPrincipal(usuarioAtual.uid, cartao.id);
+            renderizarPerfil();
+        });
+    }
+
+    div.querySelector('.btn-excluir-cartao').addEventListener('click', () => {
+        cartaoParaExcluir = cartao.id;
+        abrirPopup('popup-excluir-cartao');
+    });
+
+    return div;
+}
+
+function renderizarCartoes(cartoes) {
+    const lista = document.querySelector('.cartoes-lista');
+    const botaoAdicionar = lista.querySelector('.btn-adicionar-cartao');
+
+    lista.querySelectorAll('.cartao').forEach(el => el.remove());
+    lista.querySelector('.cartoes-vazio')?.remove();
+
+    if (cartoes.length === 0) {
+        const vazio = document.createElement('p');
+        vazio.className = 'cartoes-vazio';
+        vazio.textContent = 'Nenhum cartão cadastrado.';
+        lista.insertBefore(vazio, botaoAdicionar);
+        return;
+    }
+
+    cartoes.forEach(cartao => lista.insertBefore(criarCartaoElemento(cartao), botaoAdicionar));
+}
+
+function renderizarPerfil() {
+    if (!usuarioAtual) return;
+    const extra = obterPerfilExtra(usuarioAtual.uid);
+
+    document.querySelector('.perfil-nome').textContent = usuarioAtual.displayName || 'Sem nome cadastrado';
+    document.querySelector('.perfil-info').innerHTML = `
+        <span>Idade: ${extra.idade ? extra.idade + ' anos' : 'não informada'}</span>
+        <span>Telefone: ${extra.telefone || 'não informado'}</span>
+        <span>Email: ${usuarioAtual.email || '-'}</span>
+    `;
+
+    if (extra.fotoPerfil) {
+        const avatarImg = document.querySelector('.perfil-avatar img');
+        if (avatarImg) avatarImg.src = extra.fotoPerfil;
+    }
+
+    const endereco = formatarEndereco(extra.endereco);
+    document.querySelector('.endereco-linha1').textContent = endereco.linha1;
+    document.querySelector('.endereco-linha2').textContent = endereco.linha2;
+
+    renderizarCartoes(extra.cartoes);
+}
+
+// ---------- Editar Perfil ----------
+
+function abrirEditarPerfil() {
+    if (!usuarioAtual) return;
+    const extra = obterPerfilExtra(usuarioAtual.uid);
+
+    document.getElementById('input-editar-nome').value = usuarioAtual.displayName || '';
+    document.getElementById('input-editar-idade').value = extra.idade ?? '';
+    document.getElementById('input-editar-telefone').value = extra.telefone ?? '';
+    document.getElementById('input-editar-email').value = usuarioAtual.email || '';
+
+    abrirPopup('popup-editar');
+}
+window.abrirEditarPerfil = abrirEditarPerfil;
+
+async function salvarPerfil() {
+    if (!usuarioAtual) return;
+
+    const nome = document.getElementById('input-editar-nome').value.trim();
+    const idade = document.getElementById('input-editar-idade').value.trim();
+    const telefone = document.getElementById('input-editar-telefone').value.trim();
+
+    try {
+        if (nome && nome !== usuarioAtual.displayName) {
+            await updateProfile(usuarioAtual, { displayName: nome });
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar nome:', error);
+    }
+
+    atualizarPerfilExtra(usuarioAtual.uid, {
+        idade: idade ? Number(idade) : null,
+        telefone: telefone || null,
+    });
+
+    renderizarPerfil();
+    fecharPopup('popup-editar');
+}
+window.salvarPerfil = salvarPerfil;
+
+// ---------- Cartões ----------
+
+function abrirAdicionarCartao() {
+    document.getElementById('input-cartao-numero').value = '';
+    document.getElementById('input-cartao-nome').value = '';
+    document.getElementById('input-cartao-validade').value = '';
+    document.getElementById('input-cartao-cvv').value = '';
+    abrirPopup('popup-adicionar-cartao');
+}
+window.abrirAdicionarCartao = abrirAdicionarCartao;
+
+function salvarNovoCartao() {
+    if (!usuarioAtual) return;
+
+    const numero = document.getElementById('input-cartao-numero').value.trim();
+    const nomeCartao = document.getElementById('input-cartao-nome').value.trim();
+
+    if (!numero || !nomeCartao) return;
+
+    adicionarCartao(usuarioAtual.uid, { numero, nomeCartao });
+    renderizarPerfil();
+    fecharPopup('popup-adicionar-cartao');
+}
+window.salvarNovoCartao = salvarNovoCartao;
+
+function confirmarExclusaoCartao() {
+    if (!usuarioAtual || !cartaoParaExcluir) return;
+    removerCartao(usuarioAtual.uid, cartaoParaExcluir);
+    cartaoParaExcluir = null;
+    renderizarPerfil();
+    fecharPopup('popup-excluir-cartao');
+}
+window.confirmarExclusaoCartao = confirmarExclusaoCartao;
+
+// ---------- Endereço ----------
+
+function abrirAlterarEndereco() {
+    if (!usuarioAtual) return;
+    const extra = obterPerfilExtra(usuarioAtual.uid);
+    const endereco = extra.endereco || {};
+
+    document.getElementById('input-endereco-rua').value = endereco.rua ?? '';
+    document.getElementById('input-endereco-cidade').value = endereco.cidade ?? '';
+    document.getElementById('input-endereco-estado').value = endereco.estado ?? '';
+    document.getElementById('input-endereco-cep').value = endereco.cep ?? '';
+
+    abrirPopup('popup-alterar-endereco');
+}
+window.abrirAlterarEndereco = abrirAlterarEndereco;
+
+function salvarEndereco() {
+    if (!usuarioAtual) return;
+
+    const rua = document.getElementById('input-endereco-rua').value.trim();
+    const cidade = document.getElementById('input-endereco-cidade').value.trim();
+    const estado = document.getElementById('input-endereco-estado').value.trim();
+    const cep = document.getElementById('input-endereco-cep').value.trim();
+
+    atualizarPerfilExtra(usuarioAtual.uid, {
+        endereco: rua ? { rua, cidade, estado, cep } : null,
+    });
+
+    renderizarPerfil();
+    fecharPopup('popup-alterar-endereco');
+}
+window.salvarEndereco = salvarEndereco;
+
+// ---------- Foto de perfil ----------
+
+function abrirFotoPerfil() {
+    if (!usuarioAtual) return;
+    const extra = obterPerfilExtra(usuarioAtual.uid);
+    fotoSelecionadaTemp = extra.fotoPerfil || null;
+
+    const grid = document.getElementById('fotos-grid');
+    grid.innerHTML = '';
+
+    FOTOS_DISPONIVEIS.forEach(caminho => {
+        const btn = document.createElement('button');
+        btn.className = 'foto-opcao' + (caminho === fotoSelecionadaTemp ? ' selecionada' : '');
+        btn.setAttribute('aria-label', 'Selecionar esta foto');
+        btn.innerHTML = `<img src="${caminho}" alt="" />`;
+        btn.addEventListener('click', () => {
+            fotoSelecionadaTemp = caminho;
+            grid.querySelectorAll('.foto-opcao').forEach(el => el.classList.remove('selecionada'));
+            btn.classList.add('selecionada');
+        });
+        grid.appendChild(btn);
+    });
+
+    abrirPopup('popup-foto-perfil');
+}
+window.abrirFotoPerfil = abrirFotoPerfil;
+
+function salvarFotoPerfil() {
+    if (!usuarioAtual || !fotoSelecionadaTemp) {
+        fecharPopup('popup-foto-perfil');
+        return;
+    }
+    atualizarPerfilExtra(usuarioAtual.uid, { fotoPerfil: fotoSelecionadaTemp });
+    renderizarPerfil();
+    fecharPopup('popup-foto-perfil');
+}
+window.salvarFotoPerfil = salvarFotoPerfil;
+
+// ---------- Sair da conta ----------
+
+async function confirmarSaida() {
+    try {
+        await signOut(auth);
+    } catch (error) {
+        console.error('Erro ao sair da conta:', error);
+    }
+    window.location.href = '../Login_Cadatro/login.html';
+}
+window.confirmarSaida = confirmarSaida;
+
+// ===================== INICIALIZAÇÃO =====================
+
+onAuthStateChanged(auth, (usuario) => {
+    if (!usuario) {
+        window.location.replace('../Login_Cadatro/login.html');
+        return;
+    }
+    usuarioAtual = usuario;
+    renderizarPerfil();
 });

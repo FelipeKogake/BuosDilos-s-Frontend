@@ -1,3 +1,7 @@
+import { obterProdutoPorId, obterProdutos } from '../../api/produtosStore.js';
+import { formatarPreco, obterFotoPrincipal, renderizarBonecosEmGrids } from '../../api/produtosView.js';
+import { inicializarBuscaNav } from '../../api/buscaNav.js';
+
 const temas = {
     azul: {
         '--cor-fundo': '#DCEAF7',
@@ -92,6 +96,7 @@ function toggleTema() {
     const proximo = atual === 'azul' ? 'rosa' : 'azul';
     aplicarTema(proximo);
 }
+window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
@@ -115,6 +120,8 @@ function ajustarBtnTema() {
 window.addEventListener('scroll', ajustarBtnTema);
 ajustarBtnTema();
 
+inicializarBuscaNav('tela_busca.html');
+
 // Scroll dos links da navbar
 document.addEventListener('DOMContentLoaded', () => {
     const links = document.querySelectorAll('.nav-link');
@@ -131,3 +138,72 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DETALHE DO PRODUTO
+// ─────────────────────────────────────────────────────────────────────────────
+
+const QTD_OUTROS_PRODUTOS = 5;
+
+function irParaProduto(id) {
+    const origem = new URLSearchParams(window.location.search).get('origem') || 'catalogo';
+    window.location.href = `tela_produto.html?id=${encodeURIComponent(id)}&origem=${origem}`;
+}
+
+/** Mantém ativa a aba de onde o usuário veio (tela inicial ou catálogo), como se esta fosse uma página modal. */
+function aplicarAbaAtiva() {
+    const origem = new URLSearchParams(window.location.search).get('origem');
+    const textoAlvo = origem === 'inicial' ? 'TELA INICIAL' : 'BONECOS';
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.toggle('active', link.textContent.trim().toUpperCase() === textoAlvo);
+    });
+}
+
+function preencherHero(produto) {
+    const titulo    = document.querySelector('.hero-titulo');
+    const preco     = document.querySelector('.hero-preco');
+    const descricao = document.querySelector('.hero-descricao');
+    const imagem    = document.querySelector('.hero-imagens img.hero-img-1');
+
+    if (titulo) titulo.textContent = produto.nome ?? '';
+    if (preco) preco.textContent = formatarPreco(produto.preco);
+    if (descricao) descricao.textContent = produto.descricao ?? '';
+    if (imagem) imagem.src = obterFotoPrincipal(produto);
+}
+
+async function carregarProduto() {
+    aplicarAbaAtiva();
+
+    const id = new URLSearchParams(window.location.search).get('id');
+    if (!id) {
+        window.location.href = 'tela_catalogo.html';
+        return;
+    }
+
+    try {
+        const produto = await obterProdutoPorId(id);
+        preencherHero(produto);
+
+        const produtos = await obterProdutos();
+        const outros = produtos
+            .filter(p => p.ativo && String(p.id) !== String(id))
+            .slice(0, QTD_OUTROS_PRODUTOS);
+        renderizarBonecosEmGrids('.bonecos-grid', outros, irParaProduto);
+    } catch (error) {
+        console.error('Erro ao carregar produto:', error);
+        window.location.href = 'tela_catalogo.html';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', carregarProduto);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AÇÕES QUE EXIGEM LOGIN (carrinho, favoritos, notificações, comprar)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function exigirLogin() {
+    localStorage.setItem('popup', 'login-necessario');
+    window.location.href = '../Login_Cadatro/login.html';
+}
+window.exigirLogin = exigirLogin; // usado pelo onclick inline no HTML

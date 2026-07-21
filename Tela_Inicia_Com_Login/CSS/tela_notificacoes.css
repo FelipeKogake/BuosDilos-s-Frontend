@@ -19,11 +19,11 @@
     --cor-sombra-fim: #DCEAF7;
 
     /* Variáveis de tema dinâmico */
-    --cor-top-bar: #d4a0a0;
-    --cor-cta-dark: #FFC2C2;
-    --cor-cta-dark-border: #FFA5A5;
-    --cor-cta-light: #f18888;
-    --cor-cta-light-border: #FFA5A5;
+    --cor-top-bar: #a0b8d4;
+    --cor-cta-dark: #C2D4F0;
+    --cor-cta-dark-border: #A5B8E0;
+    --cor-cta-light: #88a8f1;
+    --cor-cta-light-border: #A5B8E0;
 }
 
 *, *::before, *::after {
@@ -412,7 +412,8 @@ body {
     transition: color 0.2s;
 }
 
-.boneco-fav:hover {
+.boneco-fav:hover,
+.boneco-fav.ativo {
     color: #e24b4a;
 }
 

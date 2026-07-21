@@ -119,12 +119,34 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .perfil-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.btn-editar-foto {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--cor-botao-principal);
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--cor-texto-titulo);
+  transition: background 0.2s;
+}
+
+.btn-editar-foto:hover {
+  background: var(--cor-botao-principal-hover);
 }
 
 .perfil-nome {
@@ -306,6 +328,13 @@ body {
 .btn-excluir-cartao:hover {
   background: #fde8e8;
   color: #b34e4c;
+}
+
+.cartoes-vazio {
+  text-align: center;
+  color: var(--cor-texto-terciario);
+  font-size: 0.85rem;
+  padding: 1rem 0;
 }
 
 /* BOTÃO ADICIONAR CARTÃO */
@@ -705,4 +734,37 @@ body {
 
 .popup-btn-perigo:hover {
   background: #b34e4c;
+}
+
+/* GRID DE FOTOS DE PERFIL */
+.fotos-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.9rem;
+}
+
+.foto-opcao {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  background: var(--cor-input-fundo);
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.15s;
+}
+
+.foto-opcao img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.foto-opcao:hover {
+  transform: scale(1.05);
+}
+
+.foto-opcao.selecionada {
+  border-color: var(--cor-label);
 }

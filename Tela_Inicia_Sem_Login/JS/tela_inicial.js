@@ -1,3 +1,7 @@
+import { obterProdutos } from '../../api/produtosStore.js';
+import { renderizarBonecosEmGrids, renderizarItensEmGrids } from '../../api/produtosView.js';
+import { inicializarBuscaNav } from '../../api/buscaNav.js';
+
 const temas = {
     azul: {
         '--cor-fundo': '#DCEAF7',
@@ -92,6 +96,7 @@ function toggleTema() {
     const proximo = atual === 'azul' ? 'rosa' : 'azul';
     aplicarTema(proximo);
 }
+window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
@@ -115,6 +120,8 @@ function ajustarBtnTema() {
 window.addEventListener('scroll', ajustarBtnTema);
 ajustarBtnTema();
 
+inicializarBuscaNav('Tela_Inicia_Sem_Login/tela_busca.html');
+
 // Scroll dos links da navbar
 document.addEventListener('DOMContentLoaded', () => {
     const links = document.querySelectorAll('.nav-link');
@@ -131,3 +138,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AÇÕES QUE EXIGEM LOGIN (carrinho, favoritos, notificações, comprar)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function exigirLogin() {
+    localStorage.setItem('popup', 'login-necessario');
+    window.location.href = 'Login_Cadatro/login.html';
+}
+window.exigirLogin = exigirLogin; // usado pelo onclick inline no HTML
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PRODUTOS DINÂMICOS (Itens Colecionáveis + Novos Bonecos)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const QTD_ITENS_COLECIONAVEIS = 6;
+const QTD_BONECOS             = 5;
+
+function irParaProduto(id) {
+    window.location.href = `Tela_Inicia_Sem_Login/tela_produto.html?id=${encodeURIComponent(id)}&origem=inicial`;
+}
+
+async function carregarProdutosTelaInicial() {
+    try {
+        const produtos = await obterProdutos();
+        const ativos = produtos.filter(p => p.ativo);
+
+        renderizarItensEmGrids('.itens-grid', ativos.slice(0, QTD_ITENS_COLECIONAVEIS), irParaProduto);
+        renderizarBonecosEmGrids('.bonecos-grid', ativos.slice(0, QTD_BONECOS), irParaProduto);
+    } catch (error) {
+        console.error('Erro ao carregar produtos na tela inicial:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', carregarProdutosTelaInicial);

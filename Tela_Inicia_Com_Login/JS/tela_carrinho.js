@@ -8,6 +8,8 @@ const temas = {
         '--cor-input-fundo': '#f0f0f0',
         '--cor-input-texto': '#aaa',
         '--cor-texto-titulo': '#111',
+        "--cor-botao-principal": "#BCC7EA",
+        "--cor-botao-principal-hover": "#bfd4e8",
         '--cor-texto-secundario': '#555',
         '--cor-texto-terciario': '#888',
         '--cor-borda': '#ccc',
@@ -24,8 +26,7 @@ const temas = {
         imagens: {
             avatar: 'Assets/avatar-azul.png',
             heroFundo: 'Assets/Subtract2.jpg',
-            logo: 'Assets/logo-azul.png',
-            favicon: 'Assets/logo-azul.png'
+            fravicon: 'Assets/logo-azul.png',
         }
     },
     rosa: {
@@ -33,6 +34,8 @@ const temas = {
         '--cor-painel': '#ffffff',
         '--cor-primaria': '#F1CECE',
         '--cor-primaria-hover': '#e3b8b8',
+        "--cor-botao-principal": "#F1CECE",
+        "--cor-botao-principal-hover": "#e6b2b2",
         '--cor-label': '#E3676b',
         '--cor-input-fundo': '#f0f0f0',
         '--cor-input-texto': '#aaa',
@@ -53,8 +56,7 @@ const temas = {
         imagens: {
             avatar: 'Assets/avatar-rosa.png',
             heroFundo: 'Assets/Subtract.jpg',
-            logo: 'Assets/logo-rosa2.png',
-            favicon: 'Assets/logo-rosa2.png'
+            fravicon: 'Assets/logo-rosa2.png',
         }
     }
 };
@@ -70,18 +72,9 @@ function aplicarTema(nomeTema) {
         }
     });
 
-    const logoImgs = document.querySelectorAll('.footer-logo');
     const btnTemaImg = document.querySelector('.btn-tema img');
-    const sectionAvatar = document.querySelector('.section-avatar');
-    const heroFundoImg = document.querySelector('.hero-fundo-img');
-    const logoImg = document.querySelector('.navbar-logo-img');
     const favicon = document.querySelector('#favicon');
-
-    logoImgs.forEach(el => el.src = tema.imagens.avatar);
     if (btnTemaImg) btnTemaImg.src = tema.imagens.avatar;
-    if (sectionAvatar) sectionAvatar.src = tema.imagens.avatar;
-    if (heroFundoImg) heroFundoImg.src = tema.imagens.heroFundo;
-    if (logoImg) logoImg.src = tema.imagens.logo;
     if (favicon) favicon.href = tema.imagens.favicon;
 
     localStorage.setItem('tema', nomeTema);
@@ -103,7 +96,6 @@ function ajustarBtnTema() {
 
     const footerTop = footer.getBoundingClientRect().top;
     const windowHeight = window.innerHeight;
-    const btnHeight = btn.offsetHeight;
 
     if (footerTop < windowHeight) {
         btn.style.bottom = (windowHeight - footerTop + 20) + 'px';
@@ -115,19 +107,80 @@ function ajustarBtnTema() {
 window.addEventListener('scroll', ajustarBtnTema);
 ajustarBtnTema();
 
-// Scroll dos links da navbar
-document.addEventListener('DOMContentLoaded', () => {
-    const links = document.querySelectorAll('.nav-link');
+/* ============================================
+   CARRINHO
+   ============================================ */
 
-    links.forEach(link => {
-        link.addEventListener('click', (e) => {
-            const texto = link.textContent.trim().toUpperCase();
+const FRETE = 14.00;
 
-            // "TELA INICIAL" → topo da página
-            if (texto === 'CARRINHO') {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
+function formatarPreco(valor) {
+    return 'R$ ' + valor.toFixed(2).replace('.', ',');
+}
+
+function calcularTotais() {
+    const itens = document.querySelectorAll('#lista-carrinho .favorito-card');
+    let subtotal = 0;
+
+    itens.forEach(card => {
+        const preco = parseFloat(card.dataset.preco) || 0;
+        const qty = parseInt(card.querySelector('.qty-valor').textContent) || 1;
+        subtotal += preco * qty;
     });
-});
+
+    const temItens = itens.length > 0;
+    document.getElementById('subtotal').textContent = formatarPreco(subtotal);
+    document.getElementById('frete').textContent = temItens ? formatarPreco(FRETE) : 'R$ 00,00';
+    document.getElementById('total').textContent = formatarPreco(temItens ? subtotal + FRETE : 0);
+}
+
+function alterarQty(btn, delta) {
+    const card = btn.closest('.favorito-card');
+    const span = card.querySelector('.qty-valor');
+    let qty = parseInt(span.textContent) + delta;
+    if (qty < 1) qty = 1;
+    span.textContent = qty;
+    calcularTotais();
+}
+
+function removerItem(btn) {
+    const card = btn.closest('.favorito-card');
+    card.style.transition = 'opacity 0.25s, transform 0.25s';
+    card.style.opacity = '0';
+    card.style.transform = 'translateX(20px)';
+    setTimeout(() => {
+        card.remove();
+        calcularTotais();
+    }, 250);
+}
+
+function toggleFav(btn) {
+    btn.classList.toggle('ativo');
+    const svg = btn.querySelector('svg');
+    if (btn.classList.contains('ativo')) {
+        svg.setAttribute('fill', 'currentColor');
+    } else {
+        svg.setAttribute('fill', 'none');
+    }
+}
+
+function aplicarCupom() {
+    const input = document.getElementById('cupom-input');
+    const val = input.value.trim().toUpperCase();
+    if (val === 'GERMINARE10') {
+        document.getElementById('taxa').textContent = '−R$ 12,00';
+        input.style.borderColor = '#5cb85c';
+    } else if (val !== '') {
+        input.style.borderColor = '#e24b4a';
+    }
+}
+
+function fecharPedido() {
+    const itens = document.querySelectorAll('#lista-carrinho .favorito-card');
+    if (itens.length === 0) {
+        alert('Seu carrinho está vazio!');
+        return;
+    }
+    alert('Pedido realizado com sucesso! Obrigado pela compra.');
+}
+
+calcularTotais();

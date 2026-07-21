@@ -1,3 +1,7 @@
+import { obterProdutos, obterProdutoPorId } from '../../api/produtosStore.js';
+import { formatarPreco, obterFotoPrincipal, renderizarBonecosEmGrids } from '../../api/produtosView.js';
+import { obterFavoritos, alternarFavorito } from '../../api/favoritos.js';
+
 const temas = {
     azul: {
         '--cor-fundo': '#DCEAF7',
@@ -88,6 +92,7 @@ function toggleTema() {
     const proximo = atual === 'azul' ? 'rosa' : 'azul';
     aplicarTema(proximo);
 }
+window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
@@ -126,4 +131,120 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FAVORITOS
+// ─────────────────────────────────────────────────────────────────────────────
+
+const QTD_BONECOS = 5;
+
+function irParaProduto(id) {
+    window.location.href = `tela_produto.html?id=${encodeURIComponent(id)}&origem=favoritos`;
+}
+
+function atualizarEstadoVazio() {
+    const lista = document.getElementById('lista-favoritos');
+    if (!lista) return;
+
+    let mensagem = lista.querySelector('.favoritos-vazio');
+
+    if (lista.children.length === 0) {
+        if (!mensagem) {
+            mensagem = document.createElement('p');
+            mensagem.className = 'favoritos-vazio';
+            mensagem.textContent = 'Você ainda não favoritou nenhum produto.';
+            lista.appendChild(mensagem);
+        }
+    } else if (mensagem) {
+        mensagem.remove();
+    }
+}
+
+function criarFavoritoCard(produto) {
+    const card = document.createElement('div');
+    card.className = 'favorito-card';
+    card.dataset.id = produto.id;
+
+    const imgWrap = document.createElement('div');
+    imgWrap.className = 'favorito-img-wrap';
+    const img = document.createElement('img');
+    img.src = obterFotoPrincipal(produto);
+    img.alt = produto.nome || '';
+    imgWrap.appendChild(img);
+
+    const info = document.createElement('div');
+    info.className = 'favorito-info';
+    info.innerHTML = `
+        <p class="favorito-nome">${produto.nome ?? ''}</p>
+        <p class="favorito-preco">${formatarPreco(produto.preco)}</p>
+    `;
+
+    const acoes = document.createElement('div');
+    acoes.className = 'favorito-acoes';
+
+    const btnFav = document.createElement('button');
+    btnFav.className = 'btn-fav-ativo';
+    btnFav.setAttribute('aria-label', 'Remover dos favoritos');
+    btnFav.innerHTML = `
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="#e24b4a" stroke="#e24b4a" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+    `;
+    btnFav.addEventListener('click', () => {
+        alternarFavorito(produto.id);
+        card.remove();
+        atualizarEstadoVazio();
+    });
+
+    const btnComprar = document.createElement('button');
+    btnComprar.className = 'btn-comprar-fav';
+    btnComprar.textContent = 'COMPRAR';
+    btnComprar.addEventListener('click', () => irParaProduto(produto.id));
+
+    acoes.appendChild(btnFav);
+    acoes.appendChild(btnComprar);
+
+    card.appendChild(imgWrap);
+    card.appendChild(info);
+    card.appendChild(acoes);
+    return card;
+}
+
+async function carregarFavoritos() {
+    const lista = document.getElementById('lista-favoritos');
+    if (!lista) return;
+
+    lista.innerHTML = '';
+
+    const idsFavoritos = obterFavoritos();
+    if (idsFavoritos.length === 0) {
+        atualizarEstadoVazio();
+        return;
+    }
+
+    try {
+        const produtos = await Promise.all(
+            idsFavoritos.map(id => obterProdutoPorId(id).catch(() => null))
+        );
+        produtos.filter(Boolean).forEach(produto => lista.appendChild(criarFavoritoCard(produto)));
+        atualizarEstadoVazio();
+    } catch (error) {
+        console.error('Erro ao carregar favoritos:', error);
+    }
+}
+
+async function carregarNovosBonecos() {
+    try {
+        const produtos = await obterProdutos();
+        const ativos = produtos.filter(p => p.ativo).slice(0, QTD_BONECOS);
+        renderizarBonecosEmGrids('.bonecos-grid', ativos, irParaProduto);
+    } catch (error) {
+        console.error('Erro ao carregar novos bonecos:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    carregarFavoritos();
+    carregarNovosBonecos();
 });

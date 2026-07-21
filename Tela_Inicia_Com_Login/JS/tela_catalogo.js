@@ -1,3 +1,7 @@
+import { obterProdutos } from '../../api/produtosStore.js';
+import { renderizarBonecosEmGrids, renderizarItensEmGrids } from '../../api/produtosView.js';
+import { inicializarBuscaNav } from '../../api/buscaNav.js';
+
 const temas = {
     azul: {
         '--cor-fundo': '#DCEAF7',
@@ -24,8 +28,9 @@ const temas = {
         imagens: {
             avatar: 'Assets/avatar-azul.png',
             heroFundo: 'Assets/Subtract2.jpg',
-            logo: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
-            favicon: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
+            logo: 'Assets/logo-azul.png',
+            favicon: 'Assets/logo-azul.png'
+
         }
     },
     rosa: {
@@ -53,8 +58,8 @@ const temas = {
         imagens: {
             avatar: 'Assets/avatar-rosa.png',
             heroFundo: 'Assets/Subtract.jpg',
-            logo: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
-            favicon: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
+            logo: 'Assets/logo-rosa2.png',
+            favicon: 'Assets/logo-rosa2.png'
         }
     }
 };
@@ -70,20 +75,19 @@ function aplicarTema(nomeTema) {
         }
     });
 
-    const logoImgs = document.querySelectorAll('.navbar-logo-img, .footer-logo');
+    const logoImgs = document.querySelectorAll('.footer-logo');
     const btnTemaImg = document.querySelector('.btn-tema img');
     const sectionAvatar = document.querySelector('.section-avatar');
     const heroFundoImg = document.querySelector('.hero-fundo-img');
     const logoImg = document.querySelector('.navbar-logo-img');
-    const faviconLink = document.getElementById('favicon');
+    const favicon = document.querySelector('#favicon');
 
     logoImgs.forEach(el => el.src = tema.imagens.avatar);
     if (btnTemaImg) btnTemaImg.src = tema.imagens.avatar;
     if (sectionAvatar) sectionAvatar.src = tema.imagens.avatar;
     if (heroFundoImg) heroFundoImg.src = tema.imagens.heroFundo;
     if (logoImg) logoImg.src = tema.imagens.logo;
-    if (faviconLink) faviconLink.href = tema.imagens.favicon;
-
+    if (favicon) favicon.href = tema.imagens.favicon;
     localStorage.setItem('tema', nomeTema);
 }
 
@@ -92,6 +96,7 @@ function toggleTema() {
     const proximo = atual === 'azul' ? 'rosa' : 'azul';
     aplicarTema(proximo);
 }
+window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
@@ -115,6 +120,8 @@ function ajustarBtnTema() {
 window.addEventListener('scroll', ajustarBtnTema);
 ajustarBtnTema();
 
+inicializarBuscaNav('tela_busca.html');
+
 // Scroll dos links da navbar
 document.addEventListener('DOMContentLoaded', () => {
     const links = document.querySelectorAll('.nav-link');
@@ -125,7 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (texto === 'BONECOS') {
                 e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                const secaoBonecos = document.querySelector('#bonecos');
+                if (secaoBonecos) {
+                    const navbar = document.querySelector('.navbar-wrapper');
+                    const offset = navbar ? navbar.offsetHeight : 0;
+                    const top = secaoBonecos.getBoundingClientRect().top + window.scrollY - offset - 30;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                }
             }
 
             if (texto === 'ITENS') {
@@ -156,6 +169,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.scrollTo({ top, behavior: 'smooth' });
             }, 100); // pequeno delay para garantir que a página carregou
         }
+    } else {
+        // Entrada padrão no catálogo: pula a hero e já mostra os bonecos
+        const secaoBonecos = document.querySelector('#bonecos');
+        if (secaoBonecos) {
+            setTimeout(() => {
+                const navbar = document.querySelector('.navbar-wrapper');
+                const offset = navbar ? navbar.offsetHeight : 0;
+                const top = secaoBonecos.getBoundingClientRect().top + window.scrollY - offset - 30;
+                window.scrollTo({ top, behavior: 'instant' });
+            }, 0);
+        }
     }
 });
 
@@ -181,3 +205,26 @@ window.addEventListener('scroll', () => {
         linkBonecos?.classList.add('active');
     }
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CATÁLOGO DE PRODUTOS (Novos Bonecos + Itens Colecionáveis)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function irParaProduto(id) {
+    window.location.href = `tela_produto.html?id=${encodeURIComponent(id)}&origem=catalogo`;
+}
+
+async function carregarCatalogo() {
+    try {
+        const produtos = await obterProdutos();
+        const ativos = produtos.filter(p => p.ativo);
+
+        renderizarBonecosEmGrids('.bonecos-grid', ativos, irParaProduto, { limitar: true });
+        renderizarItensEmGrids('.itens-grid', ativos, irParaProduto, { limitar: true });
+    } catch (error) {
+        console.error('Erro ao carregar catálogo de produtos:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', carregarCatalogo);
+

@@ -2,10 +2,6 @@ import { obterProdutos } from '../../api/produtosStore.js';
 import { renderizarBonecosEmGrids, renderizarItensEmGrids } from '../../api/produtosView.js';
 import { inicializarBuscaNav } from '../../api/buscaNav.js';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// TEMA (claro/escuro "azul"/"rosa")
-// ─────────────────────────────────────────────────────────────────────────────
-
 const temas = {
     azul: {
         '--cor-fundo': '#DCEAF7',
@@ -32,8 +28,8 @@ const temas = {
         imagens: {
             avatar: 'Assets/avatar-azul.png',
             heroFundo: 'Assets/Subtract2.jpg',
-            logo: 'Assets/logo-azul.png',
-            favicon: 'Assets/logo-azul.png'
+            logo: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
+            favicon: '/Tela_Inicia_Com_Login/Assets/logo-azul.png',
         }
     },
     rosa: {
@@ -61,8 +57,8 @@ const temas = {
         imagens: {
             avatar: 'Assets/avatar-rosa.png',
             heroFundo: 'Assets/Subtract.jpg',
-            logo: 'Assets/logo-rosa2.png',
-            favicon: 'Assets/logo-rosa2.png'
+            logo: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
+            favicon: '/Tela_Inicia_Com_Login/Assets/logo-rosa2.png',
         }
     }
 };
@@ -83,14 +79,15 @@ function aplicarTema(nomeTema) {
     const sectionAvatar = document.querySelector('.section-avatar');
     const heroFundoImg = document.querySelector('.hero-fundo-img');
     const logoImg = document.querySelector('.navbar-logo-img');
-    const favicon = document.getElementById('favicon');
+    const faviconLink = document.getElementById('favicon');
 
     logoImgs.forEach(el => el.src = tema.imagens.avatar);
     if (btnTemaImg) btnTemaImg.src = tema.imagens.avatar;
     if (sectionAvatar) sectionAvatar.src = tema.imagens.avatar;
     if (heroFundoImg) heroFundoImg.src = tema.imagens.heroFundo;
     if (logoImg) logoImg.src = tema.imagens.logo;
-    if (favicon) favicon.href = tema.imagens.favicon;
+    if (faviconLink) faviconLink.href = tema.imagens.favicon;
+
     localStorage.setItem('tema', nomeTema);
 }
 
@@ -111,6 +108,7 @@ function ajustarBtnTema() {
 
     const footerTop = footer.getBoundingClientRect().top;
     const windowHeight = window.innerHeight;
+    const btnHeight = btn.offsetHeight;
 
     if (footerTop < windowHeight) {
         btn.style.bottom = (windowHeight - footerTop + 20) + 'px';
@@ -124,10 +122,7 @@ ajustarBtnTema();
 
 inicializarBuscaNav('tela_busca.html');
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SCROLL DOS LINKS DA NAVBAR
-// ─────────────────────────────────────────────────────────────────────────────
-
+// Scroll dos links da navbar
 document.addEventListener('DOMContentLoaded', () => {
     const links = document.querySelectorAll('.nav-link');
 
@@ -135,36 +130,104 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', (e) => {
             const texto = link.textContent.trim().toUpperCase();
 
-            // "TELA INICIAL" → topo da página
-            if (texto === 'TELA INICIAL') {
+            if (texto === 'BONECOS') {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+
+            if (texto === 'ITENS') {
+                // Só faz scroll suave se já estiver nesta página
+                if (link.getAttribute('href') === '#' || link.getAttribute('href') === '') {
+                    e.preventDefault();
+                    const secaoItens = document.querySelector('.section-itens');
+                    if (secaoItens) {
+                        const navbar = document.querySelector('.navbar-wrapper');
+                        const offset = navbar ? navbar.offsetHeight : 0;
+                        const top = secaoItens.getBoundingClientRect().top + window.scrollY - offset - 30;
+                        window.scrollTo({ top, behavior: 'smooth' });
+                    }
+                }
+                // Se tiver href com #itens, deixa o navegador redirecionar normalmente
+            }
         });
     });
+
+    // Se chegou na página com #itens na URL, faz o scroll com offset correto
+    if (window.location.hash === '#itens') {
+        const secaoItens = document.querySelector('#itens');
+        if (secaoItens) {
+            setTimeout(() => {
+                const navbar = document.querySelector('.navbar-wrapper');
+                const offset = navbar ? navbar.offsetHeight : 0;
+                const top = secaoItens.getBoundingClientRect().top + window.scrollY - offset - 30;
+                window.scrollTo({ top, behavior: 'smooth' });
+            }, 100); // pequeno delay para garantir que a página carregou
+        }
+    } else {
+        // Entrada padrão no catálogo: pula a hero e já mostra os bonecos
+        const secaoBonecos = document.querySelector('#bonecos');
+        if (secaoBonecos) {
+            setTimeout(() => {
+                const navbar = document.querySelector('.navbar-wrapper');
+                const offset = navbar ? navbar.offsetHeight : 0;
+                const top = secaoBonecos.getBoundingClientRect().top + window.scrollY - offset - 30;
+                window.scrollTo({ top, behavior: 'instant' });
+            }, 0);
+        }
+    }
+});
+
+// Atualiza o nav-link active conforme o scroll
+const sectionBonecos = document.querySelector('.section-bonecos');
+const sectionItens = document.querySelector('.section-itens');
+
+window.addEventListener('scroll', () => {
+    const navbar = document.querySelector('.navbar-wrapper');
+    const offset = navbar ? navbar.offsetHeight : 0;
+    const scrollY = window.scrollY + offset + 10;
+
+    const linkBonecos = [...document.querySelectorAll('.nav-link')]
+        .find(l => l.textContent.trim().toUpperCase() === 'BONECOS');
+    const linkItens = [...document.querySelectorAll('.nav-link')]
+        .find(l => l.textContent.trim().toUpperCase() === 'ITENS');
+
+    if (sectionItens && scrollY >= sectionItens.offsetTop) {
+        linkBonecos?.classList.remove('active');
+        linkItens?.classList.add('active');
+    } else {
+        linkItens?.classList.remove('active');
+        linkBonecos?.classList.add('active');
+    }
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PRODUTOS DINÂMICOS (Itens Colecionáveis + Novos Bonecos)
+// CATÁLOGO DE PRODUTOS (Novos Bonecos + Itens Colecionáveis)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const QTD_ITENS_COLECIONAVEIS = 6;
-const QTD_BONECOS             = 5;
-
 function irParaProduto(id) {
-    window.location.href = `tela_produto.html?id=${encodeURIComponent(id)}&origem=inicial`;
+    window.location.href = `tela_produto.html?id=${encodeURIComponent(id)}&origem=catalogo`;
 }
 
-async function carregarProdutosTelaInicial() {
+async function carregarCatalogo() {
     try {
         const produtos = await obterProdutos();
         const ativos = produtos.filter(p => p.ativo);
 
-        renderizarItensEmGrids('.itens-grid', ativos.slice(0, QTD_ITENS_COLECIONAVEIS), irParaProduto);
-        renderizarBonecosEmGrids('.bonecos-grid', ativos.slice(0, QTD_BONECOS), irParaProduto);
+        renderizarBonecosEmGrids('.bonecos-grid', ativos, irParaProduto, { limitar: true });
+        renderizarItensEmGrids('.itens-grid', ativos, irParaProduto, { limitar: true });
     } catch (error) {
-        console.error('Erro ao carregar produtos na tela inicial:', error);
+        console.error('Erro ao carregar catálogo de produtos:', error);
     }
 }
 
-document.addEventListener('DOMContentLoaded', carregarProdutosTelaInicial);
+document.addEventListener('DOMContentLoaded', carregarCatalogo);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AÇÕES QUE EXIGEM LOGIN (carrinho, favoritos, notificações, comprar)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function exigirLogin() {
+    localStorage.setItem('popup', 'login-necessario');
+    window.location.href = '../Login_Cadatro/login.html';
+}
+window.exigirLogin = exigirLogin; // usado pelo onclick inline no HTML

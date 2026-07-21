@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../api/temaPreload.js" data-paleta="app"></script>
+    <link rel="stylesheet" href="CSS/tela_busca.css">
+    <link id="favicon" rel="icon" type="image/png" href="/Tela_Inicia_Com_Login/Assets/logo-azul.png">
+    <title>Buscar</title>
+</head>
+<body>
+
+    <!-- BARRA TOPO ESCURA -->
+    <div class="top-bar"></div>
+
+    <!-- NAVBAR -->
+    <div class="navbar-wrapper">
+        <header class="navbar">
+            <a href="#" class="navbar-logo">
+                <img src="Assets/avatar-azul.png" alt="Logo" class="navbar-logo-img" />
+            </a>
+            <nav class="navbar-links">
+                <a href="#" class="nav-link" onclick="window.location.href='../index.html'">TELA INICIAL</a>
+                <a href="#" class="nav-link" onclick="window.location.href='tela_catalogo.html'">BONECOS</a>
+                <a href="tela_catalogo.html#itens" class="nav-link">ITENS</a>
+            </nav>
+            <div class="navbar-actions">
+                <div class="busca-nav" id="busca-nav">
+                    <input type="text" class="busca-nav-input" placeholder="Buscar..." />
+                    <button class="icon-btn" aria-label="Buscar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </button>
+                </div>
+                <button class="icon-btn" aria-label="Notificações" onclick="exigirLogin()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                </button>
+                <button class="icon-btn" aria-label="Favoritos" onclick="exigirLogin()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+                <button class="icon-btn" aria-label="Carrinho" onclick="exigirLogin()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                </button>
+                <a href="../Login_Cadatro/login.html" class="btn-entrar-nav" onclick="window.location.href='../Login_Cadatro/login.html'">ENTRAR</a>
+            </div>
+        </header>
+    </div>
+
+    <!-- HERO DE BUSCA -->
+    <section class="busca-hero">
+        <h1 class="busca-titulo">Encontre o seu<br>próximo boneco</h1>
+        <div class="busca-barra-wrap">
+            <svg class="busca-icone" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="input-busca-nome" class="busca-input" placeholder="Buscar por nome..." />
+        </div>
+    </section>
+
+    <!-- CONTEÚDO: FILTROS + RESULTADOS -->
+    <section class="busca-conteudo">
+
+        <!-- SIDEBAR DE CATEGORIAS -->
+        <aside class="busca-sidebar">
+            <div class="busca-sidebar-header">
+                <p class="card-titulo">Categorias</p>
+                <button class="btn-limpar-filtros" id="btn-limpar-filtros" onclick="limparFiltros()" hidden>Limpar</button>
+            </div>
+            <div class="categoria-lista" id="categoria-lista">
+                <p class="categoria-vazio">Carregando categorias...</p>
+            </div>
+        </aside>
+
+        <!-- GRID DE RESULTADOS -->
+        <div class="busca-resultados">
+            <p class="busca-contagem" id="busca-contagem">Carregando produtos...</p>
+            <div class="bonecos-grid bonecos-grid--wrap" id="grid-resultados"></div>
+            <p class="busca-vazio" id="busca-vazio" hidden>Nenhum produto encontrado para essa busca.</p>
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <p class="footer-name">PopDreams</p>
+            </div>
+            <div class="footer-cols">
+                <div class="footer-col">
+                    <p class="footer-col-title">PRODUTOS</p>
+                    <a href="#" onclick="window.location.href='tela_catalogo.html'">Bonecos</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">SUPORTE</p>
+                    <a href="#" onclick="window.location.href='mailto:contato@exemplo.com'">Suporte</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">COMPANHIA</p>
+                    <a href="#" onclick="location.href='https://institutojef.org.br/'">Sobre Germinare</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 PopDreams. Escola Germinare Tech.</p>
+        </div>
+    </footer>
+
+    <!-- Botão tema -->
+    <button class="btn-tema" onclick="toggleTema()">
+        <img src="Assets/avatar-azul.png" alt="Trocar tema" />
+    </button>
+
+    <script type="module" src="JS/tela_busca.js"></script>
+</body>
+</html>

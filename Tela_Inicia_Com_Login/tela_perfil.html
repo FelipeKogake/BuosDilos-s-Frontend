@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../api/temaPreload.js" data-paleta="app"></script>
     <title>Perfil</title>
     <link rel="stylesheet" href="CSS/tela_perfil.css">
     <link id="favicon" rel="icon" type="image/png" href="Assets/logo-azul.png">
@@ -22,16 +23,18 @@
             <div class="perfil-header">
                 <div class="perfil-avatar">
                     <img src="Assets/login/personagem-azul.png" alt="Avatar" onerror="this.style.display='none'" />
+                    <button class="btn-editar-foto" onclick="abrirFotoPerfil()" aria-label="Trocar foto de perfil">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                    </button>
                 </div>
                 <div>
-                    <p class="perfil-nome">Luiza Vicente</p>
-                    <div class="perfil-info">
-                        <span>Idade: 22 anos</span>
-                        <span>Telefone: (11) 99999-9999</span>
-                        <span>Email: luiza@email.com</span>
-                    </div>
+                    <p class="perfil-nome"></p>
+                    <div class="perfil-info"></div>
                 </div>
-                <button class="btn-editar" onclick="abrirPopup('popup-editar')">
+                <button class="btn-editar" onclick="abrirEditarPerfil()">
                     Editar Perfil
                 </button>
             </div>
@@ -43,45 +46,10 @@
                 <div class="card-pagamento">
                     <p class="card-titulo">Tipos de Pagamento</p>
                     <div class="cartoes-lista">
-                        <div class="cartao">
-                            <div class="cartao-esquerda">
-                                <span class="cartao-bandeira">MASTERCARD</span>
-                                <span class="cartao-numero">•••• •••• •••• 1234</span>
-                                <span class="cartao-nome">LUIZA VICENTE</span>
-                            </div>
-                            <div class="cartao-acoes">
-                                <span class="cartao-tag">PRIMARY</span>
-                                <button class="btn-excluir-cartao" onclick="abrirPopup('popup-excluir-cartao')" title="Excluir cartão">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                        <polyline points="3 6 5 6 21 6"/>
-                                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                                        <path d="M10 11v6M14 11v6"/>
-                                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="cartao">
-                            <div class="cartao-esquerda">
-                                <span class="cartao-bandeira">VISA</span>
-                                <span class="cartao-numero">•••• •••• •••• 8892</span>
-                                <span class="cartao-nome">L. VICENTE</span>
-                            </div>
-                            <div class="cartao-acoes">
-                                <button class="btn-tornar-primary" title="Tornar principal">Tornar primary</button>
-                                <button class="btn-excluir-cartao" onclick="abrirPopup('popup-excluir-cartao')" title="Excluir cartão">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                        <polyline points="3 6 5 6 21 6"/>
-                                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                                        <path d="M10 11v6M14 11v6"/>
-                                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
+                        <!-- Cartões renderizados dinamicamente via JS -->
 
                         <!-- BOTÃO ADICIONAR CARTÃO -->
-                        <button class="btn-adicionar-cartao" onclick="abrirPopup('popup-adicionar-cartao')">
+                        <button class="btn-adicionar-cartao" onclick="abrirAdicionarCartao()">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                 <circle cx="12" cy="12" r="10"/>
                                 <line x1="12" y1="8" x2="12" y2="16"/>
@@ -95,15 +63,15 @@
                 <!-- ENDEREÇO -->
                 <div class="card-endereco">
                     <p class="card-titulo">Endereço</p>
-                    <p class="endereco-linha1">10880 Malibu Point, Malibu</p>
-                    <p class="endereco-linha2">California, 90265</p>
+                    <p class="endereco-linha1"></p>
+                    <p class="endereco-linha2"></p>
                 </div>
 
             </div>
 
             <!-- BOTÕES INFERIORES -->
             <div class="btns-inferiores">
-                <button class="btn-alterar-endereco" onclick="abrirPopup('popup-alterar-endereco')">
+                <button class="btn-alterar-endereco" onclick="abrirAlterarEndereco()">
                     Alterar endereço
                 </button>
                 <button class="btn-sair" onclick="abrirPopup('popup-sair')">
@@ -122,7 +90,7 @@
                 <div class="footer-cols">
                     <div class="footer-col">
                         <p class="footer-col-title">PRODUTOS</p>
-                        <a href="tela_item.html">Bonecos</a>
+                        <a href="tela_catalogo.html">Bonecos</a>
                     </div>
                     <div class="footer-col">
                         <p class="footer-col-title">SUPORTE</p>
@@ -162,24 +130,24 @@
             <div class="popup-corpo">
                 <div class="campo-grupo">
                     <label class="campo-label">Nome completo</label>
-                    <input class="campo-input" type="text" value="Luiza Vicente" placeholder="Seu nome" />
+                    <input class="campo-input" id="input-editar-nome" type="text" placeholder="Seu nome" />
                 </div>
                 <div class="campo-grupo">
                     <label class="campo-label">Idade</label>
-                    <input class="campo-input" type="number" value="22" placeholder="Sua idade" />
+                    <input class="campo-input" id="input-editar-idade" type="number" placeholder="Sua idade" />
                 </div>
                 <div class="campo-grupo">
                     <label class="campo-label">Telefone</label>
-                    <input class="campo-input" type="tel" value="(11) 99999-9999" placeholder="(00) 00000-0000" />
+                    <input class="campo-input" id="input-editar-telefone" type="tel" placeholder="(00) 00000-0000" />
                 </div>
                 <div class="campo-grupo">
                     <label class="campo-label">E-mail</label>
-                    <input class="campo-input" type="email" value="luiza@email.com" placeholder="seu@email.com" />
+                    <input class="campo-input" id="input-editar-email" type="email" placeholder="seu@email.com" disabled />
                 </div>
             </div>
             <div class="popup-rodape">
                 <button class="popup-btn-cancelar" onclick="fecharPopup('popup-editar')">Cancelar</button>
-                <button class="popup-btn-salvar">Salvar alterações</button>
+                <button class="popup-btn-salvar" onclick="salvarPerfil()">Salvar alterações</button>
             </div>
         </div>
     </div>
@@ -199,26 +167,26 @@
             <div class="popup-corpo">
                 <div class="campo-grupo">
                     <label class="campo-label">Número do cartão</label>
-                    <input class="campo-input campo-cartao-num" type="text" placeholder="0000 0000 0000 0000" maxlength="19" />
+                    <input class="campo-input campo-cartao-num" id="input-cartao-numero" type="text" placeholder="0000 0000 0000 0000" maxlength="19" />
                 </div>
                 <div class="campo-grupo">
                     <label class="campo-label">Nome no cartão</label>
-                    <input class="campo-input" type="text" placeholder="NOME SOBRENOME" />
+                    <input class="campo-input" id="input-cartao-nome" type="text" placeholder="NOME SOBRENOME" />
                 </div>
                 <div class="campos-inline">
                     <div class="campo-grupo">
                         <label class="campo-label">Validade</label>
-                        <input class="campo-input" type="text" placeholder="MM/AA" maxlength="5" />
+                        <input class="campo-input" id="input-cartao-validade" type="text" placeholder="MM/AA" maxlength="5" />
                     </div>
                     <div class="campo-grupo">
                         <label class="campo-label">CVV</label>
-                        <input class="campo-input" type="text" placeholder="000" maxlength="3" />
+                        <input class="campo-input" id="input-cartao-cvv" type="text" placeholder="000" maxlength="3" />
                     </div>
                 </div>
             </div>
             <div class="popup-rodape">
                 <button class="popup-btn-cancelar" onclick="fecharPopup('popup-adicionar-cartao')">Cancelar</button>
-                <button class="popup-btn-salvar">Adicionar cartão</button>
+                <button class="popup-btn-salvar" onclick="salvarNovoCartao()">Adicionar cartão</button>
             </div>
         </div>
     </div>
@@ -247,7 +215,7 @@
             </div>
             <div class="popup-rodape">
                 <button class="popup-btn-cancelar" onclick="fecharPopup('popup-excluir-cartao')">Cancelar</button>
-                <button class="popup-btn-perigo">Excluir cartão</button>
+                <button class="popup-btn-perigo" onclick="confirmarExclusaoCartao()">Excluir cartão</button>
             </div>
         </div>
     </div>
@@ -267,26 +235,26 @@
             <div class="popup-corpo">
                 <div class="campo-grupo">
                     <label class="campo-label">Rua / Logradouro</label>
-                    <input class="campo-input" type="text" value="10880 Malibu Point" placeholder="Rua, número" />
+                    <input class="campo-input" id="input-endereco-rua" type="text" placeholder="Rua, número" />
                 </div>
                 <div class="campo-grupo">
                     <label class="campo-label">Cidade</label>
-                    <input class="campo-input" type="text" value="Malibu" placeholder="Cidade" />
+                    <input class="campo-input" id="input-endereco-cidade" type="text" placeholder="Cidade" />
                 </div>
                 <div class="campos-inline">
                     <div class="campo-grupo">
                         <label class="campo-label">Estado</label>
-                        <input class="campo-input" type="text" value="California" placeholder="Estado" />
+                        <input class="campo-input" id="input-endereco-estado" type="text" placeholder="Estado" />
                     </div>
                     <div class="campo-grupo">
                         <label class="campo-label">CEP</label>
-                        <input class="campo-input" type="text" value="90265" placeholder="00000-000" />
+                        <input class="campo-input" id="input-endereco-cep" type="text" placeholder="00000-000" />
                     </div>
                 </div>
             </div>
             <div class="popup-rodape">
                 <button class="popup-btn-cancelar" onclick="fecharPopup('popup-alterar-endereco')">Cancelar</button>
-                <button class="popup-btn-salvar">Salvar endereço</button>
+                <button class="popup-btn-salvar" onclick="salvarEndereco()">Salvar endereço</button>
             </div>
         </div>
     </div>
@@ -315,11 +283,33 @@
             </div>
             <div class="popup-rodape">
                 <button class="popup-btn-cancelar" onclick="fecharPopup('popup-sair')">Cancelar</button>
-                <a href="../Login_Cadatro/login.html" class="popup-btn-perigo">Sair da conta</a>
+                <button class="popup-btn-perigo" onclick="confirmarSaida()">Sair da conta</button>
             </div>
         </div>
     </div>
 
-    <script src="JS/tela_perfil.js"></script>
+    <!-- POPUP: FOTO DE PERFIL -->
+    <div class="popup-overlay" id="popup-foto-perfil" onclick="fecharPopupOverlay(event, 'popup-foto-perfil')">
+        <div class="popup-box">
+            <div class="popup-header">
+                <h2 class="popup-titulo">Escolher foto de perfil</h2>
+                <button class="popup-fechar" onclick="fecharPopup('popup-foto-perfil')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="popup-corpo">
+                <div class="fotos-grid" id="fotos-grid"></div>
+            </div>
+            <div class="popup-rodape">
+                <button class="popup-btn-cancelar" onclick="fecharPopup('popup-foto-perfil')">Cancelar</button>
+                <button class="popup-btn-salvar" onclick="salvarFotoPerfil()">Salvar foto</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="JS/tela_perfil.js"></script>
 </body>
 </html>

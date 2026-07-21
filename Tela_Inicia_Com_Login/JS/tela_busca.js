@@ -1,5 +1,5 @@
 import { obterProdutos } from '../../api/produtosStore.js';
-import { renderizarBonecosEmGrids, renderizarItensEmGrids } from '../../api/produtosView.js';
+import { renderizarBonecosEmGrids } from '../../api/produtosView.js';
 import { inicializarBuscaNav } from '../../api/buscaNav.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -20,8 +20,6 @@ const temas = {
         '--cor-texto-terciario': '#888',
         '--cor-borda': '#ccc',
         '--cor-divisor': '#e0e0e0',
-        '--sombra-painel': '6px 6px 20px rgba(0, 9, 169, 0.4)',
-        '--sombra-input': '0 2px 8px rgba(0, 0, 0, 0.4)',
         '--cor-sombra-inicio': '#BFD7EE',
         '--cor-sombra-fim': '#DCEAF7',
         '--cor-top-bar': '#a0b8d4',
@@ -31,7 +29,6 @@ const temas = {
         '--cor-cta-light-border': '#A5B8E0',
         imagens: {
             avatar: 'Assets/avatar-azul.png',
-            heroFundo: 'Assets/Subtract2.jpg',
             logo: 'Assets/logo-azul.png',
             favicon: 'Assets/logo-azul.png'
         }
@@ -49,8 +46,6 @@ const temas = {
         '--cor-texto-terciario': '#888',
         '--cor-borda': '#cbc3c3',
         '--cor-divisor': '#cbc3c3',
-        '--sombra-painel': '6px 6px 20px rgba(243, 162, 162, 0.6)',
-        '--sombra-input': '0 2px 8px rgba(0, 0, 0, 0.6)',
         '--cor-sombra-inicio': '#F1CECE',
         '--cor-sombra-fim': '#F9EBEB',
         '--cor-top-bar': '#d4a0a0',
@@ -60,7 +55,6 @@ const temas = {
         '--cor-cta-light-border': '#FFA5A5',
         imagens: {
             avatar: 'Assets/avatar-rosa.png',
-            heroFundo: 'Assets/Subtract.jpg',
             logo: 'Assets/logo-rosa2.png',
             favicon: 'Assets/logo-rosa2.png'
         }
@@ -78,17 +72,11 @@ function aplicarTema(nomeTema) {
         }
     });
 
-    const logoImgs = document.querySelectorAll('.navbar-logo-img, .footer-logo');
     const btnTemaImg = document.querySelector('.btn-tema img');
-    const sectionAvatar = document.querySelector('.section-avatar');
-    const heroFundoImg = document.querySelector('.hero-fundo-img');
     const logoImg = document.querySelector('.navbar-logo-img');
-    const favicon = document.getElementById('favicon');
+    const favicon = document.querySelector('#favicon');
 
-    logoImgs.forEach(el => el.src = tema.imagens.avatar);
     if (btnTemaImg) btnTemaImg.src = tema.imagens.avatar;
-    if (sectionAvatar) sectionAvatar.src = tema.imagens.avatar;
-    if (heroFundoImg) heroFundoImg.src = tema.imagens.heroFundo;
     if (logoImg) logoImg.src = tema.imagens.logo;
     if (favicon) favicon.href = tema.imagens.favicon;
     localStorage.setItem('tema', nomeTema);
@@ -101,8 +89,7 @@ function toggleTema() {
 }
 window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
 
-const temaSalvo = localStorage.getItem('tema') || 'azul';
-aplicarTema(temaSalvo);
+aplicarTema(localStorage.getItem('tema') || 'azul');
 
 function ajustarBtnTema() {
     const btn = document.querySelector('.btn-tema');
@@ -125,46 +112,101 @@ ajustarBtnTema();
 inicializarBuscaNav('tela_busca.html');
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SCROLL DOS LINKS DA NAVBAR
+// BUSCA (por nome + filtro por categoria, os dois já ligados)
 // ─────────────────────────────────────────────────────────────────────────────
 
-document.addEventListener('DOMContentLoaded', () => {
-    const links = document.querySelectorAll('.nav-link');
-
-    links.forEach(link => {
-        link.addEventListener('click', (e) => {
-            const texto = link.textContent.trim().toUpperCase();
-
-            // "TELA INICIAL" → topo da página
-            if (texto === 'TELA INICIAL') {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
-    });
-});
-
-// ─────────────────────────────────────────────────────────────────────────────
-// PRODUTOS DINÂMICOS (Itens Colecionáveis + Novos Bonecos)
-// ─────────────────────────────────────────────────────────────────────────────
-
-const QTD_ITENS_COLECIONAVEIS = 6;
-const QTD_BONECOS             = 5;
+let todosOsProdutos = [];
 
 function irParaProduto(id) {
-    window.location.href = `tela_produto.html?id=${encodeURIComponent(id)}&origem=inicial`;
+    window.location.href = `tela_produto.html?id=${encodeURIComponent(id)}&origem=busca`;
 }
 
-async function carregarProdutosTelaInicial() {
+/** Remove acentos e caixa pra comparar termos sem distinção. */
+function normalizar(texto) {
+    return (texto || '')
+        .normalize('NFD')
+        .replace(/\p{M}/gu, '')
+        .toLowerCase();
+}
+
+function obterCategoriasSelecionadas() {
+    return [...document.querySelectorAll('#categoria-lista input[type="checkbox"]:checked')]
+        .map(input => input.dataset.categoria);
+}
+
+function atualizarBotaoLimpar() {
+    const termo = document.getElementById('input-busca-nome').value.trim();
+    const categorias = obterCategoriasSelecionadas();
+    const btn = document.getElementById('btn-limpar-filtros');
+    if (btn) btn.hidden = !termo && categorias.length === 0;
+}
+
+function aplicarFiltros() {
+    const termo = normalizar(document.getElementById('input-busca-nome').value.trim());
+    const categoriasSelecionadas = obterCategoriasSelecionadas();
+
+    const filtrados = todosOsProdutos.filter(produto => {
+        const combinaNome = !termo || normalizar(produto.nome).includes(termo);
+        const combinaCategoria = categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(produto.categoria);
+        return combinaNome && combinaCategoria;
+    });
+
+    renderizarBonecosEmGrids('#grid-resultados', filtrados, irParaProduto);
+    atualizarContagem(filtrados.length);
+    document.getElementById('busca-vazio').hidden = filtrados.length > 0;
+    atualizarBotaoLimpar();
+}
+
+function limparFiltros() {
+    document.getElementById('input-busca-nome').value = '';
+    document.querySelectorAll('#categoria-lista input[type="checkbox"]').forEach(cb => cb.checked = false);
+    aplicarFiltros();
+}
+window.limparFiltros = limparFiltros;
+
+function renderizarCategorias(produtos) {
+    const lista = document.getElementById('categoria-lista');
+    const categorias = [...new Set(produtos.map(p => p.categoria).filter(Boolean))];
+
+    if (categorias.length === 0) {
+        lista.innerHTML = '<p class="categoria-vazio">Nenhuma categoria disponível.</p>';
+        return;
+    }
+
+    lista.innerHTML = '';
+    categorias.forEach(categoria => {
+        const label = document.createElement('label');
+        label.className = 'categoria-chip';
+        label.innerHTML = `<input type="checkbox" data-categoria="${categoria}" /><span>${categoria}</span>`;
+        label.querySelector('input').addEventListener('change', aplicarFiltros);
+        lista.appendChild(label);
+    });
+}
+
+function atualizarContagem(qtd) {
+    const contagem = document.getElementById('busca-contagem');
+    contagem.textContent = `${qtd} produto${qtd === 1 ? '' : 's'} encontrado${qtd === 1 ? '' : 's'}`;
+}
+
+function preencherTermoDaUrl() {
+    const termo = new URLSearchParams(window.location.search).get('q');
+    if (termo) document.getElementById('input-busca-nome').value = termo;
+}
+
+async function carregarBusca() {
+    preencherTermoDaUrl();
+    document.getElementById('input-busca-nome').addEventListener('input', aplicarFiltros);
+
     try {
         const produtos = await obterProdutos();
-        const ativos = produtos.filter(p => p.ativo);
+        todosOsProdutos = produtos.filter(p => p.ativo);
 
-        renderizarItensEmGrids('.itens-grid', ativos.slice(0, QTD_ITENS_COLECIONAVEIS), irParaProduto);
-        renderizarBonecosEmGrids('.bonecos-grid', ativos.slice(0, QTD_BONECOS), irParaProduto);
+        renderizarCategorias(todosOsProdutos);
+        aplicarFiltros();
     } catch (error) {
-        console.error('Erro ao carregar produtos na tela inicial:', error);
+        console.error('Erro ao carregar busca:', error);
+        document.getElementById('busca-contagem').textContent = 'Erro ao carregar produtos.';
     }
 }
 
-document.addEventListener('DOMContentLoaded', carregarProdutosTelaInicial);
+document.addEventListener('DOMContentLoaded', carregarBusca);

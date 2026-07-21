@@ -1,3 +1,7 @@
+import { obterProdutoPorId, obterProdutos } from '../../api/produtosStore.js';
+import { formatarPreco, obterFotoPrincipal, renderizarBonecosEmGrids } from '../../api/produtosView.js';
+import { inicializarBuscaNav } from '../../api/buscaNav.js';
+
 const temas = {
     azul: {
         '--cor-fundo': '#DCEAF7',
@@ -26,7 +30,6 @@ const temas = {
             heroFundo: 'Assets/Subtract2.jpg',
             logo: 'Assets/logo-azul.png',
             favicon: 'Assets/logo-azul.png'
-
         }
     },
     rosa: {
@@ -84,6 +87,7 @@ function aplicarTema(nomeTema) {
     if (heroFundoImg) heroFundoImg.src = tema.imagens.heroFundo;
     if (logoImg) logoImg.src = tema.imagens.logo;
     if (favicon) favicon.href = tema.imagens.favicon;
+
     localStorage.setItem('tema', nomeTema);
 }
 
@@ -92,6 +96,7 @@ function toggleTema() {
     const proximo = atual === 'azul' ? 'rosa' : 'azul';
     aplicarTema(proximo);
 }
+window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
@@ -115,6 +120,8 @@ function ajustarBtnTema() {
 window.addEventListener('scroll', ajustarBtnTema);
 ajustarBtnTema();
 
+inicializarBuscaNav('tela_busca.html');
+
 // Scroll dos links da navbar
 document.addEventListener('DOMContentLoaded', () => {
     const links = document.querySelectorAll('.nav-link');
@@ -123,68 +130,70 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', (e) => {
             const texto = link.textContent.trim().toUpperCase();
 
-            if (texto === 'BONECOS') {
+            // "TELA INICIAL" → topo da página
+            if (texto === 'CARRINHO') {
                 e.preventDefault();
-                const secaoBonecos = document.querySelector('#bonecos');
-                if (secaoBonecos) {
-                    const navbar = document.querySelector('.navbar-wrapper');
-                    const offset = navbar ? navbar.offsetHeight : 0;
-                    const top = secaoBonecos.getBoundingClientRect().top + window.scrollY - offset - 30;
-                    window.scrollTo({ top, behavior: 'smooth' });
-                }
-            }
-
-            if (texto === 'ITENS') {
-                // Só faz scroll suave se já estiver nesta página
-                if (link.getAttribute('href') === '#' || link.getAttribute('href') === '') {
-                    e.preventDefault();
-                    const secaoItens = document.querySelector('.section-itens');
-                    if (secaoItens) {
-                        const navbar = document.querySelector('.navbar-wrapper');
-                        const offset = navbar ? navbar.offsetHeight : 0;
-                        const top = secaoItens.getBoundingClientRect().top + window.scrollY - offset - 30;
-                        window.scrollTo({ top, behavior: 'smooth' });
-                    }
-                }
-                // Se tiver href com #itens, deixa o navegador redirecionar normalmente
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
     });
-
-    // Se chegou na página com #itens na URL, faz o scroll com offset correto
-    if (window.location.hash === '#itens') {
-        const secaoItens = document.querySelector('#itens');
-        if (secaoItens) {
-            setTimeout(() => {
-                const navbar = document.querySelector('.navbar-wrapper');
-                const offset = navbar ? navbar.offsetHeight : 0;
-                const top = secaoItens.getBoundingClientRect().top + window.scrollY - offset - 30;
-                window.scrollTo({ top, behavior: 'smooth' });
-            }, 100); // pequeno delay para garantir que a página carregou
-        }
-    }
 });
 
-// Atualiza o nav-link active conforme o scroll
-const sectionBonecos = document.querySelector('.section-bonecos');
-const sectionItens = document.querySelector('.section-itens');
+// ─────────────────────────────────────────────────────────────────────────────
+// DETALHE DO PRODUTO
+// ─────────────────────────────────────────────────────────────────────────────
 
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar-wrapper');
-    const offset = navbar ? navbar.offsetHeight : 0;
-    const scrollY = window.scrollY + offset + 10;
+const QTD_OUTROS_PRODUTOS = 5;
 
-    const linkBonecos = [...document.querySelectorAll('.nav-link')]
-        .find(l => l.textContent.trim().toUpperCase() === 'BONECOS');
-    const linkItens = [...document.querySelectorAll('.nav-link')]
-        .find(l => l.textContent.trim().toUpperCase() === 'ITENS');
+function irParaProduto(id) {
+    const origem = new URLSearchParams(window.location.search).get('origem') || 'catalogo';
+    window.location.href = `tela_produto.html?id=${encodeURIComponent(id)}&origem=${origem}`;
+}
 
-    if (sectionItens && scrollY >= sectionItens.offsetTop) {
-        linkBonecos?.classList.remove('active');
-        linkItens?.classList.add('active');
-    } else {
-        linkItens?.classList.remove('active');
-        linkBonecos?.classList.add('active');
+/** Mantém ativa a aba de onde o usuário veio (tela inicial ou catálogo), como se esta fosse uma página modal. */
+function aplicarAbaAtiva() {
+    const origem = new URLSearchParams(window.location.search).get('origem');
+    const textoAlvo = origem === 'inicial' ? 'TELA INICIAL' : 'BONECOS';
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.toggle('active', link.textContent.trim().toUpperCase() === textoAlvo);
+    });
+}
+
+function preencherHero(produto) {
+    const titulo    = document.querySelector('.hero-titulo');
+    const preco     = document.querySelector('.hero-preco');
+    const descricao = document.querySelector('.hero-descricao');
+    const imagem    = document.querySelector('.hero-imagens img.hero-img-1');
+
+    if (titulo) titulo.textContent = produto.nome ?? '';
+    if (preco) preco.textContent = formatarPreco(produto.preco);
+    if (descricao) descricao.textContent = produto.descricao ?? '';
+    if (imagem) imagem.src = obterFotoPrincipal(produto);
+}
+
+async function carregarProduto() {
+    aplicarAbaAtiva();
+
+    const id = new URLSearchParams(window.location.search).get('id');
+    if (!id) {
+        window.location.href = 'tela_catalogo.html';
+        return;
     }
-});
 
+    try {
+        const produto = await obterProdutoPorId(id);
+        preencherHero(produto);
+
+        const produtos = await obterProdutos();
+        const outros = produtos
+            .filter(p => p.ativo && String(p.id) !== String(id))
+            .slice(0, QTD_OUTROS_PRODUTOS);
+        renderizarBonecosEmGrids('.bonecos-grid', outros, irParaProduto);
+    } catch (error) {
+        console.error('Erro ao carregar produto:', error);
+        window.location.href = 'tela_catalogo.html';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', carregarProduto);
