@@ -10,15 +10,20 @@
  *
  * Se nada chamar esconder() em até TEMPO_MAX_MS, o splash se esconde por
  * segurança — nunca trava a página caso o carregamento falhe silenciosamente.
+ * TEMPO_MAX_MS precisa ser generoso: o backend (Render, plano free) "dorme"
+ * quando fica sem uso e pode levar bem mais que alguns segundos para
+ * responder à primeira requisição depois disso (cold start).
  */
 (function () {
     "use strict";
 
     var ESCONDIDO_CLASSE = "splash-escondido";
-    var TEMPO_MAX_MS = 8000;
+    var TEMPO_MAX_MS = 45000;
+    var TEMPO_AVISO_MS = 10000;
 
     var elemento = null;
     var timeoutSeguranca = null;
+    var timeoutAviso = null;
 
     function injetarEstilos() {
         var style = document.createElement("style");
@@ -42,7 +47,7 @@
         overlay.innerHTML =
             '<div class="splash-conteudo">' +
                 '<div class="splash-spinner" aria-hidden="true"></div>' +
-                '<p class="splash-texto">Carregando produtos...</p>' +
+                '<p class="splash-texto" id="splash-produtos-texto">Carregando produtos...</p>' +
             "</div>";
         document.body.insertBefore(overlay, document.body.firstChild);
         return overlay;
@@ -51,6 +56,7 @@
     function esconder() {
         if (!elemento) return;
         clearTimeout(timeoutSeguranca);
+        clearTimeout(timeoutAviso);
 
         var el = elemento;
         elemento = null;
@@ -60,9 +66,16 @@
         }, 300);
     }
 
+    /** Depois de um tempo, avisa que o servidor pode estar "acordando" (cold start). */
+    function avisarDemora() {
+        var texto = document.getElementById("splash-produtos-texto");
+        if (texto) texto.textContent = "Ainda carregando... o servidor pode estar iniciando.";
+    }
+
     function init() {
         injetarEstilos();
         elemento = injetarMarkup();
+        timeoutAviso = setTimeout(avisarDemora, TEMPO_AVISO_MS);
         timeoutSeguranca = setTimeout(esconder, TEMPO_MAX_MS);
     }
 
