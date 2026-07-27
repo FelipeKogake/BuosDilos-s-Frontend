@@ -348,6 +348,20 @@ body {
     padding: 3rem 0;
 }
 
+.busca-resultados-secao {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1.5px solid var(--cor-divisor);
+}
+
+.busca-resultados-secao .section-titulo {
+    font-size: 1.3rem;
+    font-weight: 900;
+    font-style: italic;
+    color: var(--cor-texto-titulo);
+    margin-bottom: 0.4rem;
+}
+
 /* ============================================
    CARDS DE PRODUTO
    ============================================ */
@@ -442,6 +456,44 @@ body {
 
 .bonecos-grid--wrap .boneco-card {
     width: 100%;
+}
+
+.itens-grid--wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.5rem;
+    justify-items: center;
+}
+
+.item-circular {
+    width: 169px;
+    height: 169px;
+    border-radius: 50%;
+    border: 2px solid var(--cor-divisor);
+    overflow: hidden;
+    background: var(--cor-fundo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.itens-grid--wrap .item-circular {
+    width: 100%;
+    max-width: 169px;
+    aspect-ratio: 1 / 1;
+    height: auto;
+}
+
+.item-circular:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.item-circular img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* ============================================
@@ -599,6 +651,11 @@ body {
 
     .bonecos-grid--wrap {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .itens-grid--wrap {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
         gap: 1rem;
     }
 }

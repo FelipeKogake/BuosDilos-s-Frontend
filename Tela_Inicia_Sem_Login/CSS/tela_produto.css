@@ -186,7 +186,7 @@ body {
 
 .btn-voltar {
     position: absolute;
-    top: -10px;
+    top: -34px;
     left: 0;
     z-index: 5;
     display: inline-flex;
@@ -217,7 +217,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem 10rem 0 10rem;
+    padding: 2rem 10rem 0 10rem;
     min-height: 540px;
     overflow: hidden;
     position: relative;
@@ -267,6 +267,69 @@ body {
     z-index: 2;
     flex-shrink: 0;
     margin-top: -50px;
+}
+
+.produto-galeria {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-foto-seta {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 4;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    color: var(--cor-texto-titulo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: background 0.2s;
+}
+
+.hero-foto-seta:hover {
+    background: #fff;
+}
+
+.hero-foto-seta--anterior {
+    left: -2.25rem;
+}
+
+/* +20px pra compensar o translateX(20px) do .hero-img-1: a imagem visualmente
+   ocupa 20px mais à direita do que a própria caixa (que não muda com transform). */
+.hero-foto-seta--proxima {
+    right: calc(-2.25rem - 20px);
+}
+
+.hero-img-1 {
+    transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.hero-img-1.hero-img--sem-transicao {
+    transition: none;
+}
+
+/* deslocamentos somados aos 20px de translateX de repouso do .hero-img-1, pra não "saltar" ao animar */
+.hero-img-1.hero-img--deslocada-esquerda {
+    opacity: 0;
+    transform: translateX(-8px);
+}
+
+.hero-img-1.hero-img--deslocada-direita {
+    opacity: 0;
+    transform: translateX(48px);
+}
+
+html.a11y-reduce-motion .hero-img-1 {
+    transition: none !important;
 }
 
 .hero-imagens::before {
@@ -369,6 +432,38 @@ body {
 
 .btn-comprar:hover {
     background: #d4c55a;
+}
+
+.hero-acoes-row {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.btn-favoritar-produto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1.5px solid var(--cor-borda);
+    background: #fff;
+    color: var(--cor-texto-terciario);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn-favoritar-produto:hover {
+    border-color: #e24b4a;
+    color: #e24b4a;
+}
+
+.btn-favoritar-produto.ativo {
+    background: #fdeaea;
+    border-color: #e24b4a;
+    color: #e24b4a;
 }
 
 /* ============================================

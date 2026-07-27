@@ -1,4 +1,4 @@
-import { obterProdutos } from '../../api/produtosStore.js';
+import { obterProdutos, obterItens } from '../../api/produtosStore.js';
 import { renderizarBonecosEmGrids, renderizarItensEmGrids } from '../../api/produtosView.js';
 import { inicializarBuscaNav } from '../../api/buscaNav.js';
 
@@ -157,11 +157,12 @@ function urlProduto(id) {
 
 async function carregarProdutosTelaInicial() {
     try {
-        const produtos = await obterProdutos();
-        const ativos = produtos.filter(p => p.ativo);
+        const [produtos, itens] = await Promise.all([obterProdutos(), obterItens()]);
+        const produtosAtivos = produtos.filter(p => p.ativo);
+        const itensAtivos = itens.filter(p => p.ativo);
 
-        renderizarItensEmGrids('.itens-grid', ativos.slice(0, QTD_ITENS_COLECIONAVEIS), urlProduto);
-        renderizarBonecosEmGrids('.bonecos-grid', ativos.slice(0, QTD_BONECOS), urlProduto);
+        renderizarItensEmGrids('.itens-grid', itensAtivos.slice(0, QTD_ITENS_COLECIONAVEIS), urlProduto);
+        renderizarBonecosEmGrids('.bonecos-grid', produtosAtivos.slice(0, QTD_BONECOS), urlProduto);
     } catch (error) {
         console.error('Erro ao carregar produtos na tela inicial:', error);
     } finally {

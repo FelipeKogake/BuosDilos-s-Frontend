@@ -1,5 +1,5 @@
-import { obterProdutos } from '../../api/produtosStore.js';
-import { renderizarBonecosEmGrids } from '../../api/produtosView.js';
+import { obterProdutos, obterItens } from '../../api/produtosStore.js';
+import { renderizarBonecosEmGrids, renderizarItensEmGrids } from '../../api/produtosView.js';
 import { inicializarBuscaNav } from '../../api/buscaNav.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -116,6 +116,7 @@ inicializarBuscaNav('tela_busca.html');
 // ─────────────────────────────────────────────────────────────────────────────
 
 let todosOsProdutos = [];
+let todosOsItens = [];
 
 function urlProduto(id) {
     return `tela_produto.html?id=${encodeURIComponent(id)}&origem=busca`;
@@ -141,19 +142,28 @@ function atualizarBotaoLimpar() {
     if (btn) btn.hidden = !termo && categorias.length === 0;
 }
 
-function aplicarFiltros() {
-    const termo = normalizar(document.getElementById('input-busca-nome').value.trim());
-    const categoriasSelecionadas = obterCategoriasSelecionadas();
-
-    const filtrados = todosOsProdutos.filter(produto => {
+function filtrarLista(lista, termo, categoriasSelecionadas) {
+    return lista.filter(produto => {
         const combinaNome = !termo || normalizar(produto.nome).includes(termo);
         const combinaCategoria = categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(produto.categoria);
         return combinaNome && combinaCategoria;
     });
+}
 
-    renderizarBonecosEmGrids('#grid-resultados', filtrados, urlProduto);
-    atualizarContagem(filtrados.length);
-    document.getElementById('busca-vazio').hidden = filtrados.length > 0;
+function aplicarFiltros() {
+    const termo = normalizar(document.getElementById('input-busca-nome').value.trim());
+    const categoriasSelecionadas = obterCategoriasSelecionadas();
+
+    const produtosFiltrados = filtrarLista(todosOsProdutos, termo, categoriasSelecionadas);
+    renderizarBonecosEmGrids('#grid-resultados', produtosFiltrados, urlProduto);
+    atualizarContagem('busca-contagem', produtosFiltrados.length, 'produto');
+    document.getElementById('busca-vazio').hidden = produtosFiltrados.length > 0;
+
+    const itensFiltrados = filtrarLista(todosOsItens, termo, categoriasSelecionadas);
+    renderizarItensEmGrids('#grid-resultados-itens', itensFiltrados, urlProduto);
+    atualizarContagem('busca-contagem-itens', itensFiltrados.length, 'item');
+    document.getElementById('busca-vazio-itens').hidden = itensFiltrados.length > 0;
+
     atualizarBotaoLimpar();
 }
 
@@ -164,9 +174,9 @@ function limparFiltros() {
 }
 window.limparFiltros = limparFiltros;
 
-function renderizarCategorias(produtos) {
+function renderizarCategorias(produtos, itens) {
     const lista = document.getElementById('categoria-lista');
-    const categorias = [...new Set(produtos.map(p => p.categoria).filter(Boolean))];
+    const categorias = [...new Set([...produtos, ...itens].map(p => p.categoria).filter(Boolean))];
 
     if (categorias.length === 0) {
         lista.innerHTML = '<p class="categoria-vazio">Nenhuma categoria disponível.</p>';
@@ -183,9 +193,10 @@ function renderizarCategorias(produtos) {
     });
 }
 
-function atualizarContagem(qtd) {
-    const contagem = document.getElementById('busca-contagem');
-    contagem.textContent = `${qtd} produto${qtd === 1 ? '' : 's'} encontrado${qtd === 1 ? '' : 's'}`;
+function atualizarContagem(id, qtd, singular) {
+    const contagem = document.getElementById(id);
+    if (!contagem) return;
+    contagem.textContent = `${qtd} ${singular}${qtd === 1 ? '' : 's'} encontrado${qtd === 1 ? '' : 's'}`;
 }
 
 function preencherTermoDaUrl() {
@@ -198,14 +209,16 @@ async function carregarBusca() {
     document.getElementById('input-busca-nome').addEventListener('input', aplicarFiltros);
 
     try {
-        const produtos = await obterProdutos();
+        const [produtos, itens] = await Promise.all([obterProdutos(), obterItens()]);
         todosOsProdutos = produtos.filter(p => p.ativo);
+        todosOsItens = itens.filter(p => p.ativo);
 
-        renderizarCategorias(todosOsProdutos);
+        renderizarCategorias(todosOsProdutos, todosOsItens);
         aplicarFiltros();
     } catch (error) {
         console.error('Erro ao carregar busca:', error);
         document.getElementById('busca-contagem').textContent = 'Erro ao carregar produtos.';
+        document.getElementById('busca-contagem-itens').textContent = 'Erro ao carregar itens.';
     } finally {
         window.SplashScreen?.esconder();
     }

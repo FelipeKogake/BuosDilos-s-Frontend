@@ -10,20 +10,27 @@
  *
  * Se nada chamar esconder() em até TEMPO_MAX_MS, o splash se esconde por
  * segurança — nunca trava a página caso o carregamento falhe silenciosamente.
- * TEMPO_MAX_MS precisa ser generoso: o backend (Render, plano free) "dorme"
- * quando fica sem uso e pode levar bem mais que alguns segundos para
- * responder à primeira requisição depois disso (cold start).
+ * TEMPO_MAX_MS precisa ser bem generoso: o backend (Render, plano free) "dorme"
+ * quando fica sem uso e pode levar até 1-2 minutos pra responder à primeira
+ * requisição depois disso (cold start). As MENSAGENS vão trocando com o tempo
+ * pra dar sensação de progresso, já que a espera pode ser longa.
  */
 (function () {
     "use strict";
 
     var ESCONDIDO_CLASSE = "splash-escondido";
-    var TEMPO_MAX_MS = 45000;
-    var TEMPO_AVISO_MS = 10000;
+    var TEMPO_MAX_MS = 120000;
+    var MENSAGENS = [
+        { tempo: 0,     texto: "Carregando produtos..." },
+        { tempo: 8000,  texto: "Ainda carregando... o servidor pode estar iniciando." },
+        { tempo: 25000, texto: "Isso está demorando mais que o normal, mas já estamos quase lá." },
+        { tempo: 50000, texto: "O servidor ainda está de pé, prometemos! Só mais um pouco." },
+        { tempo: 80000, texto: "Quase lá! Agradecemos a paciência." },
+    ];
 
     var elemento = null;
     var timeoutSeguranca = null;
-    var timeoutAviso = null;
+    var timeoutsMensagens = [];
 
     function injetarEstilos() {
         var style = document.createElement("style");
@@ -56,7 +63,8 @@
     function esconder() {
         if (!elemento) return;
         clearTimeout(timeoutSeguranca);
-        clearTimeout(timeoutAviso);
+        timeoutsMensagens.forEach(clearTimeout);
+        timeoutsMensagens = [];
 
         var el = elemento;
         elemento = null;
@@ -66,16 +74,23 @@
         }, 300);
     }
 
-    /** Depois de um tempo, avisa que o servidor pode estar "acordando" (cold start). */
-    function avisarDemora() {
-        var texto = document.getElementById("splash-produtos-texto");
-        if (texto) texto.textContent = "Ainda carregando... o servidor pode estar iniciando.";
+    function trocarTexto(texto) {
+        var el = document.getElementById("splash-produtos-texto");
+        if (el) el.textContent = texto;
+    }
+
+    /** Agenda a troca de mensagem pra cada estágio em MENSAGENS, dando sensação de progresso. */
+    function agendarMensagens() {
+        MENSAGENS.forEach(function (etapa) {
+            if (etapa.tempo === 0) return; // já é o texto inicial do markup
+            timeoutsMensagens.push(setTimeout(function () { trocarTexto(etapa.texto); }, etapa.tempo));
+        });
     }
 
     function init() {
         injetarEstilos();
         elemento = injetarMarkup();
-        timeoutAviso = setTimeout(avisarDemora, TEMPO_AVISO_MS);
+        agendarMensagens();
         timeoutSeguranca = setTimeout(esconder, TEMPO_MAX_MS);
     }
 

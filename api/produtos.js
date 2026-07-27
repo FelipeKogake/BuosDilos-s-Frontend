@@ -88,6 +88,7 @@ export async function criarProduto(dados) {
         categoria: dados.categoria || null,
         descricao: dados.descricao || null,
         ativo:     dados.ativo,
+        item:      !!dados.item,
     };
 
     return apiFetch('/produtos', {
@@ -106,6 +107,7 @@ export async function atualizarProduto(id, dados) {
         categoria: dados.categoria || null,
         descricao: dados.descricao || null,
         ativo:     dados.ativo,
+        item:      !!dados.item,
     };
 
     return apiFetch(`/produtos/${id}`, {

@@ -1,4 +1,4 @@
-import { obterProdutos } from '../../api/produtosStore.js';
+import { obterProdutos, obterItens } from '../../api/produtosStore.js';
 import { renderizarBonecosEmGrids, renderizarItensEmGrids } from '../../api/produtosView.js';
 import { inicializarBuscaNav } from '../../api/buscaNav.js';
 
@@ -210,11 +210,12 @@ function urlProduto(id) {
 
 async function carregarCatalogo() {
     try {
-        const produtos = await obterProdutos();
-        const ativos = produtos.filter(p => p.ativo);
+        const [produtos, itens] = await Promise.all([obterProdutos(), obterItens()]);
+        const produtosAtivos = produtos.filter(p => p.ativo);
+        const itensAtivos = itens.filter(p => p.ativo);
 
-        renderizarBonecosEmGrids('.bonecos-grid', ativos, urlProduto, { limitar: true });
-        renderizarItensEmGrids('.itens-grid', ativos, urlProduto, { limitar: true });
+        renderizarBonecosEmGrids('.bonecos-grid', produtosAtivos, urlProduto, { limitar: true });
+        renderizarItensEmGrids('.itens-grid', itensAtivos, urlProduto, { limitar: true });
     } catch (error) {
         console.error('Erro ao carregar catálogo de produtos:', error);
     } finally {

@@ -91,6 +91,8 @@ export function criarBonecoCard(produto, obterUrl, escuro = false) {
 /**
  * Cria o item circular usado nos carrosséis "Itens Colecionáveis".
  * `obterUrl(produtoId)` deve retornar a URL de destino.
+ * Sem ícone de favoritar de propósito: itens só podem ser favoritados
+ * na tela_produto (diferente de boneco, que também favorita pelo card).
  */
 export function criarItemCircular(produto, obterUrl) {
     const link = document.createElement('a');

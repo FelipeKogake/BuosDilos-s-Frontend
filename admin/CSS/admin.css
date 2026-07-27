@@ -400,6 +400,13 @@ body {
 
 .card-produto-badge--ativo { background: var(--cor-sucesso-fundo); color: var(--cor-sucesso); }
 .card-produto-badge--inativo { background: var(--cor-erro-fundo); color: var(--cor-erro); }
+.card-produto-badge--tipo { background: var(--cor-primaria); color: #1B1F2A; }
+
+.card-produto-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
 
 .card-produto-acoes {
     display: flex;

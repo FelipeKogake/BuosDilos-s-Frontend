@@ -14,6 +14,7 @@ import {
 
 import {
     obterProdutos,
+    obterItens,
     obterProdutoPorId,
     invalidarCacheProdutos,
 } from '../../api/produtosStore.js';
@@ -98,71 +99,15 @@ function pedirConfirmacao(mensagem) {
 }
 
 // ============================================
-// PRODUTOS
+// PRODUTOS / ITENS
 // ============================================
-let todosProdutos          = [];
-let produtoEmEdicao        = null;
+// Produtos (bonecos) e itens colecionáveis vêm do mesmo endpoint, diferenciados
+// pelo campo `item`. Cada aba (Produtos/Itens) tem seu próprio grid, busca e
+// filtro de categoria, mas compartilham a mesma lógica via criarGerenciadorDeAba.
+let produtoEmEdicao = null;
 
-const gridProdutos       = document.getElementById('grid-produtos');
-const produtosCarregando = document.getElementById('produtos-estado-carregando');
-const produtosVazio      = document.getElementById('produtos-estado-vazio');
-const buscaProdutos      = document.getElementById('busca-produtos');
-const filtroCategoria    = document.getElementById('filtro-categoria');
-const btnRecarregarProduto = document.getElementById('btn-recarregar-produto');
-
-function separarProdutos(produtos) {
-    return {
-        ativos:   produtos.filter(p => p.ativo),
-        inativos: produtos.filter(p => !p.ativo),
-    };
-}
-
-async function carregarProdutos() {
-    produtosCarregando.hidden = false;
-    gridProdutos.hidden       = true;
-    produtosVazio.hidden      = true;
-    document.getElementById('grid-inativos').hidden          = true;
-    document.getElementById('inativos-estado-vazio').hidden  = true;
-
-    try {
-        todosProdutos = await obterProdutos();
-        const { ativos, inativos } = separarProdutos(todosProdutos);
-        preencherFiltroCategorias(ativos);
-        renderizarProdutos(ativos,   'grid-produtos', 'produtos-estado-vazio');
-        renderizarProdutos(inativos, 'grid-inativos', 'inativos-estado-vazio');
-    } catch (error) {
-        mostrarToast('Erro ao carregar produtos', 'erro');
-        console.error(error);
-    } finally {
-        produtosCarregando.hidden = true;
-    }
-}
-
-function preencherFiltroCategorias(produtos) {
-    const categorias = [...new Set(produtos.map(p => p.categoria).filter(Boolean))];
-    filtroCategoria.innerHTML = '<option value="">Todas as categorias</option>';
-    categorias.forEach((cat) => {
-        const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = cat;
-        filtroCategoria.appendChild(opt);
-    });
-}
-
-function renderizarProdutos(produtos, gridId = 'grid-produtos', vazioId = 'produtos-estado-vazio') {
-    const grid  = document.getElementById(gridId);
-    const vazio = document.getElementById(vazioId);
-
-    if (produtos.length === 0) {
-        grid.hidden  = true;
-        vazio.hidden = false;
-        return;
-    }
-
-    vazio.hidden = true;
-    grid.hidden  = false;
-
-    grid.innerHTML = produtos.map((p) => `
+function criarCardProdutoHTML(p, mostrarTipo = false) {
+    return `
         <article class="card-produto" data-id="${p.id}">
             <div class="card-produto-imagem">
                 ${p.fotoUrl
@@ -171,9 +116,12 @@ function renderizarProdutos(produtos, gridId = 'grid-produtos', vazioId = 'produ
                 }
             </div>
             <div class="card-produto-corpo">
-                <span class="card-produto-badge ${p.ativo ? 'card-produto-badge--ativo' : 'card-produto-badge--inativo'}">
-                    ${p.ativo ? 'Ativo' : 'Inativo'}
-                </span>
+                <div class="card-produto-badges">
+                    <span class="card-produto-badge ${p.ativo ? 'card-produto-badge--ativo' : 'card-produto-badge--inativo'}">
+                        ${p.ativo ? 'Ativo' : 'Inativo'}
+                    </span>
+                    ${mostrarTipo ? `<span class="card-produto-badge card-produto-badge--tipo">${p.item ? 'Item' : 'Boneco'}</span>` : ''}
+                </div>
                 <p class="card-produto-nome">${p.nome}</p>
                 ${p.categoria ? `<span class="card-produto-categoria">${p.categoria}</span>` : ''}
                 <span class="card-produto-preco">R$ ${Number(p.preco).toFixed(2).replace('.', ',')}</span>
@@ -183,59 +131,158 @@ function renderizarProdutos(produtos, gridId = 'grid-produtos', vazioId = 'produ
                 <button class="btn-acao-excluir" data-acao="excluir">Excluir</button>
             </div>
         </article>
-    `).join('');
+    `;
 }
 
-function filtrarProdutos() {
-    const termo     = buscaProdutos.value.trim().toLowerCase();
-    const categoria = filtroCategoria.value;
-    const ativos    = todosProdutos.filter(p => p.ativo);
-    const filtrados = ativos.filter((p) => {
-        const bateTermo     = !termo     || p.nome.toLowerCase().includes(termo);
-        const bateCategoria = !categoria || p.categoria === categoria;
-        return bateTermo && bateCategoria;
+function renderizarGridProdutos(lista, gridId, vazioId, mostrarTipo = false) {
+    const grid  = document.getElementById(gridId);
+    const vazio = document.getElementById(vazioId);
+
+    if (lista.length === 0) {
+        grid.hidden  = true;
+        vazio.hidden = false;
+        return;
+    }
+
+    vazio.hidden = true;
+    grid.hidden  = false;
+    grid.innerHTML = lista.map((p) => criarCardProdutoHTML(p, mostrarTipo)).join('');
+}
+
+function preencherFiltroCategorias(lista, selectEl) {
+    const categorias = [...new Set(lista.map(p => p.categoria).filter(Boolean))];
+    selectEl.innerHTML = '<option value="">Todas as categorias</option>';
+    categorias.forEach((cat) => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        selectEl.appendChild(opt);
     });
-    renderizarProdutos(filtrados, 'grid-produtos', 'produtos-estado-vazio');
 }
 
-buscaProdutos.addEventListener('input', filtrarProdutos);
-filtroCategoria.addEventListener('change', filtrarProdutos);
+/** Gerencia uma aba (Produtos ou Itens): carrega sua lista, filtra por nome/categoria e trata editar/excluir. */
+function criarGerenciadorDeAba({ obterLista, gridId, carregandoId, vazioId, buscaInputId, filtroCategoriaId, rotuloErro }) {
+    let todos = [];
 
-gridProdutos.addEventListener('click', async (e) => {
-    const botao   = e.target.closest('button[data-acao]');
-    if (!botao) return;
+    const grid         = document.getElementById(gridId);
+    const carregandoEl = document.getElementById(carregandoId);
+    const vazioEl       = document.getElementById(vazioId);
+    const buscaInput   = document.getElementById(buscaInputId);
+    const filtroSelect = document.getElementById(filtroCategoriaId);
 
-    const card    = botao.closest('.card-produto');
-    const id      = card.dataset.id;
-    const produto = todosProdutos.find(p => String(p.id) === String(id));
-    const acao    = botao.dataset.acao;
+    function filtrar() {
+        const termo     = buscaInput.value.trim().toLowerCase();
+        const categoria = filtroSelect.value;
+        const ativos    = todos.filter(p => p.ativo);
+        const filtrados = ativos.filter((p) => {
+            const bateTermo     = !termo     || p.nome.toLowerCase().includes(termo);
+            const bateCategoria = !categoria || p.categoria === categoria;
+            return bateTermo && bateCategoria;
+        });
+        renderizarGridProdutos(filtrados, gridId, vazioId);
+    }
 
-    if (acao === 'editar') {
+    async function carregar() {
+        carregandoEl.hidden = false;
+        grid.hidden          = true;
+        vazioEl.hidden       = true;
         try {
-            const produtoAtualizado = await obterProdutoPorId(produto.id);
-            abrirModalProduto(produtoAtualizado);
-        } catch {
-            mostrarToast('Erro ao carregar produto', 'erro');
+            todos = await obterLista();
+            preencherFiltroCategorias(todos.filter(p => p.ativo), filtroSelect);
+            filtrar();
+        } catch (error) {
+            mostrarToast(rotuloErro, 'erro');
+            console.error(error);
+        } finally {
+            carregandoEl.hidden = true;
         }
     }
 
-    if (acao === 'excluir') {
-        const confirmado = await pedirConfirmacao(`Excluir "${produto.nome}" permanentemente?`);
-        if (!confirmado) return;
-        try {
-            await deletarProduto(id);
-            invalidarCacheProdutos();
-            mostrarToast('Produto excluído');
-            carregarProdutos();
-        } catch {
-            mostrarToast('Erro ao excluir produto', 'erro');
+    buscaInput.addEventListener('input', filtrar);
+    filtroSelect.addEventListener('change', filtrar);
+
+    grid.addEventListener('click', async (e) => {
+        const botao = e.target.closest('button[data-acao]');
+        if (!botao) return;
+
+        const card    = botao.closest('.card-produto');
+        const id      = card.dataset.id;
+        const produto = todos.find(p => String(p.id) === String(id));
+        const acao    = botao.dataset.acao;
+
+        if (acao === 'editar') {
+            try {
+                const produtoAtualizado = await obterProdutoPorId(produto.id);
+                abrirModalProduto(produtoAtualizado);
+            } catch {
+                mostrarToast('Erro ao carregar produto', 'erro');
+            }
         }
-    }
+
+        if (acao === 'excluir') {
+            const confirmado = await pedirConfirmacao(`Excluir "${produto.nome}" permanentemente?`);
+            if (!confirmado) return;
+            try {
+                await deletarProduto(id);
+                invalidarCacheProdutos();
+                mostrarToast(`${produto.item ? 'Item' : 'Produto'} excluído`);
+                recarregarTudo();
+            } catch {
+                mostrarToast('Erro ao excluir', 'erro');
+            }
+        }
+    });
+
+    return { carregar };
+}
+
+const gerenciadorProdutos = criarGerenciadorDeAba({
+    obterLista:        obterProdutos,
+    gridId:            'grid-produtos',
+    carregandoId:      'produtos-estado-carregando',
+    vazioId:           'produtos-estado-vazio',
+    buscaInputId:      'busca-produtos',
+    filtroCategoriaId: 'filtro-categoria',
+    rotuloErro:        'Erro ao carregar produtos',
 });
 
-// btnRecarregarProduto.addEventListener('click', async (e) => {
-//     renderizarProdutos()
-// });
+const gerenciadorItens = criarGerenciadorDeAba({
+    obterLista:        obterItens,
+    gridId:            'grid-itens',
+    carregandoId:      'itens-estado-carregando',
+    vazioId:           'itens-estado-vazio',
+    buscaInputId:      'busca-itens',
+    filtroCategoriaId: 'filtro-categoria-itens',
+    rotuloErro:        'Erro ao carregar itens',
+});
+
+// ============================================
+// INATIVOS (produtos + itens inativos, juntos)
+// ============================================
+async function carregarInativos() {
+    try {
+        const [produtos, itens] = await Promise.all([obterProdutos(), obterItens()]);
+        const inativos = [...produtos, ...itens].filter(p => !p.ativo);
+        renderizarGridProdutos(inativos, 'grid-inativos', 'inativos-estado-vazio', true);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function recarregarTudo() {
+    gerenciadorProdutos.carregar();
+    gerenciadorItens.carregar();
+    carregarInativos();
+}
+
+document.getElementById('btn-recarregar-produtos').addEventListener('click', () => {
+    invalidarCacheProdutos();
+    recarregarTudo();
+});
+document.getElementById('btn-recarregar-itens').addEventListener('click', () => {
+    invalidarCacheProdutos();
+    recarregarTudo();
+});
 
 // ============================================
 // MODAL PRODUTO — abas internas
@@ -251,6 +298,7 @@ const inputEstoque       = document.getElementById('produto-estoque');
 const inputCategoria     = document.getElementById('produto-categoria');
 const inputDescricao     = document.getElementById('produto-descricao');
 const inputAtivo         = document.getElementById('produto-ativo');
+const inputItem          = document.getElementById('produto-item');
 const btnSalvarProduto   = document.getElementById('modal-produto-salvar');
 const btnToggleProduto   = document.getElementById('modal-produto-toggle');
 const btnToggleTexto     = document.getElementById('modal-produto-toggle-texto');
@@ -273,7 +321,7 @@ document.querySelectorAll('.modal-tab').forEach(tab => {
     });
 });
 
-function abrirModalProduto(produto = null) {
+function abrirModalProduto(produto = null, tipoPadrao = 'produto') {
     produtoEmEdicao = produto;
     formProduto.reset();
 
@@ -285,7 +333,7 @@ function abrirModalProduto(produto = null) {
     btnSalvarProduto.hidden = false;
 
     if (produto) {
-        modalProdutoTitulo.textContent = 'Editar produto';
+        modalProdutoTitulo.textContent = produto.item ? 'Editar item' : 'Editar produto';
         btnToggleProduto.hidden        = false;
         btnToggleTexto.textContent     = produto.ativo ? 'Inativar' : 'Ativar';
         btnToggleProduto.querySelector('i').className = `ti ti-${produto.ativo ? 'eye-off' : 'eye'}`;
@@ -299,12 +347,14 @@ function abrirModalProduto(produto = null) {
         inputCategoria.value  = produto.categoria || '';
         inputDescricao.value  = produto.descricao || '';
         inputAtivo.checked    = produto.ativo;
+        inputItem.checked     = !!produto.item;
     } else {
-        modalProdutoTitulo.textContent = 'Novo produto';
+        modalProdutoTitulo.textContent = tipoPadrao === 'item' ? 'Novo item' : 'Novo produto';
         btnToggleProduto.hidden        = true;
         tabFotos.disabled              = true; // fotos só depois de criar
         inputProdutoId.value           = '';
         inputAtivo.checked             = true;
+        inputItem.checked              = tipoPadrao === 'item';
     }
 
     modalProduto.hidden = false;
@@ -317,7 +367,8 @@ function fecharModalProduto() {
     resetarFormFoto();
 }
 
-document.getElementById('btn-novo-produto').addEventListener('click', () => abrirModalProduto());
+document.getElementById('btn-novo-produto').addEventListener('click', () => abrirModalProduto(null, 'produto'));
+document.getElementById('btn-novo-item').addEventListener('click', () => abrirModalProduto(null, 'item'));
 document.getElementById('modal-produto-fechar').addEventListener('click', fecharModalProduto);
 document.getElementById('modal-produto-cancelar').addEventListener('click', fecharModalProduto);
 
@@ -328,9 +379,9 @@ btnToggleProduto.addEventListener('click', async () => {
     try {
         await inativarProduto(produtoEmEdicao.id);
         invalidarCacheProdutos();
-        mostrarToast('Produto inativado');
+        mostrarToast(`${produtoEmEdicao.item ? 'Item' : 'Produto'} inativado`);
         fecharModalProduto();
-        carregarProdutos();
+        recarregarTudo();
     } catch {
         mostrarToast('Erro ao inativar produto', 'erro');
     }
@@ -347,6 +398,7 @@ formProduto.addEventListener('submit', async (e) => {
         categoria: inputCategoria.value.trim() || null,
         descricao: inputDescricao.value.trim() || null,
         ativo:     inputAtivo.checked,
+        item:      inputItem.checked,
     };
 
     if (!dados.nome) {
@@ -362,11 +414,11 @@ formProduto.addEventListener('submit', async (e) => {
         if (produtoEmEdicao) {
             await atualizarProduto(produtoEmEdicao.id, dados);
             invalidarCacheProdutos();
-            mostrarToast('Produto atualizado!');
+            mostrarToast(`${dados.item ? 'Item' : 'Produto'} atualizado!`);
         } else {
             const novoProduto = await criarProduto(dados);
             invalidarCacheProdutos();
-            mostrarToast('Produto criado! Agora adicione as fotos na aba Fotos.');
+            mostrarToast(`${dados.item ? 'Item' : 'Produto'} criado! Agora adicione as fotos na aba Fotos.`);
             // Abre o modal no produto recém criado com aba de fotos disponível
             const produtoCriado = await obterProdutoPorId(novoProduto.id);
             fecharModalProduto();
@@ -376,10 +428,10 @@ formProduto.addEventListener('submit', async (e) => {
             return;
         }
         fecharModalProduto();
-        carregarProdutos();
+        recarregarTudo();
     } catch (error) {
         console.error(error);
-        mostrarToast('Erro ao salvar produto', 'erro');
+        mostrarToast('Erro ao salvar', 'erro');
     } finally {
         btnSalvarProduto.disabled = false;
         btnSalvarProduto.querySelector('.btn-texto').hidden   = false;
@@ -476,7 +528,8 @@ fotosGrid.addEventListener('click', async (e) => {
         mostrarToast('Foto removida');
         fotosDoProduto = fotosDoProduto.filter(f => String(f.id) !== String(fotoId));
         renderizarFotos();
-        carregarProdutos(); // atualiza card no grid
+        invalidarCacheProdutos();
+        recarregarTudo(); // atualiza card no grid
     } catch {
         mostrarToast('Erro ao remover foto', 'erro');
     }
@@ -539,8 +592,9 @@ btnAdicionarFoto.addEventListener('click', async () => {
         });
         mostrarToast('Foto adicionada!');
         resetarFormFoto();
+        invalidarCacheProdutos();
         await carregarFotosProduto(produtoEmEdicao.id);
-        carregarProdutos();
+        recarregarTudo();
     } catch (error) {
         console.error(error);
         mostrarToast('Erro ao adicionar foto', 'erro');
@@ -688,4 +742,4 @@ tabelaUsuariosCorpo.addEventListener('click', async (e) => {
 // ============================================
 // INICIALIZAÇÃO
 // ============================================
-carregarProdutos();
+recarregarTudo();

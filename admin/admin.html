@@ -20,6 +20,10 @@
                 <i class="ti ti-shopping-bag" aria-hidden="true"></i>
                 <span>Produtos</span>
             </button>
+            <button class="nav-item" data-aba="itens">
+                <i class="ti ti-puzzle" aria-hidden="true"></i>
+                <span>Itens</span>
+            </button>
             <button class="nav-item" data-aba="inativos">
                 <i class="ti ti-eye-off" aria-hidden="true"></i>
                 <span>Inativos</span>
@@ -73,12 +77,47 @@
             <div class="grid-produtos" id="grid-produtos" hidden></div>
         </section>
 
+        <!-- ---------- ABA ITENS ---------- -->
+        <section class="aba" id="aba-itens" aria-labelledby="titulo-itens" hidden>
+            <header class="aba-header">
+                <div>
+                    <h2 id="titulo-itens">Itens</h2>
+                    <p class="aba-subtitulo">Gerencie os itens colecionáveis da loja</p>
+                </div>
+                <button class="btn-secundario" id="btn-recarregar-itens">
+                    Recarregar itens
+                </button>
+                <button class="btn-primario" id="btn-novo-item">
+                    <i class="ti ti-plus" aria-hidden="true"></i>
+                    Novo item
+                </button>
+            </header>
+            <div class="toolbar">
+                <div class="busca-wrapper">
+                    <i class="ti ti-search" aria-hidden="true"></i>
+                    <input type="search" id="busca-itens" placeholder="Buscar item por nome..." aria-label="Buscar item" />
+                </div>
+                <select id="filtro-categoria-itens" aria-label="Filtrar por categoria">
+                    <option value="">Todas as categorias</option>
+                </select>
+            </div>
+            <div id="itens-estado-carregando" class="estado-carregando">
+                <div class="spinner" aria-hidden="true"></div>
+                <p>Carregando itens...</p>
+            </div>
+            <div id="itens-estado-vazio" class="estado-vazio" hidden>
+                <i class="ti ti-package-off" aria-hidden="true"></i>
+                <p>Nenhum item encontrado</p>
+            </div>
+            <div class="grid-produtos" id="grid-itens" hidden></div>
+        </section>
+
         <!-- ---------- ABA INATIVOS ---------- -->
         <section class="aba" id="aba-inativos" aria-labelledby="titulo-inativos" hidden>
             <header class="aba-header">
                 <div>
-                    <h2 id="titulo-inativos">Produtos Inativos</h2>
-                    <p class="aba-subtitulo">Produtos removidos do catálogo</p>
+                    <h2 id="titulo-inativos">Produtos e Itens Inativos</h2>
+                    <p class="aba-subtitulo">Produtos e itens removidos do catálogo</p>
                 </div>
             </header>
             <div id="inativos-estado-vazio" class="estado-vazio" hidden>
@@ -182,6 +221,13 @@
                 <div class="campo">
                     <label for="produto-descricao">Descrição</label>
                     <textarea id="produto-descricao" rows="4" placeholder="Descreva o produto..."></textarea>
+                </div>
+
+                <div class="campo campo--checkbox">
+                    <label for="produto-item">
+                        <input type="checkbox" id="produto-item" />
+                        É um item colecionável (não um boneco)
+                    </label>
                 </div>
 
                 <div class="campo campo--checkbox">
