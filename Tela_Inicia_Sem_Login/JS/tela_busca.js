@@ -1,6 +1,7 @@
 import { obterProdutos, obterItens } from '../../api/produtosStore.js';
 import { renderizarBonecosEmGrids, renderizarItensEmGrids } from '../../api/produtosView.js';
 import { inicializarBuscaNav } from '../../api/buscaNav.js';
+import { listarCategorias } from '../../api/produtos.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TEMA (claro/escuro "azul"/"rosa")
@@ -184,9 +185,8 @@ function limparFiltros() {
 }
 window.limparFiltros = limparFiltros;
 
-function renderizarCategorias(produtos, itens) {
+function renderizarCategorias(categorias) {
     const lista = document.getElementById('categoria-lista');
-    const categorias = [...new Set([...produtos, ...itens].map(p => p.categoria).filter(Boolean))];
 
     if (categorias.length === 0) {
         lista.innerHTML = '<p class="categoria-vazio">Nenhuma categoria disponível.</p>';
@@ -219,11 +219,11 @@ async function carregarBusca() {
     document.getElementById('input-busca-nome').addEventListener('input', aplicarFiltros);
 
     try {
-        const [produtos, itens] = await Promise.all([obterProdutos(), obterItens()]);
+        const [produtos, itens, categorias] = await Promise.all([obterProdutos(), obterItens(), listarCategorias()]);
         todosOsProdutos = produtos.filter(p => p.ativo);
         todosOsItens = itens.filter(p => p.ativo);
 
-        renderizarCategorias(todosOsProdutos, todosOsItens);
+        renderizarCategorias(categorias);
         aplicarFiltros();
     } catch (error) {
         console.error('Erro ao carregar busca:', error);

@@ -78,6 +78,11 @@ export async function buscarProduto(id) {
     return apiFetch(`/produtos/${id}`);
 }
 
+/** Lista todas as categorias de produtos cadastradas. */
+export async function listarCategorias() {
+    return apiFetch('/produtos/categorias');
+}
+
 /** Cria um novo produto (sem imagem — foto é adicionada separadamente). */
 export async function criarProduto(dados) {
     const payload = {
