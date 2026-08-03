@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="../api/temaPreload.js" data-paleta="app"></script>
     <script src="../api/acessibilidadeWidget.js" defer></script>
-    <script src="../api/splashScreen.js" defer></script>
     <link rel="stylesheet" href="CSS/tela_catalogo.css">
     <link rel="icon" id="favicon" type="image/png" href="./assets/logo-azul.png">
     <title>Bonecos e itens</title>
@@ -71,7 +70,12 @@
     <!-- NOVOS BONECOS -->
     <section class="section-bonecos" id="bonecos">
         <h2 class="section-titulo">Novos bonecos</h2>
-        <div class="bonecos-grid bonecos-grid--wrap"></div>
+        <div class="bonecos-grid bonecos-grid--wrap">
+            <div class="estado-carregando">
+                <div class="spinner" aria-hidden="true"></div>
+                <p>Carregando bonecos...</p>
+            </div>
+        </div>
     </section>
 
     <!-- NOVOS ITENS COLECIONÁVEIS -->
@@ -79,7 +83,12 @@
         <div class="section-header">
             <h2 class="section-titulo">Novos Itens Colecionáveis</h2>
         </div>
-        <div class="itens-grid itens-grid--wrap"></div>
+        <div class="itens-grid itens-grid--wrap">
+            <div class="estado-carregando">
+                <div class="spinner" aria-hidden="true"></div>
+                <p>Carregando itens...</p>
+            </div>
+        </div>
     </section>
 
     </main>

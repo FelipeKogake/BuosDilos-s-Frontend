@@ -249,6 +249,6 @@ async function carregarNovosBonecos() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    Promise.all([carregarFavoritos(), carregarNovosBonecos()])
-        .finally(() => window.SplashScreen?.esconder());
+    carregarFavoritos();
+    carregarNovosBonecos();
 });

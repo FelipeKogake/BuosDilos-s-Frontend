@@ -165,8 +165,6 @@ async function carregarProdutosTelaInicial() {
         renderizarBonecosEmGrids('.bonecos-grid', produtosAtivos.slice(0, QTD_BONECOS), urlProduto);
     } catch (error) {
         console.error('Erro ao carregar produtos na tela inicial:', error);
-    } finally {
-        window.SplashScreen?.esconder();
     }
 }
 

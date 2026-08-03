@@ -254,7 +254,6 @@ async function carregarProduto() {
 
     const id = new URLSearchParams(window.location.search).get('id');
     if (!id) {
-        window.SplashScreen?.esconder();
         window.location.href = 'tela_catalogo.html';
         return;
     }
@@ -272,8 +271,6 @@ async function carregarProduto() {
     } catch (error) {
         console.error('Erro ao carregar produto:', error);
         window.location.href = 'tela_catalogo.html';
-    } finally {
-        window.SplashScreen?.esconder();
     }
 }
 

@@ -229,8 +229,6 @@ async function carregarBusca() {
         console.error('Erro ao carregar busca:', error);
         document.getElementById('busca-contagem').textContent = 'Erro ao carregar produtos.';
         document.getElementById('busca-contagem-itens').textContent = 'Erro ao carregar itens.';
-    } finally {
-        window.SplashScreen?.esconder();
     }
 }
 

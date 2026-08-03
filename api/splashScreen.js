@@ -1,31 +1,30 @@
 /*!
- * Splash screen exibido enquanto os produtos são carregados (primeira busca
- * na API ou leitura do cache em sessionStorage). Script clássico, sem
- * dependências — funciona em qualquer página, com ou sem módulos.
+ * Splash screen de página inteira — hoje sem nenhuma página usando (as telas
+ * de produto carregam a página imediatamente e mostram spinners por seção
+ * em vez de bloquear tudo com isto). Mantido disponível para casos futuros
+ * que precisem bloquear a tela inteira até algo terminar. Script clássico,
+ * sem dependências — funciona em qualquer página, com ou sem módulos.
  *
  * Como usar:
  *   <script src="../api/splashScreen.js" defer></script>   (antes do <script type="module"> da página)
- *   ... e, no JS da página, ao terminar de carregar os produtos (sucesso ou erro):
+ *   ... e, no JS da página, ao terminar o carregamento (sucesso ou erro):
  *   window.SplashScreen.esconder();
  *
  * Se nada chamar esconder() em até TEMPO_MAX_MS, o splash se esconde por
  * segurança — nunca trava a página caso o carregamento falhe silenciosamente.
- * TEMPO_MAX_MS precisa ser bem generoso: o backend (Render, plano free) "dorme"
- * quando fica sem uso e pode levar até 1-2 minutos pra responder à primeira
- * requisição depois disso (cold start). As MENSAGENS vão trocando com o tempo
- * pra dar sensação de progresso, já que a espera pode ser longa.
+ * As MENSAGENS vão trocando com o tempo pra dar sensação de progresso.
  */
 (function () {
     "use strict";
 
     var ESCONDIDO_CLASSE = "splash-escondido";
-    var TEMPO_MAX_MS = 120000;
+    var TEMPO_MAX_MS = 30000;
     var MENSAGENS = [
-        { tempo: 0,     texto: "Carregando produtos..." },
-        { tempo: 8000,  texto: "Ainda carregando... o servidor pode estar iniciando." },
-        { tempo: 25000, texto: "Isso está demorando mais que o normal, mas já estamos quase lá." },
-        { tempo: 50000, texto: "O servidor ainda está de pé, prometemos! Só mais um pouco." },
-        { tempo: 80000, texto: "Quase lá! Agradecemos a paciência." },
+        { tempo: 0,     texto: "Carregando..." },
+        { tempo: 3000,  texto: "Ainda carregando... o servidor pode estar iniciando." },
+        { tempo: 8000,  texto: "Isso está demorando mais que o normal, mas já estamos quase lá." },
+        { tempo: 15000, texto: "O servidor ainda está de pé, prometemos! Só mais um pouco." },
+        { tempo: 24000, texto: "Quase lá! Agradecemos a paciência." },
     ];
 
     var elemento = null;

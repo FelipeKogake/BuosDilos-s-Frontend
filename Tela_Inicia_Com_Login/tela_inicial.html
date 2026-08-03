@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="../api/temaPreload.js" data-paleta="app"></script>
     <script src="../api/acessibilidadeWidget.js" defer></script>
-    <script src="../api/splashScreen.js" defer></script>
     <link rel="stylesheet" href="CSS/tela_inicial.css">
     <link id="favicon" rel="icon" type="image/png" href="Assets/logo-azul.png">
     <title>Início</title>
@@ -75,12 +74,10 @@
         </div>
         <div class="itens-scroll">
             <div class="itens-grid">
-                <a class="item-circular" href="tela_produto.html" style="color:inherit;text-decoration:none;"><img src="Assets/avatar-azul.png" alt="Item 1" /></a>
-                <a class="item-circular" href="tela_produto.html" style="color:inherit;text-decoration:none;"><img src="Assets/login/personagem-azul.png" alt="Item 2" /></a>
-                <a class="item-circular" href="tela_produto.html" style="color:inherit;text-decoration:none;"><img src="Assets/login/personagem-rosa.png" alt="Item 3" /></a>
-                <a class="item-circular" href="tela_produto.html" style="color:inherit;text-decoration:none;"><img src="Assets/avatar-rosa.png" alt="Item 4" /></a>
-                <a class="item-circular" href="tela_produto.html" style="color:inherit;text-decoration:none;"><img src="Assets/login/personagem-azul.png" alt="Item 5" /></a>
-                <a class="item-circular" href="tela_produto.html" style="color:inherit;text-decoration:none;"><img src="Assets/login/personagem-azul.png" alt="Item 6" /></a>
+                <div class="estado-carregando">
+                    <div class="spinner" aria-hidden="true"></div>
+                    <p>Carregando itens...</p>
+                </div>
             </div>
         </div>
     </section>
@@ -89,61 +86,10 @@
     <section class="section-bonecos">
         <h2 class="section-titulo">Novos bonecos</h2>
         <div class="bonecos-grid">
-            <!-- <div class="boneco-card" onclick="window.location.href='tela_produto.html'">
-                <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Boneco 1" /></div>
-                <div class="boneco-info">
-                    <p class="boneco-nome">EDDIE BROCK</p>
-                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
-                    <p class="boneco-preco">R$42,5</p>
-                </div>
-                <button class="boneco-fav" aria-label="Favoritar">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
+            <div class="estado-carregando">
+                <div class="spinner" aria-hidden="true"></div>
+                <p>Carregando bonecos...</p>
             </div>
-            <div class="boneco-card" onclick="window.location.href='tela_produto.html'">
-                <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Boneco 2" /></div>
-                <div class="boneco-info">
-                    <p class="boneco-nome">LARA ADRIANO</p>
-                    <p class="boneco-subtitulo">LARA ADRIANO</p>
-                    <p class="boneco-preco">R$42,5</p>
-                </div>
-                <button class="boneco-fav" aria-label="Favoritar">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-            </div>
-            <div class="boneco-card" onclick="window.location.href='tela_produto.html'">
-                <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Boneco 3" /></div>
-                <div class="boneco-info">
-                    <p class="boneco-nome">PEDRO ADRIANO</p>
-                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
-                    <p class="boneco-preco">R$42,5</p>
-                </div>
-                <button class="boneco-fav" aria-label="Favoritar">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-            </div>
-            <div class="boneco-card" onclick="window.location.href='tela_produto.html'">
-                <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Boneco 4" /></div>
-                <div class="boneco-info">
-                    <p class="boneco-nome">CAPITÃO S</p>
-                    <p class="boneco-subtitulo">LARA ADRIANO</p>
-                    <p class="boneco-preco">R$42,5</p>
-                </div>
-                <button class="boneco-fav" aria-label="Favoritar">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-            </div>
-            <div class="boneco-card" onclick="window.location.href='tela_produto.html'">
-                <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Boneco 5" /></div>
-                <div class="boneco-info">
-                    <p class="boneco-nome">CAROL S</p>
-                    <p class="boneco-subtitulo">CANARY ADRIANO</p>
-                    <p class="boneco-preco">R$42,5</p>
-                </div>
-                <button class="boneco-fav" aria-label="Favoritar">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-            </div> -->
         </div>
     </section>
 

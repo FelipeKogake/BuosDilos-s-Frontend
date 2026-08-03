@@ -224,8 +224,6 @@ async function carregarCatalogo() {
         renderizarItensEmGrids('.itens-grid', itensAtivos, urlProduto, { limitar: true });
     } catch (error) {
         console.error('Erro ao carregar catálogo de produtos:', error);
-    } finally {
-        window.SplashScreen?.esconder();
     }
 }
 
