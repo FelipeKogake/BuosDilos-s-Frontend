@@ -351,7 +351,9 @@ html.a11y-reduce-motion .hero-img-1 {
 .hero-img {
     position: relative;
     z-index: 1;
-    height: clamp(430px, 22vw, 260px);
+    height: clamp(260px, 22vw, 430px);
+    max-width: 340px;
+    width: auto;
     object-fit: contain;
     filter: drop-shadow(2px 4px 12px rgba(0,0,0,0.15));
 }
