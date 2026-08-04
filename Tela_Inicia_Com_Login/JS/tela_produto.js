@@ -3,6 +3,7 @@ import { formatarPreco, obterFotoPrincipal, renderizarBonecosEmGrids } from '../
 import { inicializarBuscaNav } from '../../api/buscaNav.js';
 import { ehFavorito, alternarFavorito } from '../../api/favoritos.js';
 import { listarFotos } from '../../api/produtos.js';
+import { adicionarAoCarrinho } from '../../api/carrinho.js';
 
 const temas = {
     azul: {
@@ -174,6 +175,18 @@ function preencherHero(produto) {
     if (imagem) imagem.src = obterFotoPrincipal(produto);
 
     configurarBotaoFavoritar(produto.id);
+    configurarBotaoComprar(produto.id);
+}
+
+/** Botão "Comprar" adiciona o produto ao carrinho (1 unidade) e leva pro carrinho. */
+function configurarBotaoComprar(produtoId) {
+    const btn = document.getElementById('btn-comprar-produto');
+    if (!btn) return;
+
+    btn.onclick = () => {
+        adicionarAoCarrinho(produtoId, 1);
+        window.location.href = 'tela_carrinho.html';
+    };
 }
 
 /** Favoritar/desfavoritar funciona pra produto (boneco) e item — só é possível aqui, na tela_produto. */

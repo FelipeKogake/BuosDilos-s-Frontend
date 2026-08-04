@@ -35,13 +35,34 @@
         var style = document.createElement("style");
         style.id = "splash-produtos-styles";
         style.textContent =
-            "#splash-produtos{position:fixed;inset:0;z-index:2147483600;display:flex;align-items:center;justify-content:center;background:var(--cor-fundo,#fff);transition:opacity .25s ease;}\n" +
+            "#splash-produtos{position:fixed;inset:0;z-index:2147483600;display:flex;align-items:center;justify-content:center;background:var(--cor-fundo,#fff);transition:opacity .3s ease;}\n" +
             "#splash-produtos." + ESCONDIDO_CLASSE + "{opacity:0;pointer-events:none;}\n" +
-            ".splash-conteudo{display:flex;flex-direction:column;align-items:center;gap:1rem;}\n" +
-            ".splash-spinner{width:44px;height:44px;border-radius:50%;border:4px solid rgba(0,0,0,.12);border-top-color:var(--cor-primaria-hover,var(--cor-primaria,#7b78b0));animation:splash-girar .8s linear infinite;}\n" +
-            ".splash-texto{margin:0;font-family:'Epilogue',Arial,sans-serif;font-weight:700;color:var(--cor-texto-titulo,#111);font-size:.95rem;}\n" +
-            "@keyframes splash-girar{to{transform:rotate(360deg);}}\n" +
-            "html.a11y-reduce-motion .splash-spinner{animation:none;}\n";
+
+            ".splash-conteudo{position:relative;display:flex;flex-direction:column;align-items:center;gap:1.5rem;animation:splash-conteudo-entrar .5s cubic-bezier(.34,1.56,.64,1);}\n" +
+            "@keyframes splash-conteudo-entrar{from{opacity:0;transform:translateY(10px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}\n" +
+
+            // Brilho pulsante atrás dos pontinhos — puramente decorativo.
+            ".splash-glow{position:absolute;top:50%;left:50%;width:130px;height:130px;margin:-65px 0 0 -65px;border-radius:50%;" +
+                "background:radial-gradient(circle,var(--cor-primaria,#b0aed4) 0%,transparent 72%);opacity:.4;" +
+                "animation:splash-pulsar 2.2s ease-in-out infinite;z-index:0;}\n" +
+            "@keyframes splash-pulsar{0%,100%{transform:scale(.8);opacity:.25;}50%{transform:scale(1.15);opacity:.5;}}\n" +
+
+            // Três pontos saltitando em onda (loading dots) — a "logo" do carregamento.
+            ".splash-loader{position:relative;z-index:1;display:flex;align-items:center;gap:12px;height:26px;}\n" +
+            ".splash-loader span{width:16px;height:16px;border-radius:50%;background:var(--cor-primaria-hover,var(--cor-primaria,#7b78b0));" +
+                "animation:splash-saltar 1s ease-in-out infinite;}\n" +
+            ".splash-loader span:nth-child(2){animation-delay:.15s;}\n" +
+            ".splash-loader span:nth-child(3){animation-delay:.3s;}\n" +
+            "@keyframes splash-saltar{0%,80%,100%{transform:scale(.55) translateY(0);opacity:.5;}40%{transform:scale(1) translateY(-10px);opacity:1;}}\n" +
+
+            ".splash-texto{position:relative;z-index:1;margin:0;font-family:'Epilogue',Arial,sans-serif;font-weight:700;" +
+                "color:var(--cor-texto-titulo,#111);font-size:.95rem;text-align:center;max-width:280px;" +
+                "transition:opacity .2s ease,transform .2s ease;}\n" +
+            ".splash-texto--trocando{opacity:0;transform:translateY(4px);}\n" +
+
+            // Preferência de "reduzir movimento" desliga tudo que gira/pula/pulsa, mantendo só o fade do overlay.
+            "html.a11y-reduce-motion .splash-conteudo,html.a11y-reduce-motion .splash-glow,html.a11y-reduce-motion .splash-loader span{animation:none;}\n" +
+            "html.a11y-reduce-motion .splash-loader span{opacity:.85;}\n";
         document.head.appendChild(style);
     }
 
@@ -52,8 +73,9 @@
         overlay.setAttribute("aria-live", "polite");
         overlay.innerHTML =
             '<div class="splash-conteudo">' +
-                '<div class="splash-spinner" aria-hidden="true"></div>' +
-                '<p class="splash-texto" id="splash-produtos-texto">Carregando produtos...</p>' +
+                '<div class="splash-glow" aria-hidden="true"></div>' +
+                '<div class="splash-loader" aria-hidden="true"><span></span><span></span><span></span></div>' +
+                '<p class="splash-texto" id="splash-produtos-texto">Carregando...</p>' +
             "</div>";
         document.body.insertBefore(overlay, document.body.firstChild);
         return overlay;
@@ -73,9 +95,15 @@
         }, 300);
     }
 
+    /** Troca o texto com um pequeno crossfade, em vez de substituir abruptamente. */
     function trocarTexto(texto) {
         var el = document.getElementById("splash-produtos-texto");
-        if (el) el.textContent = texto;
+        if (!el) return;
+        el.classList.add("splash-texto--trocando");
+        setTimeout(function () {
+            el.textContent = texto;
+            el.classList.remove("splash-texto--trocando");
+        }, 200);
     }
 
     /** Agenda a troca de mensagem pra cada estágio em MENSAGENS, dando sensação de progresso. */

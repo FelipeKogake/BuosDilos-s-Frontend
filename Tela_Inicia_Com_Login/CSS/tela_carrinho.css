@@ -403,6 +403,154 @@ body {
     padding-bottom: 0.5rem;
 }
 
+.estado-carregando {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 3rem 1rem;
+    width: 100%;
+    color: var(--cor-texto-terciario);
+}
+
+.spinner {
+    width: 32px; height: 32px;
+    border: 3px solid var(--cor-borda);
+    border-top-color: var(--cor-primaria);
+    border-radius: 50%;
+    animation: girar 0.7s linear infinite;
+}
+
+@keyframes girar { to { transform: rotate(360deg); } }
+
+.carrinho-vazio {
+    text-align: center;
+    color: var(--cor-texto-terciario);
+    padding: 3rem 1rem;
+    font-size: 1rem;
+}
+
+.carrinho-vazio a {
+    color: var(--cor-label);
+    font-weight: 700;
+}
+
+.btn-fechar-pedido:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   MODAL DE CONFIRMAÇÃO DE PEDIDO
+   ============================================ */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 17, 17, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+    animation: modal-entrar 0.2s ease-out;
+}
+
+.modal-overlay[hidden] { display: none; }
+
+@keyframes modal-entrar {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-pedido {
+    background: #fff;
+    border-radius: 18px;
+    padding: 2.5rem 2rem;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    animation: modal-pedido-entrar 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modal-pedido-entrar {
+    from { opacity: 0; transform: scale(0.9) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.pedido-processando {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem 0;
+    color: var(--cor-texto-secundario);
+    font-weight: 600;
+}
+
+.spinner--grande {
+    width: 56px;
+    height: 56px;
+    border-width: 4px;
+}
+
+.pedido-check {
+    width: 84px;
+    height: 84px;
+    margin: 0 auto 1rem;
+}
+
+.pedido-check svg {
+    width: 100%;
+    height: 100%;
+}
+
+.pedido-check-circulo {
+    stroke: #4bb679;
+    stroke-width: 3;
+    stroke-miterlimit: 10;
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    animation: pedido-circulo 0.5s ease-out forwards;
+}
+
+.pedido-check-marca {
+    stroke: #4bb679;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: pedido-marca 0.35s 0.5s ease-out forwards;
+}
+
+@keyframes pedido-circulo { to { stroke-dashoffset: 0; } }
+@keyframes pedido-marca { to { stroke-dashoffset: 0; } }
+
+.pedido-sucesso h2 {
+    font-size: 1.4rem;
+    font-weight: 900;
+    font-style: italic;
+    color: var(--cor-texto-titulo);
+    margin: 0.25rem 0 0.75rem;
+}
+
+.pedido-sucesso p {
+    color: var(--cor-texto-secundario);
+    font-size: 0.9rem;
+    margin-bottom: 0.35rem;
+}
+
+.pedido-sucesso strong {
+    color: var(--cor-texto-titulo);
+}
+
+.pedido-sucesso .btn-fechar-pedido {
+    margin-top: 1.5rem;
+}
+
 .boneco-card {
     flex-shrink: 0;
     width: 212px;

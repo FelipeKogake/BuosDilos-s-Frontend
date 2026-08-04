@@ -1,0 +1,11 @@
+# Dependências (o projeto roda sem build, mas evita commitar isso por engano)
+node_modules/
+npm-debug.log*
+
+# Variáveis de ambiente / segredos locais
+.env
+.env.local
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
