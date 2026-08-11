@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../api/temaPreload.js" data-paleta="app"></script>
+    <script src="../api/acessibilidadeWidget.js" defer></script>
+    <link rel="stylesheet" href="CSS/base-navbar-rodape.css">
+    <link rel="stylesheet" href="CSS/tela_checkout.css">
+    <link rel="stylesheet" href="CSS/tela_pedidos.css">
+    <link rel="icon" id="favicon" type="image/png" href="Assets/logo-azul.png">
+    <title>Meus pedidos</title>
+</head>
+<body>
+
+    <!-- BARRA TOPO ESCURA -->
+    <div class="top-bar"></div>
+
+    <!-- NAVBAR -->
+    <div class="navbar-wrapper">
+        <header class="navbar">
+            <a href="tela_inicial.html" class="navbar-logo">
+                <img src="Assets/logo-azul.png" alt="Logo PopDreams" class="navbar-logo-img" />
+            </a>
+            <nav class="navbar-links" aria-label="Navegação principal">
+                <a href="tela_inicial.html" class="nav-link">TELA INICIAL</a>
+                <a href="tela_catalogo.html" class="nav-link">BONECOS</a>
+                <a href="tela_catalogo.html#itens" class="nav-link">ITENS</a>
+            </nav>
+            <div class="navbar-actions">
+                <a href="tela_carrinho.html" class="btn-entrar-nav">VER CARRINHO</a>
+            </div>
+        </header>
+    </div>
+
+    <main id="conteudo-principal">
+        <section class="checkout">
+            <h1 class="checkout-titulo">Meus pedidos</h1>
+
+            <!-- Estado: carregando -->
+            <div class="estado-carregando" id="pedidos-carregando">
+                <div class="spinner" aria-hidden="true"></div>
+                <p>Carregando seus pedidos...</p>
+            </div>
+
+            <!-- Estado: precisa estar logado -->
+            <div class="checkout-aviso" id="pedidos-login" hidden>
+                <h2>Você precisa entrar na sua conta</h2>
+                <p>O histórico é vinculado ao seu cadastro.</p>
+                <a class="btn-principal" href="../Login_Cadatro/login.html">Fazer login</a>
+            </div>
+
+            <!-- Estado: nenhum pedido -->
+            <div class="checkout-aviso" id="pedidos-vazio" hidden>
+                <h2>Você ainda não fez nenhum pedido</h2>
+                <p>Quando finalizar uma compra, ela aparece aqui.</p>
+                <a class="btn-principal" href="tela_catalogo.html">Ver catálogo</a>
+            </div>
+
+            <!-- Estado: erro -->
+            <div class="checkout-aviso" id="pedidos-erro" hidden>
+                <h2>Não foi possível carregar seus pedidos</h2>
+                <p id="pedidos-erro-detalhe"></p>
+                <button class="btn-principal" type="button" id="btn-tentar-novamente">Tentar novamente</button>
+            </div>
+
+            <!-- Estado: lista -->
+            <ul class="pedidos-lista" id="pedidos-lista" hidden></ul>
+
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <p class="footer-name">PopDreams</p>
+            </div>
+            <div class="footer-cols">
+                <div class="footer-col">
+                    <p class="footer-col-title">PRODUTOS</p>
+                    <a href="tela_catalogo.html">Bonecos</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">SUPORTE</p>
+                    <a href="mailto:contato@exemplo.com">Suporte</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">COMPANHIA</p>
+                    <a href="https://institutojef.org.br/">Sobre Germinare</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 PopDreams. Escola Germinare Tech.</p>
+        </div>
+    </footer>
+
+    <button class="btn-tema" id="btn-tema" type="button" aria-label="Trocar tema do site">
+        <img src="Assets/avatar-azul.png" alt="" />
+    </button>
+
+    <script type="module" src="JS/tela_pedidos.js"></script>
+
+    <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+    </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+
+</body>
+</html>

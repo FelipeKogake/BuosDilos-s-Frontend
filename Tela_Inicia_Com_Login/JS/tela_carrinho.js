@@ -5,7 +5,10 @@ import {
     obterItensCarrinho,
     alterarQuantidade,
     removerDoCarrinho,
-    esvaziarCarrinho,
+    aplicarCupomCodigo,
+    obterCupomAplicado,
+    calcularTotais as calcularTotaisDoCarrinho,
+    CUPONS,
 } from '../../api/carrinho.js';
 
 const temas = {
@@ -122,29 +125,30 @@ ajustarBtnTema();
    CARRINHO
    ============================================ */
 
-const FRETE = 14.00;
-
 function urlProduto(id) {
     return `tela_produto.html?id=${encodeURIComponent(id)}&origem=carrinho`;
 }
 
+/** Lê preço e quantidade dos cards já renderizados. */
+function lerLinhasDoDom() {
+    return [...document.querySelectorAll('#lista-carrinho .favorito-card')].map(card => ({
+        preco: parseFloat(card.dataset.preco) || 0,
+        qtd:   parseInt(card.querySelector('.qty-valor').textContent, 10) || 1,
+    }));
+}
+
 function calcularTotais() {
-    const itens = document.querySelectorAll('#lista-carrinho .favorito-card');
-    let subtotal = 0;
+    const linhas = lerLinhasDoDom();
+    const { subtotal, desconto, frete, total } = calcularTotaisDoCarrinho(linhas);
 
-    itens.forEach(card => {
-        const preco = parseFloat(card.dataset.preco) || 0;
-        const qty = parseInt(card.querySelector('.qty-valor').textContent, 10) || 1;
-        subtotal += preco * qty;
-    });
-
-    const temItens = itens.length > 0;
     document.getElementById('subtotal').textContent = formatarPreco(subtotal);
-    document.getElementById('frete').textContent = temItens ? formatarPreco(FRETE) : formatarPreco(0);
-    document.getElementById('total').textContent = formatarPreco(temItens ? subtotal + FRETE : 0);
+    document.getElementById('frete').textContent    = formatarPreco(frete);
+    document.getElementById('desconto').textContent =
+        desconto > 0 ? `− ${formatarPreco(desconto)}` : formatarPreco(0);
+    document.getElementById('total').textContent    = formatarPreco(total);
 
     const btnFechar = document.getElementById('btn-fechar-pedido');
-    if (btnFechar) btnFechar.disabled = !temItens;
+    if (btnFechar) btnFechar.disabled = linhas.length === 0;
 }
 
 function mostrarCarrinhoVazio() {
@@ -283,50 +287,61 @@ async function carregarCarrinho() {
     }
 }
 
-function aplicarCupom() {
-    const input = document.getElementById('cupom-input');
-    const val = input.value.trim().toUpperCase();
-    if (val === 'GERMINARE10') {
-        document.getElementById('taxa').textContent = '−R$ 12,00';
-        input.style.borderColor = '#5cb85c';
-    } else if (val !== '') {
-        input.style.borderColor = '#e24b4a';
-    }
+/**
+ * Escreve o retorno do cupom em texto (não só por cor) e marca o campo
+ * com aria-invalid para leitores de tela.
+ */
+function informarCupom(mensagem, valido) {
+    const feedback = document.getElementById('cupom-feedback');
+    const input    = document.getElementById('cupom-input');
+
+    feedback.textContent = mensagem;
+    feedback.classList.toggle('cupom-feedback--ok', valido === true);
+    feedback.classList.toggle('cupom-feedback--erro', valido === false);
+    input.setAttribute('aria-invalid', valido === false ? 'true' : 'false');
 }
-window.aplicarCupom = aplicarCupom;
+
+function aplicarCupom(evento) {
+    evento.preventDefault();
+
+    const codigo = document.getElementById('cupom-input').value.trim().toUpperCase();
+
+    if (!codigo) {
+        aplicarCupomCodigo('');
+        informarCupom('Digite um código de cupom.', false);
+        calcularTotais();
+        return;
+    }
+
+    const aplicado = aplicarCupomCodigo(codigo);
+
+    if (!aplicado) {
+        informarCupom(`Cupom "${codigo}" inválido.`, false);
+        calcularTotais();
+        return;
+    }
+
+    informarCupom(`Cupom ${aplicado} aplicado — ${CUPONS[aplicado].rotulo}.`, true);
+    calcularTotais();
+}
+
+document.getElementById('form-cupom').addEventListener('submit', aplicarCupom);
+
+/** Repõe na tela o cupom que já estava aplicado antes do reload. */
+function restaurarCupom() {
+    const salvo = obterCupomAplicado();
+    if (!salvo) return;
+    document.getElementById('cupom-input').value = salvo;
+    informarCupom(`Cupom ${salvo} aplicado — ${CUPONS[salvo].rotulo}.`, true);
+}
 
 /* ============================================
-   FECHAR PEDIDO (simulação de checkout)
+   IR PARA O CHECKOUT
    ============================================ */
 
-function fecharPedido() {
+document.getElementById('btn-fechar-pedido').addEventListener('click', () => {
     if (obterItensCarrinho().length === 0) return;
-
-    const modal        = document.getElementById('modal-pedido');
-    const processando  = document.getElementById('pedido-processando');
-    const sucesso       = document.getElementById('pedido-sucesso');
-    const totalTexto    = document.getElementById('total').textContent;
-    const numeroPedido  = '#' + Math.floor(100000 + Math.random() * 900000);
-
-    document.getElementById('pedido-total-final').textContent = totalTexto;
-    document.getElementById('pedido-numero').textContent = numeroPedido;
-
-    processando.hidden = false;
-    sucesso.hidden = true;
-    modal.hidden = false;
-
-    // Simula o tempo de processamento do pagamento.
-    setTimeout(() => {
-        processando.hidden = true;
-        sucesso.hidden = false;
-        esvaziarCarrinho();
-    }, 1400);
-}
-window.fecharPedido = fecharPedido;
-
-document.getElementById('btn-pedido-continuar').addEventListener('click', () => {
-    document.getElementById('modal-pedido').hidden = true;
-    carregarCarrinho();
+    window.location.href = 'tela_checkout.html';
 });
 
 /* ============================================
@@ -343,5 +358,6 @@ async function carregarOutrosBonecos() {
     }
 }
 
+restaurarCupom();
 carregarCarrinho();
 carregarOutrosBonecos();

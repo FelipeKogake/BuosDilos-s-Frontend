@@ -1,13 +1,15 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+import { apiFetch } from './http.js';
 
 // JS/produtos.js
 // ─────────────────────────────────────────────────────────────────────────────
 // Integração de produtos com backend REST + Supabase Storage para imagens.
 // Fotos gerenciadas via endpoint próprio /api/produtos/{id}/fotos
+//
+// BASE_URL e apiFetch ficam em api/http.js, compartilhados com os módulos de
+// consumidor, pedidos e avaliações.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const BASE_URL          = 'https://ecommerce-api-p2jw.onrender.com/api';
-// const BASE_URL          = 'http://localhost:2102/api';
 const SUPABASE_URL      = 'https://aicybssjnwtbyaequbee.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_uyPVsR2YGr6RpY2wz27Ixg_en3bQ8HD';
 const BUCKET            = 'produtos';
@@ -50,21 +52,6 @@ export async function removerImagem(imageUrl) {
 }
 
 // ── Helpers internos ──────────────────────────────────────────────────────────
-
-async function apiFetch(path, options = {}) {
-    const resposta = await fetch(`${BASE_URL}${path}`, {
-        headers: { 'Content-Type': 'application/json', ...options.headers },
-        ...options,
-    });
-
-    if (!resposta.ok) {
-        const corpo = await resposta.json().catch(() => ({}));
-        throw new Error(corpo.message || `Erro ${resposta.status}: ${resposta.statusText}`);
-    }
-
-    if (resposta.status === 204) return null;
-    return resposta.json();
-}
 
 // ── Produtos ──────────────────────────────────────────────────────────────────
 

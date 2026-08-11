@@ -49,19 +49,25 @@
                         <span id="frete">R$ 0,00</span>
                     </div>
                     <div class="resumo-linha">
-                        <span>Taxa:</span>
-                        <span id="taxa">R$ 0,00</span>
+                        <span>Desconto:</span>
+                        <span id="desconto">R$ 0,00</span>
                     </div>
-                    <div class="cupom-wrap">
-                        <input class="cupom-input" type="text" placeholder="Cupom" id="cupom-input" />
-                        <button class="btn-adicionar" onclick="aplicarCupom()">Adicionar</button>
-                    </div>
+                    <form class="cupom-form" id="form-cupom" novalidate>
+                        <label class="cupom-label" for="cupom-input">Cupom de desconto</label>
+                        <div class="cupom-wrap">
+                            <input class="cupom-input" type="text" id="cupom-input"
+                                   placeholder="Ex.: GERMINARE10" autocomplete="off"
+                                   aria-describedby="cupom-feedback" />
+                            <button class="btn-adicionar" type="submit">Aplicar</button>
+                        </div>
+                        <p class="cupom-feedback" id="cupom-feedback" role="status"></p>
+                    </form>
                     <hr class="resumo-divisor" />
                     <div class="resumo-total">
                         <span>Total:</span>
                         <span id="total">R$ 0,00</span>
                     </div>
-                    <button class="btn-fechar-pedido" id="btn-fechar-pedido" onclick="fecharPedido()" disabled>
+                    <button class="btn-fechar-pedido" id="btn-fechar-pedido" type="button" disabled>
                         Fechar Pedido
                     </button>
                 </div>
@@ -83,30 +89,8 @@
 
     </main>
 
-    <!-- ===================== MODAL DE CONFIRMAÇÃO DE PEDIDO ===================== -->
-    <div class="modal-overlay" id="modal-pedido" hidden>
-        <div class="modal-pedido" role="alertdialog" aria-modal="true" aria-labelledby="pedido-titulo">
-
-            <div class="pedido-processando" id="pedido-processando">
-                <div class="spinner spinner--grande" aria-hidden="true"></div>
-                <p>Processando pagamento...</p>
-            </div>
-
-            <div class="pedido-sucesso" id="pedido-sucesso" hidden>
-                <div class="pedido-check" aria-hidden="true">
-                    <svg viewBox="0 0 52 52">
-                        <circle class="pedido-check-circulo" cx="26" cy="26" r="24" fill="none" />
-                        <path class="pedido-check-marca" fill="none" d="M14 27l7 7 16-16" />
-                    </svg>
-                </div>
-                <h2 id="pedido-titulo">Pedido confirmado!</h2>
-                <p>Número do pedido: <strong id="pedido-numero">#000000</strong></p>
-                <p class="pedido-total-final">Total pago: <strong id="pedido-total-final">R$ 0,00</strong></p>
-                <button class="btn-fechar-pedido" id="btn-pedido-continuar" type="button">Continuar comprando</button>
-            </div>
-
-        </div>
-    </div>
+    <!-- A confirmação do pedido agora acontece em tela_checkout.html, depois do
+         formulário de entrega e pagamento. -->
 
     <!-- FOOTER -->
     <footer class="footer">

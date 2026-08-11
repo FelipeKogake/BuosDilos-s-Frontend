@@ -54,11 +54,32 @@
 
     var grupo  = (document.currentScript && document.currentScript.dataset.paleta) || 'app';
     var paleta = PALETAS[grupo] || PALETAS.app;
-    var tema   = localStorage.getItem('tema') || 'azul';
-    var cores  = paleta[tema] || paleta.azul;
 
-    var root = document.documentElement.style;
-    for (var propriedade in cores) {
-        root.setProperty(propriedade, cores[propriedade]);
+    function aplicar(nomeTema) {
+        var cores = paleta[nomeTema] || paleta.azul;
+        var root  = document.documentElement.style;
+
+        for (var propriedade in cores) {
+            root.setProperty(propriedade, cores[propriedade]);
+        }
+
+        localStorage.setItem('tema', nomeTema);
+        return nomeTema;
     }
+
+    aplicar(localStorage.getItem('tema') || 'azul');
+
+    // Exposto para as telas alternarem o tema sem redeclarar a paleta inteira.
+    // As páginas antigas ainda têm a própria cópia do objeto de temas; migrá-las
+    // para esta API é tarefa do Bloco 2.
+    window.TemaPopDreams = {
+        aplicar: aplicar,
+        temaAtual: function () {
+            return localStorage.getItem('tema') || 'azul';
+        },
+        alternar: function () {
+            var atual = localStorage.getItem('tema') || 'azul';
+            return aplicar(atual === 'azul' ? 'rosa' : 'azul');
+        },
+    };
 })();
