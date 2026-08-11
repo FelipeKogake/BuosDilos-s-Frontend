@@ -1,3 +1,134 @@
+# PopDreams — Loja Virtual de Action Figures
+
+Projeto Integrador de **Desenvolvimento de Aplicações Dinâmicas (DAD)** — Escola Germinare Tech, 2º ano.
+
+Loja virtual de action figures e itens colecionáveis construída em **JavaScript vanilla**, sem framework de front-end e sem build step. O usuário navega por um catálogo carregado dinamicamente, filtra por nome e categoria, favorita produtos, monta um carrinho persistente e acompanha tudo com suporte a acessibilidade (VLibras, alto contraste, ajuste de texto e narração por voz).
+
+---
+
+## Integrantes
+
+<!-- PREENCHER: os nomes completos e as funções abaixo precisam ser confirmados por vocês.
+     A coluna "Atuação observada" foi extraída do histórico git e serve só como ponto de
+     partida — ajustem para a divisão real de trabalho do grupo. -->
+
+| Integrante | Usuário GitHub | Função | Atuação observada no histórico git |
+|---|---|---|---|
+| Felipe Kogake | `FelipeKogake` | **[Front-end]** | Catálogo, carrinho, painel admin, integração com a API e Supabase |
+| Luiza Cursino| `Luiza` | **[UX Design e DBA]** | Identidade visual (logos) e plugin de acessibilidade VLibras |
+| Igor Quinto | `IgorQuinto5` | **[UX Design e Front-end]** | Ajustes de interface |
+| Gustavo Souza | `Gustavo` | **[Back-end]** | Backend Spring Boot e modelagem do banco |
+
+---
+
+## Stack
+
+**Front-end** (este repositório)
+
+| Tecnologia | Uso | Por quê |
+|---|---|---|
+| JavaScript vanilla + ES Modules | Toda a interface | Exigência da atividade; `import`/`export` nativos dispensam bundler |
+| HTML5 semântico + CSS3 puro | Estrutura e estilo | Sem framework de CSS; variáveis CSS controlam os dois temas |
+| Firebase Authentication | Login, cadastro, recuperação de senha | Sessão persistente sem precisar escrever backend de autenticação |
+| Supabase Storage | Hospedagem das imagens de produto | Bucket público com URL direta, sem servidor de arquivos próprio |
+| VLibras | Tradução para Libras | Plugin oficial do governo, exigido pelo recorte de acessibilidade |
+
+**Back-end** (repositório separado — ver abaixo)
+
+| Tecnologia | Uso |
+|---|---|
+| Java + Spring Boot 3.2.5 | API REST |
+| Spring Data JPA / Hibernate 6.4.4 | Persistência e mapeamento das entidades |
+| PostgreSQL (Aiven) | Banco de dados |
+| Render | Hospedagem da API |
+| springdoc-openapi | Documentação Swagger em `/swagger-ui/index.html` |
+
+> **Nenhuma dependência npm.** O `package.json` está vazio de propósito: Firebase e Supabase são importados por URL de CDN dentro do próprio `import`, e o navegador resolve. Não existe `npm install` neste projeto.
+
+---
+
+## Repositórios
+
+| Parte | Repositório |
+|---|---|
+| Front-end | https://github.com/FelipeKogake/BuosDilos-s-Frontend |
+| Back-end | https://github.com/gugsdf/BuosDilo-s |
+
+---
+
+## Como executar
+
+### Front-end
+
+O front-end é estático, mas **não abra os arquivos com duplo clique** (`file://`): os ES Modules são bloqueados pela política de origem do navegador e nenhuma tela carrega. É preciso servir por HTTP.
+
+```bash
+python -m http.server 5500
+```
+
+Depois abra `http://localhost:5500`. Qualquer servidor estático serve — a extensão Live Server do VS Code também funciona.
+
+Por padrão o front aponta para a API já publicada no Render, então **isso é suficiente para rodar o projeto inteiro** sem subir o back-end localmente.
+
+### Back-end (opcional — só se for mexer na API)
+
+```bash
+mvn spring-boot:run
+```
+
+A API sobe em `http://localhost:2102`. Para o front-end usar essa API local, inverta o comentário das duas linhas de `BASE_URL` no topo de `api/produtos.js`:
+
+```js
+// const BASE_URL = 'https://ecommerce-api-p2jw.onrender.com/api';
+const BASE_URL = 'http://localhost:2102/api';
+```
+
+> ⚠️ **Não commite essa troca.** Se a linha do `localhost` subir para o repositório, a aplicação publicada para de funcionar para quem clonar.
+
+### Variáveis de ambiente do back-end
+
+Em produção o `application-prod.properties` espera:
+
+| Variável | Descrição |
+|---|---|
+| `JDBC_DATABASE_URL` | URL JDBC do Postgres (precisa do prefixo `jdbc:`) |
+| `DATABASE_USER` | Usuário do banco |
+| `DATABASE_PASSWORD` | Senha do banco |
+| `PORT` | Porta HTTP (o Render injeta automaticamente) |
+
+---
+
+## Declaração de uso de Inteligência Artificial
+
+Conforme a Seção 10.1 do documento da atividade, declaramos o uso de IA no desenvolvimento.
+
+**Ferramenta utilizada:** Claude (Anthropic), via Claude Code.
+
+**Partes apoiadas por IA:**
+
+<!-- PREENCHER: a lista abaixo cobre apenas a sessão de apoio mais recente.
+     Se houve uso de IA em outras etapas (ChatGPT, Copilot, Gemini etc.),
+     acrescentem aqui — a transparência é condição para o uso ser permitido. -->
+
+- **Auditoria do projeto contra a rubrica** — levantamento de lacunas em relação às Seções 3.1, 3.2, 4.1 e 8.9 do documento da atividade.
+- **Diagnóstico do erro de boot do Spring** (`Schema-validation: missing table [endereco_estoque]`) — identificação da divergência entre as entidades JPA e o script de banco.
+- **Script de banco e carga de dados** — os arquivos `banco_schema.sql` e `banco_dataload.sql` no repositório do back-end foram gerados com apoio de IA a partir das entidades existentes.
+- **Endpoint `GET /api/consumidores/email/{email}`** — método `buscarPorEmail` no `ConsumidorServico` e no `ConsumidorControlador`.
+- **Esta seção do README.**
+
+**O que não foi gerado por IA:** toda a interface, o CSS, as telas, a integração com Firebase e Supabase, a modelagem original do banco e as entidades JPA foram escritos pelo grupo.
+
+Todo código gerado com apoio de IA foi lido e revisado antes de entrar no projeto, e qualquer integrante pode explicá-lo na arguição.
+
+---
+
+## Documentação complementar
+
+- [`lighthouse-report.md`](lighthouse-report.md) — auditoria de acessibilidade seguindo o protocolo da Seção 5.2
+- O guia técnico abaixo detalha o funcionamento interno de cada parte do código
+
+---
+
 # Guia Técnico — PopDreams (Frontend)
 
 Este documento explica, tecnologia por tecnologia, **como** cada peça do projeto funciona por baixo do capô — não é um manual de uso, é material de estudo. Cada seção mostra o código real do projeto e explica o mecanismo.
