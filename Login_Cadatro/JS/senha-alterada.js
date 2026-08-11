@@ -30,7 +30,7 @@ const temas = {
         '--cor-primaria': '#F1CECE',
         '--cor-primaria-hover': '#d4b6b6',
         '--cor-texto-titulo': '#111',
-        '--cor-texto-secundario': '#ccc',
+        '--cor-texto-secundario': '#757575',
         '--sombra-painel': '6px 6px 20px rgba(243, 162, 162, 0.6)',
         '--cor-sombra-inicio': '#F1CECE',
         '--cor-sombra-fim': '#F9EBEB',
@@ -77,3 +77,24 @@ function voltarParaLogin() {
     localStorage.setItem('popup', 'senha-alterada');
     window.location.href = 'login.html';
 }
+
+/* ============================================
+   ACOES POR DELEGACAO
+   Este arquivo e carregado como script classico (sem type="module"), entao
+   nao pode importar api/acoes.js — a delegacao fica local. Um unico listener
+   no document no lugar dos antigos onclick inline.
+   ============================================ */
+
+document.addEventListener('click', (evento) => {
+    const elemento = evento.target.closest('[data-acao]');
+    if (!elemento) return;
+
+    switch (elemento.dataset.acao) {
+        case 'alternar-tema':
+            toggleTema();
+            break;
+        case 'voltar-para-login':
+            voltarParaLogin();
+            break;
+    }
+});

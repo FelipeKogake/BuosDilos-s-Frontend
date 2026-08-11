@@ -16,12 +16,12 @@ const temas = {
         '--cor-painel': '#ffffff',
         '--cor-primaria': '#b0aed4',
         '--cor-primaria-hover': '#7b78b0',
-        '--cor-label': '#4a7fa5',
+        '--cor-label': '#477a9e',
         '--cor-input-fundo': '#f0f0f0',
-        '--cor-input-texto': '#aaa',
+        '--cor-input-texto': '#6d6d6d',
         '--cor-texto-titulo': '#111',
         '--cor-texto-secundario': '#555',
-        '--cor-texto-terciario': '#888',
+        '--cor-texto-terciario': '#767676',
         '--cor-borda': '#ccc',
         '--cor-divisor': '#e0e0e0',
         '--sombra-painel': '6px 6px 20px rgba(0, 9, 169, 0.4)',
@@ -40,12 +40,12 @@ const temas = {
         '--cor-painel': '#ffffff',
         '--cor-primaria': '#F1CECE',
         '--cor-primaria-hover': '#d4b6b6',
-        '--cor-label': '#E3676b',
+        '--cor-label': '#da383d',
         '--cor-input-fundo': '#f0f0f0',
-        '--cor-input-texto': '#aaa',
+        '--cor-input-texto': '#6d6d6d',
         '--cor-texto-titulo': '#111',
-        '--cor-texto-secundario': '#ccc',
-        '--cor-texto-terciario': '#888',
+        '--cor-texto-secundario': '#757575',
+        '--cor-texto-terciario': '#767676',
         '--cor-borda': '#444',
         '--cor-divisor': '#333',
         '--sombra-painel': '6px 6px 20px rgba(243, 162, 162, 0.6)',
@@ -180,6 +180,26 @@ function toggleSenha(inputId, btn) {
     });
 }
 
-window.toggleTema = toggleTema;
-window.tentarAlterar = tentarAlterar;
-window.toggleSenha = toggleSenha;
+/* ============================================
+   ACOES POR DELEGACAO
+   Este arquivo e carregado como script classico (sem type="module"), entao
+   nao pode importar api/acoes.js — a delegacao fica local. Um unico listener
+   no document no lugar dos antigos onclick inline.
+   ============================================ */
+
+document.addEventListener('click', (evento) => {
+    const elemento = evento.target.closest('[data-acao]');
+    if (!elemento) return;
+
+    switch (elemento.dataset.acao) {
+        case 'alternar-tema':
+            toggleTema();
+            break;
+        case 'tentar-alterar':
+            tentarAlterar();
+            break;
+        case 'alternar-senha':
+            toggleSenha(elemento.dataset.campo, elemento);
+            break;
+    }
+});

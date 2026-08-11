@@ -1,6 +1,7 @@
 import { auth } from '../../autthentication/firebase-config.js';
 import { sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
 import { traduzirErroFirebase } from '../../autthentication/firebase-erros.js';
+import { registrarAcao } from '../../api/acoes.js';
 
 history.pushState(null, null, location.href);
 history.replaceState(null, null, location.href);
@@ -16,12 +17,12 @@ const temas = {
         '--cor-painel': '#ffffff',
         '--cor-primaria': '#b0aed4',
         '--cor-primaria-hover': '#7b78b0',
-        '--cor-label': '#4a7fa5',
+        '--cor-label': '#477a9e',
         '--cor-input-fundo': '#f0f0f0',
-        '--cor-input-texto': '#aaa',
+        '--cor-input-texto': '#6d6d6d',
         '--cor-texto-titulo': '#111',
         '--cor-texto-secundario': '#555',
-        '--cor-texto-terciario': '#888',
+        '--cor-texto-terciario': '#767676',
         '--cor-borda': '#ccc',
         '--cor-divisor': '#e0e0e0',
         '--sombra-painel': '6px 6px 20px rgba(0, 9, 169, 0.4)',
@@ -40,12 +41,12 @@ const temas = {
         '--cor-painel': '#ffffff',
         '--cor-primaria': '#F1CECE',
         '--cor-primaria-hover': '#d4b6b6',
-        '--cor-label': '#E3676b',
+        '--cor-label': '#da383d',
         '--cor-input-fundo': '#f0f0f0',
-        '--cor-input-texto': '#aaa',
+        '--cor-input-texto': '#6d6d6d',
         '--cor-texto-titulo': '#111',
-        '--cor-texto-secundario': '#ccc',
-        '--cor-texto-terciario': '#888',
+        '--cor-texto-secundario': '#757575',
+        '--cor-texto-terciario': '#767676',
         '--cor-borda': '#444',
         '--cor-divisor': '#333',
         '--sombra-painel': '6px 6px 20px rgba(243, 162, 162, 0.6)',
@@ -179,5 +180,5 @@ async function tentarContinuar() {
     }
 }
 
-window.toggleTema = toggleTema;
-window.tentarContinuar = tentarContinuar;
+registrarAcao('alternar-tema', toggleTema);
+registrarAcao('tentar-continuar', tentarContinuar);

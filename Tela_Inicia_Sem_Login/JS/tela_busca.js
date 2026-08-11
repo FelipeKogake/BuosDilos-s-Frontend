@@ -2,6 +2,8 @@ import { obterProdutos, obterItens } from '../../api/produtosStore.js';
 import { renderizarBonecosEmGrids, renderizarItensEmGrids } from '../../api/produtosView.js';
 import { inicializarBuscaNav } from '../../api/buscaNav.js';
 import { listarCategorias } from '../../api/produtos.js';
+import { debounce } from '../../api/util.js';
+import { registrarAcao } from '../../api/acoes.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TEMA (claro/escuro "azul"/"rosa")
@@ -13,12 +15,12 @@ const temas = {
         '--cor-painel': '#ffffff',
         '--cor-primaria': '#cccaf1',
         '--cor-primaria-hover': '#b4b1ef',
-        '--cor-label': '#4a7fa5',
+        '--cor-label': '#477a9e',
         '--cor-input-fundo': '#f0f0f0',
-        '--cor-input-texto': '#aaa',
+        '--cor-input-texto': '#6d6d6d',
         '--cor-texto-titulo': '#111',
         '--cor-texto-secundario': '#555',
-        '--cor-texto-terciario': '#888',
+        '--cor-texto-terciario': '#767676',
         '--cor-borda': '#ccc',
         '--cor-divisor': '#e0e0e0',
         '--cor-sombra-inicio': '#BFD7EE',
@@ -39,12 +41,12 @@ const temas = {
         '--cor-painel': '#ffffff',
         '--cor-primaria': '#F1CECE',
         '--cor-primaria-hover': '#e3b8b8',
-        '--cor-label': '#E3676b',
+        '--cor-label': '#da383d',
         '--cor-input-fundo': '#f0f0f0',
-        '--cor-input-texto': '#aaa',
+        '--cor-input-texto': '#6d6d6d',
         '--cor-texto-titulo': '#111',
-        '--cor-texto-secundario': '#ccc',
-        '--cor-texto-terciario': '#888',
+        '--cor-texto-secundario': '#757575',
+        '--cor-texto-terciario': '#767676',
         '--cor-borda': '#cbc3c3',
         '--cor-divisor': '#cbc3c3',
         '--cor-sombra-inicio': '#F1CECE',
@@ -88,7 +90,7 @@ function toggleTema() {
     const proximo = atual === 'azul' ? 'rosa' : 'azul';
     aplicarTema(proximo);
 }
-window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
+registrarAcao('alternar-tema', toggleTema);
 
 aplicarTema(localStorage.getItem('tema') || 'azul');
 
@@ -120,7 +122,7 @@ function exigirLogin() {
     localStorage.setItem('popup', 'login-necessario');
     window.location.href = '../Login_Cadatro/login.html';
 }
-window.exigirLogin = exigirLogin; // usado pelo onclick inline no HTML
+registrarAcao('exigir-login', exigirLogin);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // BUSCA (por nome + filtro por categoria, os dois já ligados)
@@ -183,7 +185,7 @@ function limparFiltros() {
     document.querySelectorAll('#categoria-lista input[type="checkbox"]').forEach(cb => cb.checked = false);
     aplicarFiltros();
 }
-window.limparFiltros = limparFiltros;
+registrarAcao('limpar-filtros', limparFiltros);
 
 function renderizarCategorias(categorias) {
     const lista = document.getElementById('categoria-lista');
@@ -216,7 +218,10 @@ function preencherTermoDaUrl() {
 
 async function carregarBusca() {
     preencherTermoDaUrl();
-    document.getElementById('input-busca-nome').addEventListener('input', aplicarFiltros);
+    // 250ms de silencio antes de filtrar: digitar uma palavra passa a
+    // custar um re-render em vez de um por tecla.
+    document.getElementById('input-busca-nome')
+        .addEventListener('input', debounce(aplicarFiltros, 250));
 
     try {
         const [produtos, itens, categorias] = await Promise.all([obterProdutos(), obterItens(), listarCategorias()]);

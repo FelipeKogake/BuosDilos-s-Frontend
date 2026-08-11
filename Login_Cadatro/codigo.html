@@ -7,6 +7,8 @@
     <script src="../api/acessibilidadeWidget.js" defer></script>
     <link rel="stylesheet" href="CSS/codigo.css">
     <link rel="stylesheet" href="CSS/auth-landmarks.css">
+    <link rel="stylesheet" href="../CSS/acessibilidade.css">
+    <link rel="stylesheet" href="../CSS/responsivo.css">
     <link id="favicon" rel="icon" type="image/png" href="../Tela_Inicia_Com_Login/Assets/logo-azul.png">
     <title>Verificando link</title>
 </head>
@@ -15,11 +17,11 @@
         <a class="topo-auth-marca" href="../index.html">PopDreams</a>
     </header>
 
-    <img src="Assets/codigo/estrelas-azul.png" class="estrelas estrelas--back" aria-hidden="true"/>
+    <img src="Assets/codigo/estrelas-azul.png" class="estrelas estrelas--back" aria-hidden="true" loading="lazy" alt="" />
 
     <div class="personagem" aria-hidden="true">
         <div class="personagem-sombra"></div>
-        <img src="Assets/codigo/personagem-azul.png" alt="Personagem" class="personagemImg" />
+        <img src="Assets/codigo/personagem-azul.png" alt="Personagem" class="personagemImg" loading="lazy" />
     </div>
 
     <main class="painel-codigo">
@@ -32,10 +34,10 @@
         <a href="login.html" class="voltar">Voltar para Login</a>
     </main>
 
-    <img src="Assets/codigo/estrelas-azul.png" class="estrelas estrelas--front" aria-hidden="true"/>
+    <img src="Assets/codigo/estrelas-azul.png" class="estrelas estrelas--front" aria-hidden="true" loading="lazy" alt="" />
 
-    <button class="btn-tema" onclick="toggleTema()" aria-label="Trocar tema do site">
-        <img src="Assets/avatar-azul.png" alt="Trocar tema" />
+    <button class="btn-tema" data-acao="alternar-tema" aria-label="Trocar tema do site">
+        <img src="Assets/avatar-azul.png" alt="Trocar tema" loading="lazy" />
     </button>
 
     <script type="module" src="JS/codigo.js"></script>

@@ -7,6 +7,8 @@
     <script src="../api/acessibilidadeWidget.js" defer></script>
     <link rel="stylesheet" href="CSS/senha-alterada.css">
     <link rel="stylesheet" href="CSS/auth-landmarks.css">
+    <link rel="stylesheet" href="../CSS/acessibilidade.css">
+    <link rel="stylesheet" href="../CSS/responsivo.css">
     <link id="favicon" rel="icon" type="image/png" href="../Tela_Inicia_Com_Login/Assets/logo-azul.png">
     <title>Senha Alterada — Sistema</title>
 </head>
@@ -15,21 +17,21 @@
         <a class="topo-auth-marca" href="../index.html">PopDreams</a>
     </header>
 
-    <img src="Assets/senha-alterada/estrelas-azul.png" class="estrelas estrelas--back" aria-hidden="true" alt="" />
+    <img src="Assets/senha-alterada/estrelas-azul.png" class="estrelas estrelas--back" aria-hidden="true" alt="" loading="lazy" />
 
     <div class="personagem" aria-hidden="true">
-        <img src="Assets/senha-alterada/personagem-azul.png" alt="" class="personagemImg" />
+        <img src="Assets/senha-alterada/personagem-azul.png" alt="" class="personagemImg" loading="lazy" />
     </div>
 
     <main class="conteudo">
         <h1 class="titulo">Senha alterada com sucesso</h1>
-        <button class="btn-voltar" onclick="voltarParaLogin()">Voltar para login</button>
+        <button class="btn-voltar" data-acao="voltar-para-login">Voltar para login</button>
     </main>
 
-    <img src="Assets/senha-alterada/estrelas-azul.png" class="estrelas estrelas--front" aria-hidden="true" alt="" />
+    <img src="Assets/senha-alterada/estrelas-azul.png" class="estrelas estrelas--front" aria-hidden="true" alt="" loading="lazy" />
 
-    <button class="btn-tema" onclick="toggleTema()" aria-label="Trocar tema do site">
-        <img src="Assets/senha-alterada/avatar-azul.png" alt="" aria-hidden="true" />
+    <button class="btn-tema" data-acao="alternar-tema" aria-label="Trocar tema do site">
+        <img src="Assets/senha-alterada/avatar-azul.png" alt="" aria-hidden="true" loading="lazy" />
     </button>
 
     <script src="JS/senha-alterada.js"></script>

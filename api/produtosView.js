@@ -72,13 +72,25 @@ export function criarBonecoCard(produto, obterUrl, escuro = false) {
     img.alt = produto.nome || '';
     imgWrap.appendChild(img);
 
+    // Nome e categoria vêm do banco e são editáveis pelo painel admin, então
+    // nunca entram como HTML — um produto chamado "<img onerror=...>" seria
+    // executado pelo navegador. textContent trata tudo como texto puro.
     const info = document.createElement('div');
     info.className = 'boneco-info';
-    info.innerHTML = `
-        <p class="boneco-nome">${produto.nome ?? ''}</p>
-        <p class="boneco-subtitulo">${produto.categoria ?? ''}</p>
-        <p class="boneco-preco">${formatarPreco(produto.preco)}</p>
-    `;
+
+    const nome = document.createElement('p');
+    nome.className = 'boneco-nome';
+    nome.textContent = produto.nome ?? '';
+
+    const subtitulo = document.createElement('p');
+    subtitulo.className = 'boneco-subtitulo';
+    subtitulo.textContent = produto.categoria ?? '';
+
+    const preco = document.createElement('p');
+    preco.className = 'boneco-preco';
+    preco.textContent = formatarPreco(produto.preco);
+
+    info.append(nome, subtitulo, preco);
 
     link.appendChild(imgWrap);
     link.appendChild(info);
@@ -128,13 +140,62 @@ function criarBotaoVerMais(classe, aoClicar, texto = null) {
     return btn;
 }
 
+/* ============================================================
+   ESTADOS DAS GRIDS (vazio e erro)
+   ============================================================ */
+
+/** Monta o bloco de um estado, opcionalmente com botão de repetir. */
+function criarBlocoEstado(mensagem, { erro = false, aoTentarNovamente = null } = {}) {
+    const bloco = document.createElement('div');
+    bloco.className = `estado-carregando ${erro ? 'estado-erro' : 'estado-vazio'}`;
+    // role="alert" faz o leitor de tela anunciar a falha sem o usuário
+    // precisar navegar até ela.
+    if (erro) bloco.setAttribute('role', 'alert');
+
+    const texto = document.createElement('p');
+    texto.textContent = mensagem;
+    bloco.appendChild(texto);
+
+    if (typeof aoTentarNovamente === 'function') {
+        const botao = document.createElement('button');
+        botao.type = 'button';
+        botao.className = 'btn-tentar-novamente';
+        botao.textContent = 'Tentar novamente';
+        botao.addEventListener('click', aoTentarNovamente);
+        bloco.appendChild(botao);
+    }
+
+    return bloco;
+}
+
+/**
+ * Troca o conteúdo dos grids por uma mensagem de erro.
+ *
+ * Sem isto, uma falha de rede deixava o spinner de "Carregando..." girando
+ * para sempre: as funções de render é que limpam o grid, e elas nunca chegavam
+ * a rodar. O usuário não tinha como distinguir "lento" de "quebrado".
+ */
+export function mostrarErroEmGrids(seletorGrid, mensagem, aoTentarNovamente = null) {
+    document.querySelectorAll(seletorGrid).forEach(grid => {
+        grid.textContent = '';
+        grid.appendChild(criarBlocoEstado(mensagem, { erro: true, aoTentarNovamente }));
+    });
+}
+
 /**
  * Renderiza produtos em todos os grids que casam com o seletor (suporta seções duplicadas).
  * Com `limitar: true`, mostra no máximo LIMITE_GRID cards, trocando o último por um
  * botão "Ver mais" que revela o restante ao ser clicado.
+ * Lista vazia cai no estado "vazio" em vez de deixar o grid em branco.
  */
-export function renderizarBonecosEmGrids(seletorGrid, produtos, obterUrl, { limitar = false } = {}) {
+export function renderizarBonecosEmGrids(seletorGrid, produtos, obterUrl, { limitar = false, mensagemVazio = 'Nenhum produto disponível no momento.' } = {}) {
     document.querySelectorAll(seletorGrid).forEach(grid => {
+        if (!produtos || produtos.length === 0) {
+            grid.textContent = '';
+            grid.appendChild(criarBlocoEstado(mensagemVazio));
+            return;
+        }
+
         const preencher = (lista, comVerMais) => {
             grid.innerHTML = '';
             lista.forEach((produto, index) => {
@@ -158,8 +219,14 @@ export function renderizarBonecosEmGrids(seletorGrid, produtos, obterUrl, { limi
  * Com `limitar: true`, mostra no máximo LIMITE_GRID itens, trocando o último por um
  * botão "Ver mais" que revela o restante ao ser clicado.
  */
-export function renderizarItensEmGrids(seletorGrid, produtos, obterUrl, { limitar = false } = {}) {
+export function renderizarItensEmGrids(seletorGrid, produtos, obterUrl, { limitar = false, mensagemVazio = 'Nenhum item disponível no momento.' } = {}) {
     document.querySelectorAll(seletorGrid).forEach(grid => {
+        if (!produtos || produtos.length === 0) {
+            grid.textContent = '';
+            grid.appendChild(criarBlocoEstado(mensagemVazio));
+            return;
+        }
+
         const preencher = (lista, comVerMais) => {
             grid.innerHTML = '';
             lista.forEach(produto => grid.appendChild(criarItemCircular(produto, obterUrl)));

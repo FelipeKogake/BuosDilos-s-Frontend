@@ -9,3 +9,8 @@ npm-debug.log*
 # Arquivos de sistema operacional
 .DS_Store
 Thumbs.db
+
+# Configuracoes de IDE
+.vscode/
+.idea/
+*.iml

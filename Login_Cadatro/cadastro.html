@@ -7,6 +7,8 @@
     <script src="../api/acessibilidadeWidget.js" defer></script>
     <link rel="stylesheet" href="CSS/cadastro.css">
     <link rel="stylesheet" href="CSS/auth-landmarks.css">
+    <link rel="stylesheet" href="../CSS/acessibilidade.css">
+    <link rel="stylesheet" href="../CSS/responsivo.css">
     <link id="favicon" rel="icon" type="image/png" href="../Tela_Inicia_Com_Login/Assets/logo-azul.png">
     <title>cadastro — Sistema</title>
 </head>
@@ -15,11 +17,11 @@
         <a class="topo-auth-marca" href="../index.html">PopDreams</a>
     </header>
 
-    <img src="Assets/cadastro/baloes-azul.png" class="baloes baloes--back" aria-hidden="true" alt="" />
+    <img src="Assets/cadastro/baloes-azul.png" class="baloes baloes--back" aria-hidden="true" alt="" loading="lazy" />
 
     <div class="personagem" aria-hidden="true">
         <div class="personagem-sombra"></div>
-        <img src="Assets/cadastro/personagem.png" alt="" class="personagemImg" />
+        <img src="Assets/cadastro/personagem.png" alt="" class="personagemImg" loading="lazy" />
     </div>
 
     <main class="painel-cadastro">
@@ -61,7 +63,7 @@
                         autocomplete="new-password"
                         aria-required="true"
                     />
-                    <button type="button" class="btn-olho" onclick="toggleSenha('senha', this)" aria-label="Mostrar senha">
+                    <button type="button" class="btn-olho" data-acao="alternar-senha" data-campo="senha" aria-label="Mostrar senha">
                         &#xf06e;
                     </button>
                 </div>
@@ -78,22 +80,22 @@
                         autocomplete="new-password"
                         aria-required="true"
                     />
-                    <button type="button" class="btn-olho" onclick="toggleSenha('confirma-senha', this)" aria-label="Mostrar senha">
+                    <button type="button" class="btn-olho" data-acao="alternar-senha" data-campo="confirma-senha" aria-label="Mostrar senha">
                         &#xf06e;
                     </button>
                 </div>
             </div>
 
-            <button type="button" class="btn-cadastro" onclick="tentarCadastrar()">cadastrar</button>
+            <button type="button" class="btn-cadastro" data-acao="tentar-cadastrar">cadastrar</button>
         </form>
 
         <a href="login.html" class="voltar">Voltar para Login</a>
     </main>
 
-    <img src="Assets/cadastro/baloes-azul.png" class="baloes baloes--front" aria-hidden="true" alt="" />
+    <img src="Assets/cadastro/baloes-azul.png" class="baloes baloes--front" aria-hidden="true" alt="" loading="lazy" />
 
-    <button class="btn-tema" onclick="toggleTema()" aria-label="Trocar tema do site">
-        <img src="Assets/cadastro/avatar-azul.png" alt="" aria-hidden="true" />
+    <button class="btn-tema" data-acao="alternar-tema" aria-label="Trocar tema do site">
+        <img src="Assets/cadastro/avatar-azul.png" alt="" aria-hidden="true" loading="lazy" />
     </button>
 
     <script type="module" src="JS/cadastro.js"></script>

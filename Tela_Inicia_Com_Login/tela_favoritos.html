@@ -6,6 +6,9 @@
     <script src="../api/temaPreload.js" data-paleta="app"></script>
     <script src="../api/acessibilidadeWidget.js" defer></script>
     <link rel="stylesheet" href="CSS/tela_favoritos.css">
+    <link rel="stylesheet" href="../CSS/estados.css">
+    <link rel="stylesheet" href="../CSS/acessibilidade.css">
+    <link rel="stylesheet" href="../CSS/responsivo.css">
     <link id="favicon" rel="icon" type="image/png" href="Assets/logo-azul.png">
     <title>Favoritos</title>
 </head>
@@ -23,7 +26,7 @@
 
             <!-- HEADER -->
             <div class="favoritos-header">
-                <button class="btn-voltar" onclick="history.back()">
+                <button class="btn-voltar" data-acao="voltar">
                     VOLTAR
                 </button>
             </div>
@@ -81,8 +84,8 @@
     </footer>
 
     <!-- Botão tema -->
-    <button class="btn-tema" onclick="toggleTema()">
-        <img src="Assets/avatar-azul.png" alt="Trocar tema" />
+    <button class="btn-tema" data-acao="alternar-tema">
+        <img src="Assets/avatar-azul.png" alt="Trocar tema" loading="lazy" />
     </button>
 
     <script type="module" src="JS/tela_favoritos.js"></script>

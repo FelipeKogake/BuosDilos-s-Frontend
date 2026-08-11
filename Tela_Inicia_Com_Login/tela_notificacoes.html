@@ -6,6 +6,9 @@
     <script src="../api/temaPreload.js" data-paleta="app"></script>
     <script src="../api/acessibilidadeWidget.js" defer></script>
     <link rel="stylesheet" href="CSS/tela_notificacoes.css">
+    <link rel="stylesheet" href="../CSS/estados.css">
+    <link rel="stylesheet" href="../CSS/acessibilidade.css">
+    <link rel="stylesheet" href="../CSS/responsivo.css">
     <link id="favicon" rel="icon" type="image/png" href="Assets/logo-azul.png">
     <title>Notificações</title>
 </head>
@@ -23,7 +26,7 @@
 
             <!-- HEADER -->
             <div class="favoritos-header">
-                <button class="btn-voltar" onclick="history.back()">
+                <button class="btn-voltar" data-acao="voltar">
                     VOLTAR
                 </button>
             </div>
@@ -35,7 +38,7 @@
 
                 <div class="favorito-card" data-id="promo-frete">
                     <div class="favorito-img-wrap">
-                        <img src="Assets/login/personagem-azul.png" alt="" aria-hidden="true" />
+                        <img src="Assets/login/personagem-azul.png" alt="" aria-hidden="true" loading="lazy" />
                     </div>
                     <div class="favorito-info">
                         <p class="favorito-nome">Frete grátis essa semana</p>
@@ -45,7 +48,7 @@
 
                 <div class="favorito-card" data-id="promo-itens">
                     <div class="favorito-img-wrap">
-                        <img src="Assets/login/personagem-rosa.png" alt="" aria-hidden="true" />
+                        <img src="Assets/login/personagem-rosa.png" alt="" aria-hidden="true" loading="lazy" />
                     </div>
                     <div class="favorito-info">
                         <p class="favorito-nome">Novos itens colecionáveis</p>
@@ -55,7 +58,7 @@
 
                 <div class="favorito-card" data-id="promo-cupom">
                     <div class="favorito-img-wrap">
-                        <img src="Assets/avatar-azul.png" alt="" aria-hidden="true" />
+                        <img src="Assets/avatar-azul.png" alt="" aria-hidden="true" loading="lazy" />
                     </div>
                     <div class="favorito-info">
                         <p class="favorito-nome">Cupom de bem-vindo</p>
@@ -73,7 +76,7 @@
         <div class="bonecos-grid">
             <div class="boneco-card">
                 <a class="boneco-card-link" href="tela_produto.html" style="display:contents;color:inherit;text-decoration:none;">
-                    <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Eddie Brock" /></div>
+                    <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Eddie Brock" loading="lazy" /></div>
                     <div class="boneco-info">
                         <p class="boneco-nome">EDDIE BROCK</p>
                         <p class="boneco-subtitulo">CANARY ADRIANO</p>
@@ -86,7 +89,7 @@
             </div>
             <div class="boneco-card">
                 <a class="boneco-card-link" href="tela_produto.html" style="display:contents;color:inherit;text-decoration:none;">
-                    <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Lara Adriano" /></div>
+                    <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Lara Adriano" loading="lazy" /></div>
                     <div class="boneco-info">
                         <p class="boneco-nome">LARA ADRIANO</p>
                         <p class="boneco-subtitulo">LARA ADRIANO</p>
@@ -99,7 +102,7 @@
             </div>
             <div class="boneco-card">
                 <a class="boneco-card-link" href="tela_produto.html" style="display:contents;color:inherit;text-decoration:none;">
-                    <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Pedro Adriano" /></div>
+                    <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Pedro Adriano" loading="lazy" /></div>
                     <div class="boneco-info">
                         <p class="boneco-nome">PEDRO ADRIANO</p>
                         <p class="boneco-subtitulo">CANARY ADRIANO</p>
@@ -112,7 +115,7 @@
             </div>
             <div class="boneco-card">
                 <a class="boneco-card-link" href="tela_produto.html" style="display:contents;color:inherit;text-decoration:none;">
-                    <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Capitão S" /></div>
+                    <div class="boneco-img-wrap dark"><img src="Assets/login/personagem-rosa.png" alt="Capitão S" loading="lazy" /></div>
                     <div class="boneco-info">
                         <p class="boneco-nome">CAPITÃO S</p>
                         <p class="boneco-subtitulo">LARA ADRIANO</p>
@@ -125,7 +128,7 @@
             </div>
             <div class="boneco-card">
                 <a class="boneco-card-link" href="tela_produto.html" style="display:contents;color:inherit;text-decoration:none;">
-                    <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Carol S" /></div>
+                    <div class="boneco-img-wrap"><img src="Assets/login/personagem-azul.png" alt="Carol S" loading="lazy" /></div>
                     <div class="boneco-info">
                         <p class="boneco-nome">CAROL S</p>
                         <p class="boneco-subtitulo">CANARY ADRIANO</p>
@@ -169,8 +172,8 @@
     </footer>
 
     <!-- Botão tema -->
-    <button class="btn-tema" onclick="toggleTema()">
-        <img src="Assets/avatar-azul.png" alt="Trocar tema" />
+    <button class="btn-tema" data-acao="alternar-tema">
+        <img src="Assets/avatar-azul.png" alt="Trocar tema" loading="lazy" />
     </button>
 
     <script src="JS/tela_notificacoes.js"></script>

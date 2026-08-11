@@ -1,0 +1,122 @@
+/* ============================================================
+   Ajustes de responsividade — carregado por ÚLTIMO em todas as páginas.
+
+   A auditoria em 360px encontrou overflow horizontal: o documento media
+   720px numa viewport de 360, com elementos chegando a 1212px. Duas causas,
+   corrigidas aqui em vez de espalhar por 21 arquivos de CSS.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. Carrossel de itens vazando para fora da página.
+
+   .bonecos-grid já usava `overflow-x: auto` e rolava internamente, do jeito
+   certo. .itens-grid ficou com `overflow: visible`, então os círculos de
+   169px continuavam somando largura ao documento inteiro.
+   ------------------------------------------------------------ */
+
+.itens-grid {
+    overflow-x: auto;
+    overflow-y: visible;
+    /* Sem isto o Safari corta a borda do primeiro item ao rolar. */
+    scroll-padding-inline: 1rem;
+}
+
+/* ------------------------------------------------------------
+   2. Navbar em telas estreitas.
+
+   Nenhuma media query do projeto tocava .navbar-actions: em 360px o
+   conjunto logo + links + 3 ícones + botão do carrinho ocupava 389px de
+   um espaço que começa em 331px. Aqui a navbar passa a quebrar linha.
+   ------------------------------------------------------------ */
+
+@media (max-width: 700px) {
+    .navbar {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        padding: 0.6rem 0.8rem;
+    }
+
+    .navbar-actions {
+        gap: 0.5rem;
+        margin-left: auto;
+    }
+
+    /* Os links ocupam a linha de baixo inteira. */
+    .navbar-links {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.4rem;
+    }
+
+    .btn-entrar-nav {
+        padding: 0.5rem 0.7rem;
+        font-size: 0.68rem;
+        white-space: nowrap;
+    }
+
+    .navbar-logo-img {
+        max-height: 34px;
+    }
+
+    /* As 3 colunas do rodapé somavam 309px e estouravam a viewport de 360.
+       Agora quebram linha. */
+    .footer-inner {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .footer-cols {
+        flex-wrap: wrap;
+        gap: 1.2rem;
+    }
+}
+
+/* ------------------------------------------------------------
+   3. Alvos de toque de 44px.
+
+   O critério de responsividade pede 44px mínimos. Estes ficaram entre
+   33 e 34px. Aumentados só no toque, para não engordar o desenho no desktop.
+   ------------------------------------------------------------ */
+
+/* A condição é por largura, e não só `pointer: coarse`, porque o modo
+   dispositivo do DevTools nem sempre emula ponteiro grosso — e é assim que
+   o critério vai ser conferido. */
+@media (max-width: 700px), (pointer: coarse) {
+    .btn-qty,
+    .cta-icon-circle,
+    .btn-editar-foto,
+    .icon-btn,
+    .btn-entrar-nav,
+    .btn-participar,
+    .btn-ver,
+    .boneco-fav {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    /* O ícone segue pequeno; quem cresce é a área clicável. */
+    .boneco-fav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* ------------------------------------------------------------
+   4. Rede de segurança contra overflow.
+
+   Imagens e mídia nunca devem forçar a largura do documento.
+   ------------------------------------------------------------ */
+
+img,
+svg,
+video {
+    max-width: 100%;
+}
+
+/* Containers com largura fixa grande (ex.: .favoritos-container: 1360px)
+   passam a respeitar a viewport. */
+[class*="-container"] {
+    max-width: 100%;
+}

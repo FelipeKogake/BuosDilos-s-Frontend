@@ -3,6 +3,7 @@ import { formatarPreco, obterFotoPrincipal, renderizarBonecosEmGrids } from '../
 import { inicializarBuscaNav } from '../../api/buscaNav.js';
 import { ehFavorito, alternarFavorito } from '../../api/favoritos.js';
 import { listarFotos } from '../../api/produtos.js';
+import { registrarAcao } from '../../api/acoes.js';
 
 const temas = {
     azul: {
@@ -10,12 +11,12 @@ const temas = {
         '--cor-painel': '#ffffff',
         '--cor-primaria': '#cccaf1',
         '--cor-primaria-hover': '#b4b1ef',
-        '--cor-label': '#4a7fa5',
+        '--cor-label': '#477a9e',
         '--cor-input-fundo': '#f0f0f0',
-        '--cor-input-texto': '#aaa',
+        '--cor-input-texto': '#6d6d6d',
         '--cor-texto-titulo': '#111',
         '--cor-texto-secundario': '#555',
-        '--cor-texto-terciario': '#888',
+        '--cor-texto-terciario': '#767676',
         '--cor-borda': '#ccc',
         '--cor-divisor': '#e0e0e0',
         '--sombra-painel': '6px 6px 20px rgba(0, 9, 169, 0.4)',
@@ -39,12 +40,12 @@ const temas = {
         '--cor-painel': '#ffffff',
         '--cor-primaria': '#F1CECE',
         '--cor-primaria-hover': '#e3b8b8',
-        '--cor-label': '#E3676b',
+        '--cor-label': '#da383d',
         '--cor-input-fundo': '#f0f0f0',
-        '--cor-input-texto': '#aaa',
+        '--cor-input-texto': '#6d6d6d',
         '--cor-texto-titulo': '#111',
-        '--cor-texto-secundario': '#ccc',
-        '--cor-texto-terciario': '#888',
+        '--cor-texto-secundario': '#757575',
+        '--cor-texto-terciario': '#767676',
         '--cor-borda': '#cbc3c3',
         '--cor-divisor': '#cbc3c3',
         '--sombra-painel': '6px 6px 20px rgba(243, 162, 162, 0.6)',
@@ -98,7 +99,7 @@ function toggleTema() {
     const proximo = atual === 'azul' ? 'rosa' : 'azul';
     aplicarTema(proximo);
 }
-window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
+registrarAcao('alternar-tema', toggleTema);
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
@@ -284,4 +285,4 @@ function exigirLogin() {
     localStorage.setItem('popup', 'login-necessario');
     window.location.href = '../Login_Cadatro/login.html';
 }
-window.exigirLogin = exigirLogin; // usado pelo onclick inline no HTML
+registrarAcao('exigir-login', exigirLogin);
