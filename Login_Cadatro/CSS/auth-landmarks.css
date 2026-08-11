@@ -1,0 +1,60 @@
+/* ============================================================
+   Landmarks das telas de autenticação
+   ------------------------------------------------------------
+   O <body> destas 7 páginas é um flex row com overflow: hidden e o
+   <main> é um flex item posicionado dentro dele. Por isso o header e
+   o footer usam position: fixed — assim ficam fora do fluxo do flex e
+   não deslocam o painel central. É a mesma estratégia que as imagens
+   de fundo (.bolhas) já usavam.
+
+   As cores são literais em vez de variáveis de tema porque
+   --cor-texto-secundario vale #ccc na paleta rosa, o que reprovaria
+   no contraste de 4.5:1 exigido pela Seção 5 do projeto.
+   ============================================================ */
+
+.topo-auth {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    padding: 1.25rem 1.75rem;
+}
+
+.topo-auth-marca {
+    font-family: 'Epilogue', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #111;
+    text-decoration: none;
+}
+
+.topo-auth-marca:hover,
+.topo-auth-marca:focus-visible {
+    text-decoration: underline;
+}
+
+.rodape-auth {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    padding: 1rem 1.75rem;
+    text-align: center;
+    pointer-events: none;
+}
+
+.rodape-auth p {
+    margin: 0;
+    font-family: 'Epilogue', sans-serif;
+    font-size: 0.8rem;
+    color: #4a4a4a;
+}
+
+/* Abaixo de 860px o painel ocupa quase toda a viewport; o rodapé sai
+   de cena para não sobrepor os campos do formulário. */
+@media (max-width: 860px) {
+    .rodape-auth {
+        display: none;
+    }
+}

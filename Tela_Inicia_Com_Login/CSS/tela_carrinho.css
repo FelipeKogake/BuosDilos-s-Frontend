@@ -301,11 +301,40 @@ body {
     color: var(--cor-texto-titulo);
 }
 
+.cupom-form {
+    margin-top: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.cupom-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: 'Epilogue', sans-serif;
+    color: var(--cor-label);
+}
+
 .cupom-wrap {
     display: flex;
     gap: 0.5rem;
-    margin-top: 1.2rem;
-    margin-bottom: 1.5rem;
+}
+
+/* Retorno do cupom em texto — a cor é reforço, não o único sinal. */
+.cupom-feedback {
+    margin-top: 0.5rem;
+    min-height: 1.2em;
+    font-size: 0.85rem;
+    font-family: 'Epilogue', sans-serif;
+    color: var(--cor-texto-secundario);
+}
+
+.cupom-feedback--ok {
+    color: #1c6b32;
+}
+
+.cupom-feedback--erro {
+    color: #a32320;
 }
 
 .cupom-input {

@@ -1,0 +1,411 @@
+/* ============================================================
+   Checkout — endereço, pagamento e confirmação.
+   A navbar, o rodapé, o reset e as variáveis de tema vêm de
+   base-navbar-rodape.css, carregado antes deste arquivo.
+   ============================================================ */
+
+.checkout {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+}
+
+.checkout-titulo {
+    margin: 0 0 2rem;
+    font-size: 2rem;
+    font-weight: 900;
+    font-style: italic;
+    color: var(--cor-texto-titulo);
+}
+
+/* ── Estados ─────────────────────────────────────────────── */
+
+.estado-carregando {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 4rem 1rem;
+    color: var(--cor-texto-secundario);
+}
+
+.spinner {
+    width: 38px;
+    height: 38px;
+    border: 4px solid var(--cor-divisor);
+    border-top-color: var(--cor-primaria);
+    border-radius: 50%;
+    animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+    to { transform: rotate(360deg); }
+}
+
+/* Respeita quem pediu menos animação no sistema ou na central do site. */
+@media (prefers-reduced-motion: reduce) {
+    .spinner {
+        animation-duration: 3s;
+    }
+}
+
+.checkout-aviso {
+    max-width: 520px;
+    margin: 2rem auto;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    background: var(--cor-painel);
+    border-radius: 18px;
+    box-shadow: var(--sombra-painel);
+}
+
+.checkout-aviso h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.3rem;
+    color: var(--cor-texto-titulo);
+}
+
+.checkout-aviso p {
+    margin: 0 0 1.5rem;
+    color: #4a4a4a;
+}
+
+/* ── Layout ──────────────────────────────────────────────── */
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+    gap: 2rem;
+    align-items: start;
+}
+
+/* ── Formulário ──────────────────────────────────────────── */
+
+.checkout-bloco {
+    margin: 0 0 1.5rem;
+    padding: 1.5rem;
+    border: 1.5px solid var(--cor-borda);
+    border-radius: 16px;
+    background: var(--cor-painel);
+}
+
+.checkout-legenda {
+    padding: 0 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--cor-texto-titulo);
+}
+
+.campo {
+    margin-bottom: 1.1rem;
+}
+
+.campo label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--cor-label);
+}
+
+.campo input {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.55rem 0.75rem;
+    border: 1.5px solid var(--cor-borda);
+    border-radius: 10px;
+    background: var(--cor-input-fundo);
+    font-family: 'Epilogue', sans-serif;
+    font-size: 0.95rem;
+    color: #222;
+}
+
+.campo input:focus-visible,
+.pagamento-opcao input:focus-visible,
+.btn-principal:focus-visible,
+.btn-secundario:focus-visible {
+    outline: 3px solid #2a6fb0;
+    outline-offset: 2px;
+}
+
+.campo input[aria-invalid="true"] {
+    border-color: #a32320;
+}
+
+.campo-linha {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.campo-linha input {
+    flex: 1;
+}
+
+.campo-duplo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.obrigatorio {
+    color: #a32320;
+}
+
+/* O erro é texto, não só a borda vermelha — exigência do critério 6
+   da Seção 5 (nenhuma informação transmitida só por cor). */
+.campo-erro {
+    margin: 0.35rem 0 0;
+    min-height: 1.1em;
+    font-size: 0.82rem;
+    color: #a32320;
+}
+
+.campo-status {
+    margin: 0.35rem 0 0;
+    min-height: 1.1em;
+    font-size: 0.82rem;
+    color: #4a4a4a;
+}
+
+.checkout-erro-geral {
+    margin: 0 0 1rem;
+    min-height: 1.2em;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #a32320;
+}
+
+/* ── Pagamento ───────────────────────────────────────────── */
+
+.pagamento-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.pagamento-opcao {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 44px;
+    padding: 0.35rem 0.5rem;
+    border-radius: 10px;
+}
+
+.pagamento-opcao:hover {
+    background: var(--cor-input-fundo);
+}
+
+.pagamento-opcao input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--cor-cta-light);
+}
+
+.pagamento-opcao label {
+    flex: 1;
+    font-size: 0.95rem;
+    color: var(--cor-texto-titulo);
+    cursor: pointer;
+}
+
+/* ── Botões ──────────────────────────────────────────────── */
+
+.btn-principal,
+.btn-secundario {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.7rem 1.4rem;
+    border-radius: 12px;
+    font-family: 'Epilogue', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-principal {
+    border: 1.5px solid var(--cor-cta-dark-border);
+    background: var(--cor-cta-dark);
+    color: #1a1a1a;
+}
+
+.btn-principal:hover {
+    background: var(--cor-cta-light);
+}
+
+.btn-principal[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secundario {
+    border: 1.5px solid var(--cor-borda);
+    background: var(--cor-painel);
+    color: var(--cor-texto-titulo);
+}
+
+.btn-secundario:hover {
+    background: var(--cor-input-fundo);
+}
+
+.btn-confirmar {
+    width: 100%;
+}
+
+/* ── Resumo ──────────────────────────────────────────────── */
+
+.checkout-resumo {
+    position: sticky;
+    top: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 16px;
+    background: var(--cor-painel);
+    box-shadow: var(--sombra-painel);
+}
+
+.resumo-titulo {
+    margin: 0 0 1rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--cor-texto-titulo);
+}
+
+.resumo-itens {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.resumo-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.35rem 0;
+    font-size: 0.88rem;
+    color: #4a4a4a;
+}
+
+.resumo-item-nome {
+    flex: 1;
+}
+
+.resumo-divisor {
+    margin: 1rem 0;
+    border: none;
+    border-top: 1px solid var(--cor-divisor);
+}
+
+.resumo-linha {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3rem 0;
+    font-size: 0.92rem;
+    color: #4a4a4a;
+}
+
+.resumo-cupom {
+    margin: 0.5rem 0 0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #1c6b32;
+}
+
+.resumo-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cor-texto-titulo);
+}
+
+/* ── Confirmação ─────────────────────────────────────────── */
+
+.checkout-sucesso {
+    max-width: 520px;
+    margin: 2rem auto;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    background: var(--cor-painel);
+    border-radius: 18px;
+    box-shadow: var(--sombra-painel);
+}
+
+.checkout-sucesso h2 {
+    margin: 1rem 0 0.75rem;
+    font-size: 1.5rem;
+    color: var(--cor-texto-titulo);
+}
+
+.checkout-sucesso h2:focus-visible {
+    outline: 3px solid #2a6fb0;
+    outline-offset: 4px;
+}
+
+.checkout-sucesso p {
+    margin: 0.35rem 0;
+    color: #4a4a4a;
+}
+
+.pedido-check {
+    width: 88px;
+    margin: 0 auto;
+}
+
+.pedido-check-circulo {
+    stroke: #1c6b32;
+    stroke-width: 2;
+}
+
+.pedido-check-marca {
+    stroke: #1c6b32;
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+
+.checkout-sucesso-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+/* ── Responsivo ──────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-resumo {
+        position: static;
+        order: -1;
+    }
+}
+
+@media (max-width: 600px) {
+    .checkout {
+        padding: 1.5rem 1rem 3rem;
+    }
+
+    .checkout-titulo {
+        font-size: 1.5rem;
+    }
+
+    .checkout-bloco {
+        padding: 1.1rem;
+    }
+
+    .campo-duplo {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .checkout-sucesso-acoes .btn-principal,
+    .checkout-sucesso-acoes .btn-secundario {
+        width: 100%;
+    }
+}

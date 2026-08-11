@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../api/temaPreload.js" data-paleta="app"></script>
+    <script src="../api/acessibilidadeWidget.js" defer></script>
+    <link rel="stylesheet" href="CSS/base-navbar-rodape.css">
+    <link rel="stylesheet" href="CSS/tela_checkout.css">
+    <link rel="icon" id="favicon" type="image/png" href="Assets/logo-azul.png">
+    <title>Finalizar compra</title>
+</head>
+<body>
+
+    <!-- BARRA TOPO ESCURA -->
+    <div class="top-bar"></div>
+
+    <!-- NAVBAR -->
+    <div class="navbar-wrapper">
+        <header class="navbar">
+            <a href="tela_inicial.html" class="navbar-logo">
+                <img src="Assets/logo-azul.png" alt="Logo PopDreams" class="navbar-logo-img" />
+            </a>
+            <nav class="navbar-links" aria-label="Navegação principal">
+                <a href="tela_inicial.html" class="nav-link">TELA INICIAL</a>
+                <a href="tela_catalogo.html" class="nav-link">BONECOS</a>
+                <a href="tela_catalogo.html#itens" class="nav-link">ITENS</a>
+            </nav>
+            <div class="navbar-actions">
+                <a href="tela_carrinho.html" class="btn-entrar-nav">VOLTAR AO CARRINHO</a>
+            </div>
+        </header>
+    </div>
+
+    <main id="conteudo-principal">
+        <section class="checkout">
+            <h1 class="checkout-titulo">Finalizar compra</h1>
+
+            <!-- Estado: carregando -->
+            <div class="estado-carregando" id="checkout-carregando">
+                <div class="spinner" aria-hidden="true"></div>
+                <p>Carregando seu pedido...</p>
+            </div>
+
+            <!-- Estado: precisa estar logado -->
+            <div class="checkout-aviso" id="checkout-login" hidden>
+                <h2>Você precisa entrar na sua conta</h2>
+                <p>O pedido fica vinculado ao seu cadastro, então é necessário fazer login antes de finalizar.</p>
+                <a class="btn-principal" href="../Login_Cadatro/login.html">Fazer login</a>
+            </div>
+
+            <!-- Estado: carrinho vazio -->
+            <div class="checkout-aviso" id="checkout-vazio" hidden>
+                <h2>Seu carrinho está vazio</h2>
+                <p>Adicione bonecos ou itens antes de finalizar a compra.</p>
+                <a class="btn-principal" href="tela_catalogo.html">Ver catálogo</a>
+            </div>
+
+            <!-- Estado: formulário -->
+            <div class="checkout-grid" id="checkout-conteudo" hidden>
+
+                <form class="checkout-form" id="form-checkout" novalidate>
+
+                    <fieldset class="checkout-bloco">
+                        <legend class="checkout-legenda">Endereço de entrega</legend>
+
+                        <div class="campo campo--cep">
+                            <label for="cep">CEP <span class="obrigatorio" aria-hidden="true">*</span></label>
+                            <div class="campo-linha">
+                                <input type="text" id="cep" name="cep" inputmode="numeric"
+                                       autocomplete="postal-code" maxlength="9"
+                                       placeholder="00000-000"
+                                       aria-describedby="cep-erro cep-status" required />
+                                <button type="button" class="btn-secundario" id="btn-buscar-cep">Buscar</button>
+                            </div>
+                            <p class="campo-status" id="cep-status" role="status"></p>
+                            <p class="campo-erro" id="cep-erro"></p>
+                        </div>
+
+                        <div class="campo">
+                            <label for="logradouro">Rua</label>
+                            <input type="text" id="logradouro" name="logradouro"
+                                   autocomplete="address-line1" />
+                        </div>
+
+                        <div class="campo-duplo">
+                            <div class="campo">
+                                <label for="numero">Número <span class="obrigatorio" aria-hidden="true">*</span></label>
+                                <input type="text" id="numero" name="numero" maxlength="10"
+                                       autocomplete="address-line2"
+                                       aria-describedby="numero-erro" required />
+                                <p class="campo-erro" id="numero-erro"></p>
+                            </div>
+                            <div class="campo">
+                                <label for="complemento">Complemento</label>
+                                <input type="text" id="complemento" name="complemento" maxlength="50" />
+                            </div>
+                        </div>
+
+                        <div class="campo-duplo">
+                            <div class="campo">
+                                <label for="cidade">Cidade <span class="obrigatorio" aria-hidden="true">*</span></label>
+                                <input type="text" id="cidade" name="cidade" maxlength="50"
+                                       autocomplete="address-level2"
+                                       aria-describedby="cidade-erro" required />
+                                <p class="campo-erro" id="cidade-erro"></p>
+                            </div>
+                            <div class="campo">
+                                <label for="estado">Estado <span class="obrigatorio" aria-hidden="true">*</span></label>
+                                <input type="text" id="estado" name="estado" maxlength="2"
+                                       autocomplete="address-level1" placeholder="UF"
+                                       aria-describedby="estado-erro" required />
+                                <p class="campo-erro" id="estado-erro"></p>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="checkout-bloco">
+                        <legend class="checkout-legenda">Forma de pagamento</legend>
+                        <div id="lista-pagamento" class="pagamento-lista" aria-describedby="pagamento-erro">
+                            <p class="campo-status">Carregando formas de pagamento...</p>
+                        </div>
+                        <p class="campo-erro" id="pagamento-erro"></p>
+                    </fieldset>
+
+                    <p class="checkout-erro-geral" id="checkout-erro" role="alert"></p>
+
+                    <button type="submit" class="btn-principal btn-confirmar" id="btn-confirmar">
+                        Confirmar pedido
+                    </button>
+                </form>
+
+                <aside class="checkout-resumo" aria-labelledby="resumo-titulo">
+                    <h2 class="resumo-titulo" id="resumo-titulo">Resumo do pedido</h2>
+                    <ul class="resumo-itens" id="resumo-itens"></ul>
+                    <hr class="resumo-divisor" />
+                    <div class="resumo-linha">
+                        <span>Subtotal</span>
+                        <span id="resumo-subtotal">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-linha">
+                        <span>Desconto</span>
+                        <span id="resumo-desconto">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-linha">
+                        <span>Frete</span>
+                        <span id="resumo-frete">R$ 0,00</span>
+                    </div>
+                    <p class="resumo-cupom" id="resumo-cupom" hidden></p>
+                    <hr class="resumo-divisor" />
+                    <div class="resumo-total">
+                        <span>Total</span>
+                        <span id="resumo-total">R$ 0,00</span>
+                    </div>
+                </aside>
+
+            </div>
+
+            <!-- Estado: pedido confirmado -->
+            <div class="checkout-sucesso" id="checkout-sucesso" hidden>
+                <div class="pedido-check" aria-hidden="true">
+                    <svg viewBox="0 0 52 52">
+                        <circle class="pedido-check-circulo" cx="26" cy="26" r="24" fill="none" />
+                        <path class="pedido-check-marca" fill="none" d="M14 27l7 7 16-16" />
+                    </svg>
+                </div>
+                <h2>Pedido confirmado!</h2>
+                <p>Número do pedido: <strong id="pedido-numero">—</strong></p>
+                <p>Total: <strong id="pedido-total">R$ 0,00</strong></p>
+                <div class="checkout-sucesso-acoes">
+                    <a class="btn-principal" href="tela_catalogo.html">Continuar comprando</a>
+                    <a class="btn-secundario" href="tela_pedidos.html">Ver meus pedidos</a>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <p class="footer-name">PopDreams</p>
+            </div>
+            <div class="footer-cols">
+                <div class="footer-col">
+                    <p class="footer-col-title">PRODUTOS</p>
+                    <a href="tela_catalogo.html">Bonecos</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">SUPORTE</p>
+                    <a href="mailto:contato@exemplo.com">Suporte</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">COMPANHIA</p>
+                    <a href="https://institutojef.org.br/">Sobre Germinare</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 PopDreams. Escola Germinare Tech.</p>
+        </div>
+    </footer>
+
+    <button class="btn-tema" id="btn-tema" type="button" aria-label="Trocar tema do site">
+        <img src="Assets/avatar-azul.png" alt="" />
+    </button>
+
+    <script type="module" src="JS/tela_checkout.js"></script>
+
+    <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+    </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+
+</body>
+</html>

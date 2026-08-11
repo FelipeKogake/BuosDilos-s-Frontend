@@ -1,0 +1,111 @@
+/* ============================================================
+   Histórico de pedidos.
+   Reaproveita o layout de página e os estados de tela_checkout.css
+   (.checkout, .checkout-aviso, .estado-carregando, .btn-principal),
+   carregado antes deste arquivo.
+   ============================================================ */
+
+.pedidos-lista {
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pedido-cartao {
+    padding: 1.5rem;
+    border-radius: 16px;
+    background: var(--cor-painel);
+    box-shadow: var(--sombra-painel);
+}
+
+.pedido-cabecalho {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.pedido-numero {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cor-texto-titulo);
+}
+
+/* O selo tem cor e texto. Quem não distingue a cor lê o status escrito —
+   critério 6 da Seção 5. */
+.pedido-selo {
+    padding: 0.28rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.selo--entregue {
+    background: #e3f3e8;
+    color: #1c6b32;
+}
+
+.selo--enviado {
+    background: #e6eefa;
+    color: #1d4e89;
+}
+
+.selo--processando {
+    background: #fdf3e0;
+    color: #7a4a00;
+}
+
+.selo--cancelado {
+    background: #fbe9e9;
+    color: #a32320;
+}
+
+.pedido-data {
+    margin: 0.4rem 0 1rem;
+    font-size: 0.84rem;
+    color: #4a4a4a;
+}
+
+.pedido-itens {
+    margin: 0;
+    padding: 0 0 1rem;
+    border-bottom: 1px solid var(--cor-divisor);
+    list-style: none;
+}
+
+.pedido-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.3rem 0;
+    font-size: 0.9rem;
+    color: #4a4a4a;
+}
+
+.pedido-item-nome {
+    flex: 1;
+}
+
+.pedido-total {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 0.9rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--cor-texto-titulo);
+}
+
+@media (max-width: 600px) {
+    .pedido-cartao {
+        padding: 1.1rem;
+    }
+
+    .pedido-cabecalho {
+        align-items: flex-start;
+    }
+}

@@ -1,10 +1,32 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Carrinho de compras: lista de { id, qtd } guardada no localStorage.
-// Não há endpoint de carrinho/pedido no backend — é um recurso 100% client-side,
-// que simula o fluxo de compra (sem pagamento real).
+//
+// O carrinho em si é client-side — o backend não tem endpoint de carrinho. Mas
+// o fechamento do pedido é real: o checkout envia os itens para POST /pedidos,
+// e as triggers do banco validam e baixam o estoque. Ver api/pedidos.js.
+//
+// Cupom e totais moram aqui, e não na tela, porque o carrinho e o checkout
+// precisam chegar exatamente ao mesmo valor.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const CHAVE = 'carrinho';
+const CHAVE_CUPOM = 'carrinhoCupom';
+
+/** Frete fixo. Um cálculo real dependeria de contrato com transportadora. */
+export const FRETE = 14.00;
+
+/**
+ * Cupons fixos, validados no próprio front.
+ * - percentual: fração abatida do subtotal
+ * - fixo: valor em reais abatido do subtotal
+ * - frete: zera o frete
+ */
+export const CUPONS = {
+    GERMINARE10: { tipo: 'percentual', valor: 0.10,  rotulo: '10% de desconto' },
+    POPDREAMS20: { tipo: 'percentual', valor: 0.20,  rotulo: '20% de desconto' },
+    BEMVINDO15:  { tipo: 'fixo',       valor: 15.00, rotulo: 'R$ 15,00 de desconto' },
+    FRETEGRATIS: { tipo: 'frete',      valor: 0,     rotulo: 'Frete grátis' },
+};
 
 function lerCarrinho() {
     try {
@@ -59,7 +81,67 @@ export function removerDoCarrinho(id) {
     return itens;
 }
 
-/** Chamado ao "fechar pedido" — o pedido foi simulado, o carrinho esvazia. */
+/** Chamado quando o pedido é confirmado no backend. */
 export function esvaziarCarrinho() {
     gravarCarrinho([]);
+    removerCupom();
+}
+
+// ── Cupom ─────────────────────────────────────────────────────────────────────
+
+/** Código do cupom válido em uso, ou null. */
+export function obterCupomAplicado() {
+    const codigo = localStorage.getItem(CHAVE_CUPOM);
+    return codigo && CUPONS[codigo] ? codigo : null;
+}
+
+/**
+ * Aplica um cupom. Devolve o código normalizado se for válido, ou null se não
+ * for — nesse caso qualquer cupom anterior é descartado.
+ */
+export function aplicarCupomCodigo(codigo) {
+    const normalizado = String(codigo ?? '').trim().toUpperCase();
+
+    if (!CUPONS[normalizado]) {
+        removerCupom();
+        return null;
+    }
+
+    localStorage.setItem(CHAVE_CUPOM, normalizado);
+    return normalizado;
+}
+
+export function removerCupom() {
+    localStorage.removeItem(CHAVE_CUPOM);
+}
+
+// ── Totais ────────────────────────────────────────────────────────────────────
+
+/**
+ * Calcula os totais do carrinho a partir das linhas já resolvidas com preço.
+ *
+ * @param {Array<{preco: number, qtd: number}>} linhas
+ * @returns {{subtotal: number, desconto: number, frete: number, total: number, cupom: string|null}}
+ */
+export function calcularTotais(linhas) {
+    const subtotal = linhas.reduce(
+        (soma, linha) => soma + (Number(linha.preco) || 0) * (Number(linha.qtd) || 0),
+        0
+    );
+
+    const temItens = linhas.length > 0 && subtotal > 0;
+    const codigo   = obterCupomAplicado();
+    const cupom    = codigo ? CUPONS[codigo] : null;
+
+    let desconto = 0;
+    if (temItens && cupom) {
+        if (cupom.tipo === 'percentual') desconto = subtotal * cupom.valor;
+        else if (cupom.tipo === 'fixo')  desconto = Math.min(cupom.valor, subtotal);
+    }
+
+    const freteGratis = Boolean(cupom && cupom.tipo === 'frete');
+    const frete       = temItens && !freteGratis ? FRETE : 0;
+    const total       = temItens ? Math.max(0, subtotal - desconto + frete) : 0;
+
+    return { subtotal, desconto, frete, total, cupom: codigo };
 }
