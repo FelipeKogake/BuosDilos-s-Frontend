@@ -29,8 +29,14 @@ function mostrarEstado(id) {
 // ── Tema ──────────────────────────────────────────────────────────────────────
 
 function sincronizarTema(tema) {
+    const logo = tema === 'rosa' ? 'Assets/logo-rosa2.png' : 'Assets/logo-azul.png';
+
     el('btn-tema').querySelector('img').src = `Assets/avatar-${tema}.png`;
-    el('favicon').href = tema === 'rosa' ? 'Assets/logo-rosa2.png' : 'Assets/logo-azul.png';
+    el('favicon').href = logo;
+
+    // O logo da navbar também acompanha o tema, como nas demais telas.
+    const logoNavbar = document.querySelector('.navbar-logo-img');
+    if (logoNavbar) logoNavbar.src = logo;
 }
 
 el('btn-tema').addEventListener('click', () => {

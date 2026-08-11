@@ -10,6 +10,30 @@
     padding: 2.5rem 1.5rem 4rem;
 }
 
+/* Link, e não history.back(): o destino é sempre o carrinho, mesmo se a
+   pessoa chegou por URL direta ou recarregou a página. */
+.btn-voltar-checkout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    margin-bottom: 1.25rem;
+    padding: 0.5rem 1rem 0.5rem 0.8rem;
+    border: 1.5px solid var(--cor-borda);
+    border-radius: 12px;
+    background: var(--cor-painel);
+    font-family: 'Epilogue', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--cor-texto-titulo);
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.btn-voltar-checkout:hover {
+    background: var(--cor-input-fundo);
+}
+
 .checkout-titulo {
     margin: 0 0 2rem;
     font-size: 2rem;

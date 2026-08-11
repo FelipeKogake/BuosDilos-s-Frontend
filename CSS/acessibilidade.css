@@ -5,6 +5,22 @@
    ============================================================ */
 
 /* ------------------------------------------------------------
+   O atributo `hidden` precisa realmente esconder.
+
+   O navegador aplica `[hidden] { display: none }` na folha de estilo dele,
+   que tem prioridade menor que qualquer regra do autor. Ou seja: um elemento
+   com `.estado-carregando { display: flex }` continua visível mesmo depois
+   de `elemento.hidden = true` — foi exatamente o que deixava o spinner de
+   carregamento girando para sempre no checkout e em meus pedidos.
+
+   Esta regra é o idioma padrão para o problema (o normalize.css faz igual).
+   ------------------------------------------------------------ */
+
+[hidden] {
+    display: none !important;
+}
+
+/* ------------------------------------------------------------
    Foco visível — critério 4 da Seção 5.
 
    17 arquivos de CSS do projeto zeram o outline padrão do navegador

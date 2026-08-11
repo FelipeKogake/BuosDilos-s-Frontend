@@ -237,5 +237,7 @@ function toggleSenha(inputId, btn) {
 
 // ← expõe as funções para os onclick do HTML
 registrarAcao('alternar-tema', toggleTema);
-registrarAcao('tentar-login', tentarLogin);
+// tentarLogin espera o evento (chama preventDefault), mas o dispatcher de
+// acoes.js entrega (elemento, evento) — daí o adaptador.
+registrarAcao('tentar-login', (elemento, evento) => tentarLogin(evento));
 registrarAcao('alternar-senha', (elemento) => toggleSenha(elemento.dataset.campo, elemento));

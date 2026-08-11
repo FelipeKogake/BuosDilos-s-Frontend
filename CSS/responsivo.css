@@ -21,6 +21,20 @@
     scroll-padding-inline: 1rem;
 }
 
+/* A rolagem dos carrosséis continua funcionando (roda do mouse, arrasto,
+   teclado), mas sem a barra visível — que poluía o layout logo abaixo dos
+   cards. Precisa das três declarações porque cada motor usa a sua. */
+.bonecos-grid,
+.itens-grid {
+    scrollbar-width: none;        /* Firefox */
+    -ms-overflow-style: none;     /* Edge legado */
+}
+
+.bonecos-grid::-webkit-scrollbar,
+.itens-grid::-webkit-scrollbar {
+    display: none;                /* Chrome, Safari, Edge atual */
+}
+
 /* ------------------------------------------------------------
    2. Navbar em telas estreitas.
 
