@@ -122,6 +122,190 @@ Todo código gerado com apoio de IA foi lido e revisado antes de entrar no proje
 
 ---
 
+## API REST
+
+**Base:** `https://ecommerce-api-p2jw.onrender.com/api` (produção) ou `http://localhost:2102/api` (local).
+
+Documentação interativa gerada pelo springdoc em **`/swagger-ui/index.html`** — dá para disparar qualquer requisição por lá sem escrever `curl`.
+
+> A API está no plano gratuito do Render, que hiberna após inatividade. A primeira requisição depois de um tempo parado pode levar ~50 segundos.
+
+### Produtos — `/api/produtos`
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `GET` | `/api/produtos` | Lista todos os produtos |
+| `GET` | `/api/produtos/{id}` | Busca um produto |
+| `GET` | `/api/produtos/categorias` | Lista as categorias distintas cadastradas |
+| `GET` | `/api/produtos/com-itens` | Só itens de catálogo (`item = true`) |
+| `GET` | `/api/produtos/sem-itens` | Só produtos personalizáveis (`item = false`) |
+| `POST` | `/api/produtos` | Cria um produto |
+| `PUT` | `/api/produtos/{id}` | Atualiza um produto |
+| `PATCH` | `/api/produtos/{id}/inativar` | Inativa sem excluir |
+
+<details>
+<summary>Exemplo — <code>POST /api/produtos</code></summary>
+
+```json
+{
+  "nome": "Camiseta Copa 2026",
+  "descricao": "Camiseta oficial em algodão penteado.",
+  "categoria": "Camisetas",
+  "preco": 199.90,
+  "sku": "COPA-2026-001",
+  "ativo": true,
+  "item": false
+}
+```
+
+Resposta `201 Created`:
+
+```json
+{
+  "id": 12,
+  "nome": "Camiseta Copa 2026",
+  "descricao": "Camiseta oficial em algodão penteado.",
+  "categoria": "Camisetas",
+  "preco": 199.90,
+  "sku": "COPA-2026-001",
+  "ativo": true,
+  "fotoUrl": null,
+  "item": false,
+  "categorias": ["Camisetas"]
+}
+```
+</details>
+
+### Fotos do produto — `/api/produtos/{produtoId}/fotos`
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `GET` | `/api/produtos/{produtoId}/fotos` | Lista as fotos, ordenadas |
+| `POST` | `/api/produtos/{produtoId}/fotos` | Adiciona uma foto |
+| `PUT` | `/api/produtos/{produtoId}/fotos/{fotoId}` | Substitui a foto |
+| `PATCH` | `/api/produtos/{produtoId}/fotos/{fotoId}` | Atualiza só a URL |
+| `DELETE` | `/api/produtos/{produtoId}/fotos/{fotoId}` | Remove a foto |
+
+A imagem em si vive no Supabase Storage; a API guarda apenas a URL pública.
+
+### Consumidores — `/api/consumidores`
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `GET` | `/api/consumidores` | Lista todos |
+| `GET` | `/api/consumidores/{id}` | Busca por id |
+| `GET` | `/api/consumidores/email/{email}` | Busca por e-mail |
+| `POST` | `/api/consumidores` | Cria |
+| `PUT` | `/api/consumidores/{id}` | Atualiza |
+| `DELETE` | `/api/consumidores/{id}` | Remove |
+
+A busca por e-mail existe porque a autenticação é do Firebase e o banco identifica o comprador por `cliente_id`. O e-mail é a chave que liga as duas identidades — ver `api/consumidor.js`.
+
+### Pedidos — `/api/pedidos`
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `GET` | `/api/pedidos` | Lista todos |
+| `GET` | `/api/pedidos/{id}` | Busca um pedido com seus itens |
+| `GET` | `/api/pedidos/consumidor/{consumidorId}` | Histórico de um cliente |
+| `POST` | `/api/pedidos` | Cria pedido e itens |
+| `PATCH` | `/api/pedidos/{id}/status?status=ENVIADO` | Muda o status |
+
+<details>
+<summary>Exemplo — <code>POST /api/pedidos</code></summary>
+
+```json
+{
+  "consumidorId": 3,
+  "itens": [
+    { "produtoId": 12, "quantidade": 2 },
+    { "produtoId": 7,  "quantidade": 1 }
+  ]
+}
+```
+
+O preço **não** é enviado: o backend lê o valor atual do produto, para o cliente não conseguir forjar o total pela requisição. A trigger `trg_validar_estoque` recusa a criação se não houver saldo, e a `trg_baixar_estoque` desconta em seguida.
+</details>
+
+### Entrega, pagamento e tipos de pagamento
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `GET` `POST` | `/api/entregas` | Endereço de entrega de um pedido |
+| `GET` | `/api/entregas/{id}` | Busca uma entrega |
+| `GET` `POST` | `/api/pagamentos` | Pagamento de um pedido |
+| `GET` | `/api/pagamentos/{id}` | Busca um pagamento |
+| `GET` `POST` | `/api/tipos-pagamento` | PIX, crédito, débito, boleto… |
+| `GET` | `/api/tipos-pagamento/{id}` | Busca um tipo |
+
+O checkout encadeia os três: `POST /pedidos` → `POST /entregas` → `POST /pagamentos`, sempre com o `pedidoId` devolvido pelo primeiro.
+
+### Formato de erro
+
+Todos os erros passam pelo `ManipuladorGlobalExcecoes` e saem no mesmo formato:
+
+```json
+{
+  "status": 404,
+  "mensagem": "Produto não encontrado(a) com id: 99",
+  "timestamp": "2026-08-11T14:32:10.123"
+}
+```
+
+| Status | Quando |
+|---|---|
+| `400` | Validação de campo ou regra de negócio (ex.: SKU duplicado) |
+| `404` | Recurso não encontrado |
+| `500` | Erro interno |
+
+---
+
+## Estrutura do banco
+
+PostgreSQL. O script completo está em [`banco_schema.sql`](https://github.com/gugsdf/BuosDilo-s/blob/main/banco_schema.sql) e a carga de exemplo em `banco_dataload.sql`, ambos no repositório do back-end.
+
+### Tabelas
+
+| Tabela | Papel |
+|---|---|
+| `cliente` | Comprador. `telefone_cliente` e `endereco_cliente` pendem dela |
+| `produto` | Catálogo. `item` separa personalizáveis (`false`) de colecionáveis (`true`) |
+| `produto_categoria` | Categoria do produto (N por produto) |
+| `produto_fotos` | URLs das imagens, com `lado` e `ordem` |
+| `endereco_estoque` | Endereço do galpão / centro de distribuição |
+| `estoque` | Saldo de um produto em um endereço de estoque |
+| `pedido` → `item_pedido` | Pedido e suas linhas |
+| `entrega` | Endereço de entrega de um pedido |
+| `pagamento` → `tipo_pagamento` | Pagamento e sua modalidade |
+| `avaliacao_produto` | Notas e comentários por produto |
+| `log_valor_produto` | Histórico de mudança de preço, preenchido por trigger |
+
+### Relações principais
+
+```
+cliente ──< pedido ──< item_pedido >── produto ──< produto_fotos
+   │                      │                │
+   │                      │                ├──< produto_categoria
+   ├──< telefone_cliente  │                ├──< avaliacao_produto
+   └──< endereco_cliente  │                ├──< log_valor_produto
+                          │                └──< estoque >── endereco_estoque
+                          ├──1 entrega
+                          └──1 pagamento >── tipo_pagamento
+```
+
+### Triggers e funções
+
+O banco não é um depósito passivo — parte da regra de negócio está nele:
+
+| Objeto | Momento | O que faz |
+|---|---|---|
+| `trg_validar_estoque` | `BEFORE INSERT` em `item_pedido` | Soma o saldo do produto em todos os endereços e recusa o pedido se for insuficiente |
+| `trg_baixar_estoque` | `AFTER INSERT` em `item_pedido` | Consome o saldo, em ordem, até cobrir a quantidade |
+| `trg_log_preco_produto` | `AFTER UPDATE` em `produto` | Grava valor antigo e novo em `log_valor_produto` quando o preço muda |
+| `fn_calcular_avaliacao_produto(id)` | função | Devolve a média das notas de um produto |
+
+---
+
 ## Documentação complementar
 
 - [`lighthouse-report.md`](lighthouse-report.md) — auditoria de acessibilidade seguindo o protocolo da Seção 5.2
