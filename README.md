@@ -308,6 +308,21 @@ O banco não é um depósito passivo — parte da regra de negócio está nele:
 
 ## Documentação complementar
 
+Cada pasta com complexidade real tem seu próprio README, explicando as técnicas usadas e **por que** cada decisão foi tomada:
+
+| Pasta | O que documenta |
+|---|---|
+| [`api/`](api/README.md) | Os 16 módulos compartilhados: cache, delegação de eventos, ponte de identidade, carrinho, ViaCEP, anti-FOUC |
+| [`CSS/`](CSS/README.md) | Camada de estilo global: foco visível, responsividade, estados, contraste |
+| [`Tela_Inicia_Com_Login/`](Tela_Inicia_Com_Login/README.md) | As 10 telas logadas, com destaque para o checkout |
+| [`Tela_Inicia_Sem_Login/`](Tela_Inicia_Sem_Login/README.md) | Área pública e a estratégia de `exigirLogin` |
+| [`Login_Cadatro/`](Login_Cadatro/README.md) | Fluxo de autenticação e recuperação de senha |
+| [`admin/`](admin/README.md) | Painel administrativo, fábrica de abas, gestão de fotos |
+| [`autthentication/`](autthentication/README.md) | Configuração do Firebase e tradução de erros |
+| [`com.ecommerce`](https://github.com/gugsdf/BuosDilo-s/blob/main/src/main/java/com/ecommerce/README.md) | Arquitetura do backend: camadas, DTOs, JPA, triggers |
+
+Outros documentos:
+
 - [`lighthouse-report.md`](lighthouse-report.md) — auditoria de acessibilidade seguindo o protocolo da Seção 5.2
 - O guia técnico abaixo detalha o funcionamento interno de cada parte do código
 
