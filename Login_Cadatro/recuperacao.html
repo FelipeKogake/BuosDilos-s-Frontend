@@ -6,6 +6,7 @@
     <script src="../api/acessibilidadeWidget.js" defer></script>
     <link rel="stylesheet" href="CSS/recuperacao.css">
     <link rel="stylesheet" href="CSS/auth-landmarks.css">
+    <link rel="stylesheet" href="../CSS/acessibilidade.css">
     <link id="favicon" rel="icon" type="image/png" href="../Tela_Inicia_Com_Login/Assets/logo-azul.png">
     <title>Recuperação de Senha</title>
 </head>
@@ -15,11 +16,11 @@
     </header>
 
     <!-- estrelas de fundo (atrás) -->
-    <img src="Assets/recuperacao/estrelas-azul.png" class="estrelas estrelas--back" aria-hidden="true"/>
+    <img src="Assets/recuperacao/estrelas-azul.png" class="estrelas estrelas--back" aria-hidden="true" loading="lazy" alt="" />
 
     <div class="personagem" aria-hidden="true">
         <div class="personagem-sombra"></div>
-        <img src="Assets/recuperacao/personagem-recuperacao.png" alt="Personagem" class="personagemImg" />
+        <img src="Assets/recuperacao/personagem-recuperacao.png" alt="Personagem" class="personagemImg" loading="lazy" />
     </div>
 
     <main class="painel-recuperacao">
@@ -35,16 +36,16 @@
             </div>
         </form>
 
-        <button class="btn-continuar" onclick="tentarContinuar()">Continuar</button>
+        <button class="btn-continuar" data-acao="tentar-continuar">Continuar</button>
 
         <a href="login.html" class="voltar">Voltar para Login</a>
     </main>
 
     <!-- estrelas da frente -->
-    <img src="Assets/recuperacao/estrelas-azul.png" class="estrelas estrelas--front" aria-hidden="true"/>
+    <img src="Assets/recuperacao/estrelas-azul.png" class="estrelas estrelas--front" aria-hidden="true" loading="lazy" alt="" />
 
-    <button class="btn-tema" onclick="toggleTema()">
-        <img src="Assets/avatar-azul.png" alt="Trocar tema" />
+    <button class="btn-tema" data-acao="alternar-tema">
+        <img src="Assets/avatar-azul.png" alt="Trocar tema" loading="lazy" />
     </button>
 
     <script type="module" src="JS/recuperacao.js"></script>

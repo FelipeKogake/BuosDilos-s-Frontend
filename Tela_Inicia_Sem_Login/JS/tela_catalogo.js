@@ -1,6 +1,7 @@
 import { obterProdutos, obterItens } from '../../api/produtosStore.js';
 import { renderizarBonecosEmGrids, renderizarItensEmGrids, mostrarErroEmGrids } from '../../api/produtosView.js';
 import { inicializarBuscaNav } from '../../api/buscaNav.js';
+import { registrarAcao } from '../../api/acoes.js';
 
 const temas = {
     azul: {
@@ -96,7 +97,7 @@ function toggleTema() {
     const proximo = atual === 'azul' ? 'rosa' : 'azul';
     aplicarTema(proximo);
 }
-window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
+registrarAcao('alternar-tema', toggleTema);
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
@@ -234,4 +235,4 @@ function exigirLogin() {
     localStorage.setItem('popup', 'login-necessario');
     window.location.href = '../Login_Cadatro/login.html';
 }
-window.exigirLogin = exigirLogin; // usado pelo onclick inline no HTML
+registrarAcao('exigir-login', exigirLogin);

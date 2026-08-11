@@ -7,6 +7,7 @@
     <script src="../api/acessibilidadeWidget.js" defer></script>
     <title>Perfil</title>
     <link rel="stylesheet" href="CSS/tela_perfil.css">
+    <link rel="stylesheet" href="../CSS/acessibilidade.css">
     <link id="favicon" rel="icon" type="image/png" href="Assets/logo-azul.png">
 </head>
 <body>
@@ -16,15 +17,15 @@
     <div class="perfil-page">
         <main class="perfil-container" id="conteudo-principal">
 
-            <button class="btn-voltar" onclick="history.back()">VOLTAR</button>
+            <button class="btn-voltar" data-acao="voltar">VOLTAR</button>
 
             <h1 class="perfil-titulo">Perfil</h1>
 
             <!-- HEADER: AVATAR + NOME + BTN EDITAR -->
             <div class="perfil-header">
                 <div class="perfil-avatar">
-                    <img src="Assets/login/personagem-azul.png" alt="Avatar" onerror="this.style.display='none'" />
-                    <button class="btn-editar-foto" onclick="abrirFotoPerfil()" aria-label="Trocar foto de perfil">
+                    <img src="Assets/login/personagem-azul.png" alt="Avatar" onerror="this.style.display='none'" loading="lazy" />
+                    <button class="btn-editar-foto" data-acao="abrir-foto-perfil" aria-label="Trocar foto de perfil">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                             <circle cx="12" cy="13" r="4"/>
@@ -35,7 +36,7 @@
                     <p class="perfil-nome"></p>
                     <div class="perfil-info"></div>
                 </div>
-                <button class="btn-editar" onclick="abrirEditarPerfil()">
+                <button class="btn-editar" data-acao="abrir-editar-perfil">
                     Editar Perfil
                 </button>
             </div>
@@ -50,7 +51,7 @@
                         <!-- Cartões renderizados dinamicamente via JS -->
 
                         <!-- BOTÃO ADICIONAR CARTÃO -->
-                        <button class="btn-adicionar-cartao" onclick="abrirAdicionarCartao()">
+                        <button class="btn-adicionar-cartao" data-acao="abrir-adicionar-cartao">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                 <circle cx="12" cy="12" r="10"/>
                                 <line x1="12" y1="8" x2="12" y2="16"/>
@@ -75,10 +76,10 @@
                 <a class="btn-alterar-endereco btn-como-link" href="tela_pedidos.html">
                     Meus pedidos
                 </a>
-                <button class="btn-alterar-endereco" onclick="abrirAlterarEndereco()">
+                <button class="btn-alterar-endereco" data-acao="abrir-alterar-endereco">
                     Alterar endereço
                 </button>
-                <button class="btn-sair" onclick="abrirPopup('popup-sair')">
+                <button class="btn-sair" data-acao="abrir-popup" data-popup="popup-sair">
                     Sair da conta
                 </button>
             </div>
@@ -113,18 +114,18 @@
     </div>
 
     <!-- BTN TEMA -->
-    <button class="btn-tema" onclick="toggleTema()">
-        <img src="Assets/avatar-azul.png" alt="Trocar tema" />
+    <button class="btn-tema" data-acao="alternar-tema">
+        <img src="Assets/avatar-azul.png" alt="Trocar tema" loading="lazy" />
     </button>
 
     <!-- ===================== OVERLAYS ===================== -->
 
     <!-- POPUP: EDITAR PERFIL -->
-    <div class="popup-overlay" id="popup-editar" onclick="fecharPopupOverlay(event, 'popup-editar')" inert>
+    <div class="popup-overlay" id="popup-editar" data-acao="fechar-popup-fora" data-popup="popup-editar" inert>
         <div class="popup-box" role="dialog" aria-modal="true" aria-labelledby="popup-editar-titulo">
             <div class="popup-header">
                 <h2 class="popup-titulo" id="popup-editar-titulo">Editar Perfil</h2>
-                <button class="popup-fechar" onclick="fecharPopup('popup-editar')">
+                <button class="popup-fechar" data-acao="fechar-popup" data-popup="popup-editar" aria-label="Fechar">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"/>
                         <line x1="6" y1="6" x2="18" y2="18"/>
@@ -133,35 +134,35 @@
             </div>
             <div class="popup-corpo">
                 <div class="campo-grupo">
-                    <label class="campo-label">Nome completo</label>
+                    <label class="campo-label"for="input-editar-nome">Nome completo</label>
                     <input class="campo-input" id="input-editar-nome" type="text" placeholder="Seu nome" />
                 </div>
                 <div class="campo-grupo">
-                    <label class="campo-label">Idade</label>
+                    <label class="campo-label"for="input-editar-idade">Idade</label>
                     <input class="campo-input" id="input-editar-idade" type="number" placeholder="Sua idade" />
                 </div>
                 <div class="campo-grupo">
-                    <label class="campo-label">Telefone</label>
+                    <label class="campo-label"for="input-editar-telefone">Telefone</label>
                     <input class="campo-input" id="input-editar-telefone" type="tel" placeholder="(00) 00000-0000" />
                 </div>
                 <div class="campo-grupo">
-                    <label class="campo-label">E-mail</label>
+                    <label class="campo-label"for="input-editar-email">E-mail</label>
                     <input class="campo-input" id="input-editar-email" type="email" placeholder="seu@email.com" disabled />
                 </div>
             </div>
             <div class="popup-rodape">
-                <button class="popup-btn-cancelar" onclick="fecharPopup('popup-editar')">Cancelar</button>
-                <button class="popup-btn-salvar" onclick="salvarPerfil()">Salvar alterações</button>
+                <button class="popup-btn-cancelar" data-acao="fechar-popup" data-popup="popup-editar">Cancelar</button>
+                <button class="popup-btn-salvar" data-acao="salvar-perfil">Salvar alterações</button>
             </div>
         </div>
     </div>
 
     <!-- POPUP: ADICIONAR CARTÃO -->
-    <div class="popup-overlay" id="popup-adicionar-cartao" onclick="fecharPopupOverlay(event, 'popup-adicionar-cartao')" inert>
+    <div class="popup-overlay" id="popup-adicionar-cartao" data-acao="fechar-popup-fora" data-popup="popup-adicionar-cartao" inert>
         <div class="popup-box" role="dialog" aria-modal="true" aria-labelledby="popup-adicionar-cartao-titulo">
             <div class="popup-header">
                 <h2 class="popup-titulo" id="popup-adicionar-cartao-titulo">Adicionar Cartão</h2>
-                <button class="popup-fechar" onclick="fecharPopup('popup-adicionar-cartao')">
+                <button class="popup-fechar" data-acao="fechar-popup" data-popup="popup-adicionar-cartao" aria-label="Fechar">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"/>
                         <line x1="6" y1="6" x2="18" y2="18"/>
@@ -170,37 +171,37 @@
             </div>
             <div class="popup-corpo">
                 <div class="campo-grupo">
-                    <label class="campo-label">Número do cartão</label>
+                    <label class="campo-label"for="input-cartao-numero">Número do cartão</label>
                     <input class="campo-input campo-cartao-num" id="input-cartao-numero" type="text" placeholder="0000 0000 0000 0000" maxlength="19" />
                 </div>
                 <div class="campo-grupo">
-                    <label class="campo-label">Nome no cartão</label>
+                    <label class="campo-label"for="input-cartao-nome">Nome no cartão</label>
                     <input class="campo-input" id="input-cartao-nome" type="text" placeholder="NOME SOBRENOME" />
                 </div>
                 <div class="campos-inline">
                     <div class="campo-grupo">
-                        <label class="campo-label">Validade</label>
+                        <label class="campo-label"for="input-cartao-validade">Validade</label>
                         <input class="campo-input" id="input-cartao-validade" type="text" placeholder="MM/AA" maxlength="5" />
                     </div>
                     <div class="campo-grupo">
-                        <label class="campo-label">CVV</label>
+                        <label class="campo-label"for="input-cartao-cvv">CVV</label>
                         <input class="campo-input" id="input-cartao-cvv" type="text" placeholder="000" maxlength="3" />
                     </div>
                 </div>
             </div>
             <div class="popup-rodape">
-                <button class="popup-btn-cancelar" onclick="fecharPopup('popup-adicionar-cartao')">Cancelar</button>
-                <button class="popup-btn-salvar" onclick="salvarNovoCartao()">Adicionar cartão</button>
+                <button class="popup-btn-cancelar" data-acao="fechar-popup" data-popup="popup-adicionar-cartao">Cancelar</button>
+                <button class="popup-btn-salvar" data-acao="salvar-cartao">Adicionar cartão</button>
             </div>
         </div>
     </div>
 
     <!-- POPUP: EXCLUIR CARTÃO -->
-    <div class="popup-overlay" id="popup-excluir-cartao" onclick="fecharPopupOverlay(event, 'popup-excluir-cartao')" inert>
+    <div class="popup-overlay" id="popup-excluir-cartao" data-acao="fechar-popup-fora" data-popup="popup-excluir-cartao" inert>
         <div class="popup-box popup-box--compacto" role="dialog" aria-modal="true" aria-labelledby="popup-excluir-cartao-titulo">
             <div class="popup-header">
                 <h2 class="popup-titulo" id="popup-excluir-cartao-titulo">Excluir cartão</h2>
-                <button class="popup-fechar" onclick="fecharPopup('popup-excluir-cartao')">
+                <button class="popup-fechar" data-acao="fechar-popup" data-popup="popup-excluir-cartao" aria-label="Fechar">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"/>
                         <line x1="6" y1="6" x2="18" y2="18"/>
@@ -218,18 +219,18 @@
                 </div>
             </div>
             <div class="popup-rodape">
-                <button class="popup-btn-cancelar" onclick="fecharPopup('popup-excluir-cartao')">Cancelar</button>
-                <button class="popup-btn-perigo" onclick="confirmarExclusaoCartao()">Excluir cartão</button>
+                <button class="popup-btn-cancelar" data-acao="fechar-popup" data-popup="popup-excluir-cartao">Cancelar</button>
+                <button class="popup-btn-perigo" data-acao="confirmar-exclusao-cartao">Excluir cartão</button>
             </div>
         </div>
     </div>
 
     <!-- POPUP: ALTERAR ENDEREÇO -->
-    <div class="popup-overlay" id="popup-alterar-endereco" onclick="fecharPopupOverlay(event, 'popup-alterar-endereco')" inert>
+    <div class="popup-overlay" id="popup-alterar-endereco" data-acao="fechar-popup-fora" data-popup="popup-alterar-endereco" inert>
         <div class="popup-box" role="dialog" aria-modal="true" aria-labelledby="popup-alterar-endereco-titulo">
             <div class="popup-header">
                 <h2 class="popup-titulo" id="popup-alterar-endereco-titulo">Alterar endereço</h2>
-                <button class="popup-fechar" onclick="fecharPopup('popup-alterar-endereco')">
+                <button class="popup-fechar" data-acao="fechar-popup" data-popup="popup-alterar-endereco" aria-label="Fechar">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"/>
                         <line x1="6" y1="6" x2="18" y2="18"/>
@@ -238,37 +239,37 @@
             </div>
             <div class="popup-corpo">
                 <div class="campo-grupo">
-                    <label class="campo-label">Rua / Logradouro</label>
+                    <label class="campo-label"for="input-endereco-rua">Rua / Logradouro</label>
                     <input class="campo-input" id="input-endereco-rua" type="text" placeholder="Rua, número" />
                 </div>
                 <div class="campo-grupo">
-                    <label class="campo-label">Cidade</label>
+                    <label class="campo-label"for="input-endereco-cidade">Cidade</label>
                     <input class="campo-input" id="input-endereco-cidade" type="text" placeholder="Cidade" />
                 </div>
                 <div class="campos-inline">
                     <div class="campo-grupo">
-                        <label class="campo-label">Estado</label>
+                        <label class="campo-label"for="input-endereco-estado">Estado</label>
                         <input class="campo-input" id="input-endereco-estado" type="text" placeholder="Estado" />
                     </div>
                     <div class="campo-grupo">
-                        <label class="campo-label">CEP</label>
+                        <label class="campo-label"for="input-endereco-cep">CEP</label>
                         <input class="campo-input" id="input-endereco-cep" type="text" placeholder="00000-000" />
                     </div>
                 </div>
             </div>
             <div class="popup-rodape">
-                <button class="popup-btn-cancelar" onclick="fecharPopup('popup-alterar-endereco')">Cancelar</button>
-                <button class="popup-btn-salvar" onclick="salvarEndereco()">Salvar endereço</button>
+                <button class="popup-btn-cancelar" data-acao="fechar-popup" data-popup="popup-alterar-endereco">Cancelar</button>
+                <button class="popup-btn-salvar" data-acao="salvar-endereco">Salvar endereço</button>
             </div>
         </div>
     </div>
 
     <!-- POPUP: SAIR DA CONTA -->
-    <div class="popup-overlay" id="popup-sair" onclick="fecharPopupOverlay(event, 'popup-sair')" inert>
+    <div class="popup-overlay" id="popup-sair" data-acao="fechar-popup-fora" data-popup="popup-sair" inert>
         <div class="popup-box popup-box--compacto" role="dialog" aria-modal="true" aria-labelledby="popup-sair-titulo">
             <div class="popup-header">
                 <h2 class="popup-titulo" id="popup-sair-titulo">Sair da conta</h2>
-                <button class="popup-fechar" onclick="fecharPopup('popup-sair')">
+                <button class="popup-fechar" data-acao="fechar-popup" data-popup="popup-sair" aria-label="Fechar">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"/>
                         <line x1="6" y1="6" x2="18" y2="18"/>
@@ -286,18 +287,18 @@
                 </div>
             </div>
             <div class="popup-rodape">
-                <button class="popup-btn-cancelar" onclick="fecharPopup('popup-sair')">Cancelar</button>
-                <button class="popup-btn-perigo" onclick="confirmarSaida()">Sair da conta</button>
+                <button class="popup-btn-cancelar" data-acao="fechar-popup" data-popup="popup-sair">Cancelar</button>
+                <button class="popup-btn-perigo" data-acao="confirmar-saida">Sair da conta</button>
             </div>
         </div>
     </div>
 
     <!-- POPUP: FOTO DE PERFIL -->
-    <div class="popup-overlay" id="popup-foto-perfil" onclick="fecharPopupOverlay(event, 'popup-foto-perfil')" inert>
+    <div class="popup-overlay" id="popup-foto-perfil" data-acao="fechar-popup-fora" data-popup="popup-foto-perfil" inert>
         <div class="popup-box" role="dialog" aria-modal="true" aria-labelledby="popup-foto-perfil-titulo">
             <div class="popup-header">
                 <h2 class="popup-titulo" id="popup-foto-perfil-titulo">Escolher foto de perfil</h2>
-                <button class="popup-fechar" onclick="fecharPopup('popup-foto-perfil')">
+                <button class="popup-fechar" data-acao="fechar-popup" data-popup="popup-foto-perfil" aria-label="Fechar">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"/>
                         <line x1="6" y1="6" x2="18" y2="18"/>
@@ -308,8 +309,8 @@
                 <div class="fotos-grid" id="fotos-grid"></div>
             </div>
             <div class="popup-rodape">
-                <button class="popup-btn-cancelar" onclick="fecharPopup('popup-foto-perfil')">Cancelar</button>
-                <button class="popup-btn-salvar" onclick="salvarFotoPerfil()">Salvar foto</button>
+                <button class="popup-btn-cancelar" data-acao="fechar-popup" data-popup="popup-foto-perfil">Cancelar</button>
+                <button class="popup-btn-salvar" data-acao="salvar-foto">Salvar foto</button>
             </div>
         </div>
     </div>

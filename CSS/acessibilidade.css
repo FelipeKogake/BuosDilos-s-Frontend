@@ -1,0 +1,74 @@
+/* ============================================================
+   Regras globais de acessibilidade.
+
+   Carregado por ÚLTIMO em todas as páginas, de propósito.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Foco visível — critério 4 da Seção 5.
+
+   17 arquivos de CSS do projeto zeram o outline padrão do navegador
+   (`outline: none`) para estilizar campos e botões, e em 8 deles não há
+   nenhuma substituição — quem navega por teclado fica sem saber onde está.
+
+   O `!important` aqui é deliberado: sem ele, um seletor de classe como
+   `.busca-nav-input:focus { outline: none }` (especificidade 0,2,0) vence
+   uma regra de elemento como `input:focus-visible` (0,1,1), e o foco
+   continuaria invisível. Indicador de foco é requisito de acessibilidade,
+   não preferência estética — é um dos poucos casos em que `!important` é
+   a ferramenta certa.
+
+   `:focus-visible` em vez de `:focus` faz o anel aparecer para teclado
+   (Tab) mas não para clique de mouse, que é o comportamento esperado.
+   ------------------------------------------------------------ */
+
+:is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    /* #2a6fb0 tem contraste ~5:1 sobre os fundos claros das duas paletas. */
+    outline: 3px solid #2a6fb0 !important;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* ------------------------------------------------------------
+   Texto selecionável.
+
+   Alguns CSS aplicam `user-select: none` no seletor universal, o que
+   impede copiar preço, nome de produto ou número de pedido — e atrapalha
+   quem usa lupa ou leitor de tela com seleção.
+   ------------------------------------------------------------ */
+
+main, main * {
+    user-select: text;
+}
+
+/* ------------------------------------------------------------
+   Utilitário: visível só para leitores de tela.
+   Usado para rotular campos cujo desenho não comporta um label visível.
+   ------------------------------------------------------------ */
+
+.apenas-leitor-tela {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ------------------------------------------------------------
+   Respeita quem pediu menos movimento no sistema operacional.
+   ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

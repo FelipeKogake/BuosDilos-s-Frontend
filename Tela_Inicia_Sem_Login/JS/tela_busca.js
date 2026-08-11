@@ -2,6 +2,8 @@ import { obterProdutos, obterItens } from '../../api/produtosStore.js';
 import { renderizarBonecosEmGrids, renderizarItensEmGrids } from '../../api/produtosView.js';
 import { inicializarBuscaNav } from '../../api/buscaNav.js';
 import { listarCategorias } from '../../api/produtos.js';
+import { debounce } from '../../api/util.js';
+import { registrarAcao } from '../../api/acoes.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TEMA (claro/escuro "azul"/"rosa")
@@ -88,7 +90,7 @@ function toggleTema() {
     const proximo = atual === 'azul' ? 'rosa' : 'azul';
     aplicarTema(proximo);
 }
-window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
+registrarAcao('alternar-tema', toggleTema);
 
 aplicarTema(localStorage.getItem('tema') || 'azul');
 
@@ -120,7 +122,7 @@ function exigirLogin() {
     localStorage.setItem('popup', 'login-necessario');
     window.location.href = '../Login_Cadatro/login.html';
 }
-window.exigirLogin = exigirLogin; // usado pelo onclick inline no HTML
+registrarAcao('exigir-login', exigirLogin);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // BUSCA (por nome + filtro por categoria, os dois já ligados)
@@ -183,7 +185,7 @@ function limparFiltros() {
     document.querySelectorAll('#categoria-lista input[type="checkbox"]').forEach(cb => cb.checked = false);
     aplicarFiltros();
 }
-window.limparFiltros = limparFiltros;
+registrarAcao('limpar-filtros', limparFiltros);
 
 function renderizarCategorias(categorias) {
     const lista = document.getElementById('categoria-lista');
@@ -216,7 +218,10 @@ function preencherTermoDaUrl() {
 
 async function carregarBusca() {
     preencherTermoDaUrl();
-    document.getElementById('input-busca-nome').addEventListener('input', aplicarFiltros);
+    // 250ms de silencio antes de filtrar: digitar uma palavra passa a
+    // custar um re-render em vez de um por tecla.
+    document.getElementById('input-busca-nome')
+        .addEventListener('input', debounce(aplicarFiltros, 250));
 
     try {
         const [produtos, itens, categorias] = await Promise.all([obterProdutos(), obterItens(), listarCategorias()]);

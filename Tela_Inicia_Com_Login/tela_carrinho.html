@@ -7,6 +7,7 @@
     <script src="../api/acessibilidadeWidget.js" defer></script>
     <link rel="stylesheet" href="CSS/tela_carrinho.css">
     <link rel="stylesheet" href="../CSS/estados.css">
+    <link rel="stylesheet" href="../CSS/acessibilidade.css">
     <link id="favicon" rel="icon" type="image/png" href="Assets/logo-azul.png">
     <title>Seu Carrinho</title>
 </head>
@@ -22,7 +23,7 @@
         <div class="favoritos-container">
 
             <div class="favoritos-header">
-                <button class="btn-voltar" onclick="history.back()">VOLTAR</button>
+                <button class="btn-voltar" data-acao="voltar">VOLTAR</button>
             </div>
 
             <h1 class="favoritos-titulo" style="margin-bottom: 1.5rem;">Seu Carrinho</h1>
@@ -120,8 +121,8 @@
     </footer>
 
     <!-- Botão tema -->
-    <button class="btn-tema" onclick="toggleTema()">
-        <img src="Assets/avatar-azul.png" alt="Trocar tema" />
+    <button class="btn-tema" data-acao="alternar-tema">
+        <img src="Assets/avatar-azul.png" alt="Trocar tema" loading="lazy" />
     </button>
 
     <script type="module" src="JS/tela_carrinho.js"></script>

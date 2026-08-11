@@ -1,6 +1,7 @@
 import { auth } from '../../autthentication/firebase-config.js';
 import { sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
 import { traduzirErroFirebase } from '../../autthentication/firebase-erros.js';
+import { registrarAcao } from '../../api/acoes.js';
 
 history.pushState(null, null, location.href);
 history.replaceState(null, null, location.href);
@@ -179,5 +180,5 @@ async function tentarContinuar() {
     }
 }
 
-window.toggleTema = toggleTema;
-window.tentarContinuar = tentarContinuar;
+registrarAcao('alternar-tema', toggleTema);
+registrarAcao('tentar-continuar', tentarContinuar);

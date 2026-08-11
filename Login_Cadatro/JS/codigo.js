@@ -1,5 +1,6 @@
 import { auth } from '../../autthentication/firebase-config.js';
 import { verifyPasswordResetCode, applyActionCode } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+import { registrarAcao } from '../../api/acoes.js';
 
 history.pushState(null, null, location.href);
 history.replaceState(null, null, location.href);
@@ -144,4 +145,4 @@ function mostrarStatus(mensagem, tipo = 'carregando') {
 
 processarLink();
 
-window.toggleTema = toggleTema;
+registrarAcao('alternar-tema', toggleTema);

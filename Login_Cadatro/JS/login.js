@@ -2,6 +2,7 @@ import { auth, db } from '../../autthentication/firebase-config.js';
 import { signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
 import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
 import { traduzirErroFirebase } from '../../autthentication/firebase-erros.js';
+import { registrarAcao } from '../../api/acoes.js';
 
 history.pushState(null, null, location.href);
 history.replaceState(null, null, location.href);
@@ -221,7 +222,6 @@ async function tentarLogin(e) {
         }
 
     } catch (error) {
-        console.log(error);
         mostrarPopup(traduzirErroFirebase(error.code), 'erro');
     }
 }
@@ -236,6 +236,6 @@ function toggleSenha(inputId, btn) {
 }
 
 // ← expõe as funções para os onclick do HTML
-window.toggleTema = toggleTema;
-window.tentarLogin = tentarLogin;
-window.toggleSenha = toggleSenha;
+registrarAcao('alternar-tema', toggleTema);
+registrarAcao('tentar-login', tentarLogin);
+registrarAcao('alternar-senha', (elemento) => toggleSenha(elemento.dataset.campo, elemento));

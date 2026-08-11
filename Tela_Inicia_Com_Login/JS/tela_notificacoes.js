@@ -127,3 +127,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+/* ============================================
+   ACOES POR DELEGACAO
+   Este arquivo e carregado como script classico (sem type="module"), entao
+   nao pode importar api/acoes.js — a delegacao fica local. Um unico listener
+   no document no lugar dos antigos onclick inline.
+   ============================================ */
+
+document.addEventListener('click', (evento) => {
+    const elemento = evento.target.closest('[data-acao]');
+    if (!elemento) return;
+
+    switch (elemento.dataset.acao) {
+        case 'alternar-tema':
+            toggleTema();
+            break;
+        case 'voltar':
+            history.back();
+            break;
+    }
+});

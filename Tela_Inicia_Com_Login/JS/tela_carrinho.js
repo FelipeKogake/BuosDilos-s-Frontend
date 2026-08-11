@@ -1,6 +1,7 @@
 import { obterProdutoPorId, obterProdutos } from '../../api/produtosStore.js';
 import { formatarPreco, obterFotoPrincipal, renderizarBonecosEmGrids } from '../../api/produtosView.js';
 import { ehFavorito, alternarFavorito } from '../../api/favoritos.js';
+import { registrarAcao } from '../../api/acoes.js';
 import {
     obterItensCarrinho,
     alterarQuantidade,
@@ -98,7 +99,7 @@ function toggleTema() {
     const proximo = atual === 'azul' ? 'rosa' : 'azul';
     aplicarTema(proximo);
 }
-window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
+registrarAcao('alternar-tema', toggleTema);
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);

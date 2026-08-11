@@ -7,6 +7,7 @@
     <script src="../api/acessibilidadeWidget.js" defer></script>
     <link rel="stylesheet" href="CSS/nova-senha.css">
     <link rel="stylesheet" href="CSS/auth-landmarks.css">
+    <link rel="stylesheet" href="../CSS/acessibilidade.css">
     <link id="favicon" rel="icon" type="image/png" href="../Tela_Inicia_Com_Login/Assets/logo-azul.png">
     <title>Nova Senha — Sistema</title>
 </head>
@@ -15,11 +16,11 @@
         <a class="topo-auth-marca" href="../index.html">PopDreams</a>
     </header>
 
-    <img src="Assets/nova-senha/estrelas-azul.png" class="estrelas estrelas--back" aria-hidden="true" alt="" />
+    <img src="Assets/nova-senha/estrelas-azul.png" class="estrelas estrelas--back" aria-hidden="true" alt="" loading="lazy" />
 
     <div class="personagem" aria-hidden="true">
         <div class="personagem-sombra"></div>
-        <img src="Assets/nova-senha/personagem-azul.png" alt="" class="personagemImg"/>
+        <img src="Assets/nova-senha/personagem-azul.png" alt="" class="personagemImg" loading="lazy" />
     </div>
 
     <main class="painel-nova-senha">
@@ -37,7 +38,7 @@
                     autocomplete="new-password"
                     aria-required="true"
                 />
-                <button type="button" class="btn-olho" onclick="toggleSenha('senha-nova', this)" aria-label="Mostrar senha">
+                <button type="button" class="btn-olho" data-acao="alternar-senha" data-campo="senha-nova" aria-label="Mostrar senha">
                     &#xf06e;
                 </button>
             </div>
@@ -54,22 +55,22 @@
                     autocomplete="new-password"
                     aria-required="true"
                 />
-                <button type="button" class="btn-olho" onclick="toggleSenha('confirma-senha', this)" aria-label="Mostrar senha">
+                <button type="button" class="btn-olho" data-acao="alternar-senha" data-campo="confirma-senha" aria-label="Mostrar senha">
                     &#xf06e;
                 </button>
             </div>
         </div>
 
-            <button type="button" class="btn-alterar" onclick="tentarAlterar()">Alterar</button>
+            <button type="button" class="btn-alterar" data-acao="tentar-alterar">Alterar</button>
         </form>
 
         <a href="login.html" class="voltar">Voltar para Login</a>
     </main>
 
-    <img src="Assets/nova-senha/estrelas-azul.png" class="estrelas estrelas--front" aria-hidden="true" alt="" />
+    <img src="Assets/nova-senha/estrelas-azul.png" class="estrelas estrelas--front" aria-hidden="true" alt="" loading="lazy" />
 
-    <button class="btn-tema" onclick="toggleTema()" aria-label="Trocar tema do site">
-        <img src="Assets/nova-senha/avatar-azul.png" alt="" aria-hidden="true" />
+    <button class="btn-tema" data-acao="alternar-tema" aria-label="Trocar tema do site">
+        <img src="Assets/nova-senha/avatar-azul.png" alt="" aria-hidden="true" loading="lazy" />
     </button>
 
     <script src="JS/nova-senha.js"></script>

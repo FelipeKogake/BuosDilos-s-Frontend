@@ -1,5 +1,6 @@
 import { auth } from '../../autthentication/firebase-config.js';
 import { onAuthStateChanged, updateProfile, signOut } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+import { registrarAcao } from '../../api/acoes.js';
 import {
     obterPerfilExtra,
     atualizarPerfilExtra,
@@ -62,7 +63,7 @@ function toggleTema() {
     const atual = localStorage.getItem("tema") || "azul";
     aplicarTema(atual === "azul" ? "rosa" : "azul");
 }
-window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
+registrarAcao('alternar-tema', toggleTema);
 
 aplicarTema(localStorage.getItem("tema") || "azul");
 
@@ -96,7 +97,7 @@ function abrirPopup(id) {
         box.focus();
     }
 }
-window.abrirPopup = abrirPopup;
+registrarAcao('abrir-popup', (elemento) => abrirPopup(elemento.dataset.popup));
 
 function fecharPopup(id) {
     const overlay = document.getElementById(id);
@@ -105,7 +106,7 @@ function fecharPopup(id) {
     overlay.inert = true;
     document.body.style.overflow = "";
 }
-window.fecharPopup = fecharPopup;
+registrarAcao('fechar-popup', (elemento) => fecharPopup(elemento.dataset.popup));
 
 // Fecha ao clicar fora (no overlay, não no popup-box)
 function fecharPopupOverlay(event, id) {
@@ -113,7 +114,9 @@ function fecharPopupOverlay(event, id) {
         fecharPopup(id);
     }
 }
-window.fecharPopupOverlay = fecharPopupOverlay;
+registrarAcao('fechar-popup-fora', (elemento, evento) => {
+    if (evento.target === elemento) fecharPopup(elemento.dataset.popup);
+});
 
 // Fecha qualquer popup aberto com ESC
 document.addEventListener("keydown", (e) => {
@@ -236,7 +239,7 @@ function abrirEditarPerfil() {
 
     abrirPopup('popup-editar');
 }
-window.abrirEditarPerfil = abrirEditarPerfil;
+registrarAcao('abrir-editar-perfil', abrirEditarPerfil);
 
 async function salvarPerfil() {
     if (!usuarioAtual) return;
@@ -261,7 +264,7 @@ async function salvarPerfil() {
     renderizarPerfil();
     fecharPopup('popup-editar');
 }
-window.salvarPerfil = salvarPerfil;
+registrarAcao('salvar-perfil', salvarPerfil);
 
 // ---------- Cartões ----------
 
@@ -272,7 +275,7 @@ function abrirAdicionarCartao() {
     document.getElementById('input-cartao-cvv').value = '';
     abrirPopup('popup-adicionar-cartao');
 }
-window.abrirAdicionarCartao = abrirAdicionarCartao;
+registrarAcao('abrir-adicionar-cartao', abrirAdicionarCartao);
 
 function salvarNovoCartao() {
     if (!usuarioAtual) return;
@@ -286,7 +289,7 @@ function salvarNovoCartao() {
     renderizarPerfil();
     fecharPopup('popup-adicionar-cartao');
 }
-window.salvarNovoCartao = salvarNovoCartao;
+registrarAcao('salvar-cartao', salvarNovoCartao);
 
 function confirmarExclusaoCartao() {
     if (!usuarioAtual || !cartaoParaExcluir) return;
@@ -295,7 +298,7 @@ function confirmarExclusaoCartao() {
     renderizarPerfil();
     fecharPopup('popup-excluir-cartao');
 }
-window.confirmarExclusaoCartao = confirmarExclusaoCartao;
+registrarAcao('confirmar-exclusao-cartao', confirmarExclusaoCartao);
 
 // ---------- Endereço ----------
 
@@ -311,7 +314,7 @@ function abrirAlterarEndereco() {
 
     abrirPopup('popup-alterar-endereco');
 }
-window.abrirAlterarEndereco = abrirAlterarEndereco;
+registrarAcao('abrir-alterar-endereco', abrirAlterarEndereco);
 
 function salvarEndereco() {
     if (!usuarioAtual) return;
@@ -328,7 +331,7 @@ function salvarEndereco() {
     renderizarPerfil();
     fecharPopup('popup-alterar-endereco');
 }
-window.salvarEndereco = salvarEndereco;
+registrarAcao('salvar-endereco', salvarEndereco);
 
 // ---------- Foto de perfil ----------
 
@@ -355,7 +358,7 @@ function abrirFotoPerfil() {
 
     abrirPopup('popup-foto-perfil');
 }
-window.abrirFotoPerfil = abrirFotoPerfil;
+registrarAcao('abrir-foto-perfil', abrirFotoPerfil);
 
 function salvarFotoPerfil() {
     if (!usuarioAtual || !fotoSelecionadaTemp) {
@@ -366,7 +369,7 @@ function salvarFotoPerfil() {
     renderizarPerfil();
     fecharPopup('popup-foto-perfil');
 }
-window.salvarFotoPerfil = salvarFotoPerfil;
+registrarAcao('salvar-foto', salvarFotoPerfil);
 
 // ---------- Sair da conta ----------
 
@@ -378,7 +381,7 @@ async function confirmarSaida() {
     }
     window.location.href = '../Login_Cadatro/login.html';
 }
-window.confirmarSaida = confirmarSaida;
+registrarAcao('confirmar-saida', confirmarSaida);
 
 // ===================== INICIALIZAÇÃO =====================
 

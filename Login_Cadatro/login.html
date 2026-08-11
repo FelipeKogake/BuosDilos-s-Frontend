@@ -6,6 +6,7 @@
     <script src="../api/acessibilidadeWidget.js" defer></script>
     <link rel="stylesheet" href="CSS/login.css">
     <link rel="stylesheet" href="CSS/auth-landmarks.css">
+    <link rel="stylesheet" href="../CSS/acessibilidade.css">
     <link id="favicon" rel="icon" type="image/png" href="../Tela_Inicia_Com_Login/Assets/logo-azul.png">
     <title>Login</title>
 </head>
@@ -15,11 +16,11 @@
     </header>
 
     <!-- bolhas de fundo (atrás) -->
-    <img src="Assets/login/bolhas-azul.png" class="bolhas bolhas--back" aria-hidden="true"/>
+    <img src="Assets/login/bolhas-azul.png" class="bolhas bolhas--back" aria-hidden="true" loading="lazy" alt="" />
 
     <div class="personagem" aria-hidden="true">
         <div class="personagem-sombra"></div>
-        <img src="Assets/login/personagem-azul.png" alt="Personagem" class="personagemImg" />
+        <img src="Assets/login/personagem-azul.png" alt="Personagem" class="personagemImg" loading="lazy" />
     </div>
 
     <main class="painel-login">
@@ -34,7 +35,7 @@
                 <label for="senha">Senha</label>
                 <div class="input-wrapper">
                     <input type="password" id="senha" placeholder="Senha" />
-                    <button type="button" class="btn-olho" onclick="toggleSenha('senha', this)" aria-label="Mostrar senha">
+                    <button type="button" class="btn-olho" data-acao="alternar-senha" data-campo="senha" aria-label="Mostrar senha">
                         &#xf06e;
                     </button>
                 </div>
@@ -42,7 +43,7 @@
             </div>
         </form>
 
-        <button class="btn-entrar" onclick="tentarLogin(event)">Entrar</button>
+        <button class="btn-entrar" data-acao="tentar-login">Entrar</button>
 
         <div class="divider">
             <hr />
@@ -56,10 +57,10 @@
     </main>
 
     <!-- bolhas da frente -->
-    <img src="Assets/login/bolhas-azul.png" class="bolhas bolhas--front" aria-hidden="true"/>
+    <img src="Assets/login/bolhas-azul.png" class="bolhas bolhas--front" aria-hidden="true" loading="lazy" alt="" />
 
-    <button class="btn-tema" onclick="toggleTema()" aria-label="Trocar tema do site">
-        <img src="Assets/avatar-azul.png" alt="Trocar tema" />
+    <button class="btn-tema" data-acao="alternar-tema" aria-label="Trocar tema do site">
+        <img src="Assets/avatar-azul.png" alt="Trocar tema" loading="lazy" />
     </button>
 
     <script type="module" src="JS/login.js"></script>

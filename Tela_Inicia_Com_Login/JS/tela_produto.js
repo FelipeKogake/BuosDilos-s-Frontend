@@ -4,6 +4,7 @@ import { inicializarBuscaNav } from '../../api/buscaNav.js';
 import { ehFavorito, alternarFavorito } from '../../api/favoritos.js';
 import { listarFotos } from '../../api/produtos.js';
 import { adicionarAoCarrinho } from '../../api/carrinho.js';
+import { registrarAcao } from '../../api/acoes.js';
 
 const temas = {
     azul: {
@@ -99,7 +100,7 @@ function toggleTema() {
     const proximo = atual === 'azul' ? 'rosa' : 'azul';
     aplicarTema(proximo);
 }
-window.toggleTema = toggleTema; // usado pelo onclick inline no HTML
+registrarAcao('alternar-tema', toggleTema);
 
 const temaSalvo = localStorage.getItem('tema') || 'azul';
 aplicarTema(temaSalvo);
