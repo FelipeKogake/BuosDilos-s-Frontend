@@ -1,3 +1,7 @@
+import { obterProdutos } from '../../api/produtosStore.js';
+import { renderizarBonecosEmGrids, mostrarErroEmGrids } from '../../api/produtosView.js';
+import { registrarAcao } from '../../api/acoes.js';
+
 const temas = {
     azul: {
         '--cor-fundo': '#DCEAF7',
@@ -128,23 +132,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// A acao 'voltar' ja vem embutida no proprio api/acoes.js.
+registrarAcao('alternar-tema', toggleTema);
+
 /* ============================================
-   ACOES POR DELEGACAO
-   Este arquivo e carregado como script classico (sem type="module"), entao
-   nao pode importar api/acoes.js — a delegacao fica local. Um unico listener
-   no document no lugar dos antigos onclick inline.
+   NOVOS BONECOS
    ============================================ */
 
-document.addEventListener('click', (evento) => {
-    const elemento = evento.target.closest('[data-acao]');
-    if (!elemento) return;
+const QTD_BONECOS = 10;
 
-    switch (elemento.dataset.acao) {
-        case 'alternar-tema':
-            toggleTema();
-            break;
-        case 'voltar':
-            history.back();
-            break;
+function urlProduto(id) {
+    return `tela_produto.html?id=${encodeURIComponent(id)}&origem=notificacoes`;
+}
+
+async function carregarBonecos() {
+    try {
+        const produtos = await obterProdutos();
+
+        // "Novos" = os cadastrados por ultimo, que sao os de maior id.
+        const novos = produtos
+            .filter(produto => produto.ativo)
+            .sort((a, b) => b.id - a.id)
+            .slice(0, QTD_BONECOS);
+
+        renderizarBonecosEmGrids('.bonecos-grid', novos, urlProduto);
+    } catch (erro) {
+        console.error('Erro ao carregar novos bonecos:', erro);
+        mostrarErroEmGrids('.bonecos-grid',
+            'Não foi possível carregar os bonecos. Verifique sua conexão.', carregarBonecos);
     }
-});
+}
+
+carregarBonecos();
