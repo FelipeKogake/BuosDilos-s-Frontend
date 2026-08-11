@@ -1,5 +1,5 @@
 import { obterProdutos, obterItens } from '../../api/produtosStore.js';
-import { renderizarBonecosEmGrids, renderizarItensEmGrids } from '../../api/produtosView.js';
+import { renderizarBonecosEmGrids, renderizarItensEmGrids, mostrarErroEmGrids } from '../../api/produtosView.js';
 import { inicializarBuscaNav } from '../../api/buscaNav.js';
 
 const temas = {
@@ -170,6 +170,9 @@ async function carregarProdutosTelaInicial() {
         renderizarBonecosEmGrids('.bonecos-grid', produtosAtivos.slice(0, QTD_BONECOS), urlProduto);
     } catch (error) {
         console.error('Erro ao carregar produtos na tela inicial:', error);
+        // Sem isto o spinner de carregamento ficaria girando para sempre.
+        mostrarErroEmGrids('.bonecos-grid', 'Não foi possível carregar os produtos. Verifique sua conexão.', carregarProdutosTelaInicial);
+        mostrarErroEmGrids('.itens-grid', 'Não foi possível carregar os itens.', carregarProdutosTelaInicial);
     }
 }
 

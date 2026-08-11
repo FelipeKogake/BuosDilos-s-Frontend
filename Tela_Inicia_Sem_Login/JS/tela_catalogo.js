@@ -1,5 +1,5 @@
 import { obterProdutos, obterItens } from '../../api/produtosStore.js';
-import { renderizarBonecosEmGrids, renderizarItensEmGrids } from '../../api/produtosView.js';
+import { renderizarBonecosEmGrids, renderizarItensEmGrids, mostrarErroEmGrids } from '../../api/produtosView.js';
 import { inicializarBuscaNav } from '../../api/buscaNav.js';
 
 const temas = {
@@ -218,6 +218,9 @@ async function carregarCatalogo() {
         renderizarItensEmGrids('.itens-grid', itensAtivos, urlProduto, { limitar: true });
     } catch (error) {
         console.error('Erro ao carregar catálogo de produtos:', error);
+        // Sem isto o spinner de carregamento ficaria girando para sempre.
+        mostrarErroEmGrids('.bonecos-grid', 'Não foi possível carregar os produtos. Verifique sua conexão.', carregarCatalogo);
+        mostrarErroEmGrids('.itens-grid', 'Não foi possível carregar os itens.', carregarCatalogo);
     }
 }
 
