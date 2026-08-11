@@ -46,6 +46,6 @@
 }
 
 .btn-tentar-novamente:focus-visible {
-    outline: 3px solid #2a6fb0;
+    outline: 3px solid #286aa8;
     outline-offset: 2px;
 }

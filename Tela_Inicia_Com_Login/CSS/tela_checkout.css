@@ -124,7 +124,7 @@
 .pagamento-opcao input:focus-visible,
 .btn-principal:focus-visible,
 .btn-secundario:focus-visible {
-    outline: 3px solid #2a6fb0;
+    outline: 3px solid #286aa8;
     outline-offset: 2px;
 }
 
@@ -340,7 +340,7 @@
 }
 
 .checkout-sucesso h2:focus-visible {
-    outline: 3px solid #2a6fb0;
+    outline: 3px solid #286aa8;
     outline-offset: 4px;
 }
 

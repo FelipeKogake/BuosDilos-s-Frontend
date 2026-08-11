@@ -30,7 +30,7 @@ const temas = {
         '--cor-primaria': '#F1CECE',
         '--cor-primaria-hover': '#d4b6b6',
         '--cor-texto-titulo': '#111',
-        '--cor-texto-secundario': '#ccc',
+        '--cor-texto-secundario': '#757575',
         '--sombra-painel': '6px 6px 20px rgba(243, 162, 162, 0.6)',
         '--cor-sombra-inicio': '#F1CECE',
         '--cor-sombra-fim': '#F9EBEB',

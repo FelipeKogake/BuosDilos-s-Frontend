@@ -23,8 +23,8 @@
    ------------------------------------------------------------ */
 
 :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-    /* #2a6fb0 tem contraste ~5:1 sobre os fundos claros das duas paletas. */
-    outline: 3px solid #2a6fb0 !important;
+    /* #286aa8 tem contraste ~5:1 sobre os fundos claros das duas paletas. */
+    outline: 3px solid #286aa8 !important;
     outline-offset: 2px;
     border-radius: 4px;
 }
